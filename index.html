@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- PWA & Vollbild Befehle für iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CreamyP V2">
+  <link rel="manifest" href="manifest.json">
+
+  <title>CreamyP Grow Tracker V2</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #121216;
+      --card-bg: #1c1c24;
+      --card-border: #2e2e3e;
+      --primary: #ff75c3;
+      --secondary: #9b51e0;
+      --accent-green: #27ae60;
+      --text-main: #f3f3f7;
+      --text-muted: #a0a0b0;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      min-height: 100vh;
+    }
+
+    /* Header inkl. iPhone-Notch Berücksichtigung */
+    header {
+      background: linear-gradient(135deg, rgba(155, 81, 224, 0.2), rgba(255, 117, 195, 0.2));
+      padding-top: max(12px, env(safe-area-inset-top)); 
+      padding-bottom: 12px;
+      padding-left: 16px;
+      padding-right: 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-wrapper {
+      background-color: #fff;
+      padding: 5px 16px;
+      border-radius: 24px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-logo {
+      max-height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    /* Main Container & Tabs */
+    .container {
+      padding: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Sensor Grid */
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .sensor-box {
+      background: rgba(255,255,255,0.03);
+      padding: 12px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .sensor-val {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 4px 0;
+    }
+
+    .sensor-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge-good { color: #2ecc71; }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      background: #14141a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 117, 195, 0.3);
+    }
+
+    /* Bottom Navigation Bar: Geht direkt bis an den echten iPhone-Gehäuserand */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1c1c24;
+      backdrop-filter: blur(15px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-top: 10px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+      cursor: pointer;
+      width: 20%;
+    }
+
+    .nav-item .icon {
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header>
+    <div class="logo-wrapper">
+      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="card">
+        <h2>Live Klima (Inkbird) <span id="klima-status" style="font-size: 12px; color: var(--accent-green);">● Online</span></h2>
+        <div class="sensor-grid">
+          <div class="sensor-box">
+            <div class="sensor-label">TEMP</div>
+            <div class="sensor-val" id="val-temp">--°C</div>
+          </div>
+          <div class="sensor-box">
+            <div class="sensor-label">FEUCHTE</div>
+            <div class="sensor-val" id="val-humidity">--%</div>
+          </div>
+          <div class="sensor-box">
+            <div class="sensor-label">VPD</div>
+            <div class="sensor-val badge-good" id="val-vpd">--</div>
+            <div class="sensor-label" id="val-time">Lädt...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Pflanzen Status</h2>
+        <p><strong>Pflanze #1:</strong> CreamyP Special</p>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Phase: Blütewoche 3 (Tag 18)</p>
+      </div>
+    </div>
+
+    <!-- TAB 2: GROWPLAN -->
+    <div id="tab-plan" class="tab-content">
+      <div class="card">
+        <h2>Wochenplan & Zielwerte</h2>
+        <ul style="margin: 10px 0 0 20px; font-size: 14px;">
+          <li>Ziel-Temp: 23°C – 26°C</li>
+          <li>Ziel-RLF: 55% – 62%</li>
+          <li>Ziel-PPFD: 600 - 800 µmol/m²/s</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TAB 3: DÜNGERECHNER -->
+    <div id="tab-calc" class="tab-content">
+      <div class="card">
+        <h2>Düngerechner</h2>
+        <div class="form-group">
+          <label>Wassermenge (in Liter):</label>
+          <input type="number" id="calc-water" value="5" step="0.5" oninput="calculateFertilizer()">
+        </div>
+        <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+          <p style="font-size: 14px; margin-bottom: 6px;">Dosierung für <span id="calc-liters-label">5</span> Litern:</p>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>Dünger A:</span> <strong id="res-a">10 ml</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Dünger B:</span> <strong id="res-b">15 ml</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: LOGBUCH -->
+    <div id="tab-log" class="tab-content">
+      <div class="card">
+        <h2>Eintrag hinzufügen</h2>
+        <form id="logForm" onsubmit="submitLog(event)">
+          <div class="form-group">
+            <label>Gießmenge (Liter)</label>
+            <input type="number" id="log-water" placeholder="z. B. 2.5" step="0.1">
+          </div>
+          <div class="form-group">
+            <label>Licht (PPFD)</label>
+            <input type="number" id="log-light" placeholder="z. B. 600">
+          </div>
+          <div class="form-group">
+            <label>Auffälligkeiten</label>
+            <select id="log-defect">
+              <option value="Keine">Keine (Gesund)</option>
+              <option value="Stickstoff-Mangel">Stickstoff-Mangel</option>
+              <option value="CalMag-Mangel">Cal/Mag-Mangel</option>
+              <option value="Überdüngung">Überdüngung</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notizen</label>
+            <textarea id="log-notes" rows="3" placeholder="Notizen..."></textarea>
+          </div>
+          <button type="submit" class="btn">Speichern</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 5: PFLANZEN -->
+    <div id="tab-plants" class="tab-content">
+      <div class="card">
+        <h2>Pflanzen Profil</h2>
+        <p style="font-size: 14px;"><strong>Name:</strong> Pflanze #1</p>
+        <p style="font-size: 14px;"><strong>Strain:</strong> CreamyP Gelato</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('dashboard', this)">
+      <span class="icon">📊</span>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('plan', this)">
+      <span class="icon">📅</span>
+      <span>Plan</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('calc', this)">
+      <span class="icon">🧪</span>
+      <span>Rechner</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('log', this)">
+      <span class="icon">📝</span>
+      <span>Log</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('plants', this)">
+      <span class="icon">🪴</span>
+      <span>Pflanzen</span>
+    </div>
+  </nav>
+
+  <script>
+    // DEIN GOOGLE BACKEND LINK:
+    const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchLiveKlima();
+    });
+
+    function fetchLiveKlima() {
+      if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
+      
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.temp !== '--') {
+            document.getElementById('val-temp').innerText = data.temp + "°C";
+            document.getElementById('val-humidity').innerText = data.humidity + "%";
+            document.getElementById('val-time').innerText = data.time || "Aktiv";
+            calculateVPD(parseFloat(data.temp), parseFloat(data.humidity));
+          } else {
+            document.getElementById('val-time').innerText = "Keine Daten";
+          }
+        })
+        .catch(err => console.error("Fehler beim Abrufen:", err));
+    }
+
+    function calculateVPD(temp, rh) {
+      if (isNaN(temp) || isNaN(rh)) return;
+      const svp = 0.61078 * Math.exp((17.27 * temp) / (temp + 237.3));
+      const avp = svp * (rh / 100);
+      const vpd = (svp - avp).toFixed(2);
+      document.getElementById('val-vpd').innerText = vpd;
+    }
+
+    function switchTab(tabName, element) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+      element.classList.add('active');
+    }
+
+    function calculateFertilizer() {
+      const liters = parseFloat(document.getElementById('calc-water').value) || 0;
+      document.getElementById('calc-liters-label').innerText = liters;
+      document.getElementById('res-a').innerText = (liters * 2) + " ml";
+      document.getElementById('res-b').innerText = (liters * 3) + " ml";
+    }
+
+    function submitLog(e) {
+      e.preventDefault();
+      const payload = {
+        pflanzenId: "Pflanze #1",
+        wasser: document.getElementById('log-water').value,
+        licht: document.getElementById('log-light').value,
+        maengel: document.getElementById('log-defect').value,
+        notiz: document.getElementById('log-notes').value
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        alert("Eintrag erfolgreich gespeichert!");
+        document.getElementById('logForm').reset();
+      })
+      .catch(err => alert("Fehler beim Speichern: " + err));
+    }
+  </script>
+</body>
+</html>
