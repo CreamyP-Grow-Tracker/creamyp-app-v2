@@ -183,6 +183,12 @@
       box-shadow: 0 4px 15px rgba(255, 117, 195, 0.3);
     }
 
+    .btn-secondary {
+      background: #2e2e3e;
+      box-shadow: none;
+      margin-top: 8px;
+    }
+
     /* Düngerechner Ergebnis-Tabelle */
     .calc-table {
       width: 100%;
@@ -240,6 +246,7 @@
       border-radius: 12px;
       padding: 12px;
       position: relative;
+      cursor: pointer;
     }
 
     .plant-card h3 {
@@ -270,6 +277,33 @@
       background: rgba(39, 174, 96, 0.2);
       color: #2ecc71;
       float: right;
+    }
+
+    /* Modal Pop-Up Dialog */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
 
     /* Bottom Navigation Bar */
@@ -457,7 +491,7 @@
     <div id="tab-plants" class="tab-content">
       <div class="card">
         <h2>Deine 5 Sorten & Zelte</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Karte, um Phase oder Infos zu ändern:</p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Karte, um Phase & Startdatum festzulegen:</p>
         
         <div id="plants-container">
           <!-- Wird per JavaScript dynamisch generiert -->
@@ -465,6 +499,29 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Modal Dialog zum Bearbeiten einer Pflanze -->
+  <div class="modal-overlay" id="plantModal">
+    <div class="modal-card">
+      <h3 id="modalPlantTitle" style="color: var(--primary); margin-bottom: 12px;">Pflanze anpassen</h3>
+      
+      <div class="form-group">
+        <label>Aktuelle Phase:</label>
+        <select id="modalPlantPhaseType">
+          <option value="veg">Vegetationsphase</option>
+          <option value="blüte">Blütephase</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Startdatum dieser Phase:</label>
+        <input type="date" id="modalPlantStartDate">
+      </div>
+
+      <button type="button" class="btn" onclick="savePlantModal()">Speichern</button>
+      <button type="button" class="btn btn-secondary" onclick="closePlantModal()">Abbrechen</button>
+    </div>
   </div>
 
   <!-- Bottom Navigation -->
@@ -492,7 +549,7 @@
   </nav>
 
   <script>
-    // DEIN GOOGLE BACKEND LINK:
+    // DEIN GEPRÜFTER GOOGLE BACKEND LINK:
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
 
     // Das BioNova Schema (Basis: 10 Liter)
@@ -511,14 +568,19 @@
       flush:   { cocoa: 0,  cocob: 0,  roots: 0, xcel: 0,  tml: 0, bnzym: 7, vitasol: 8,  silution: 0, ec: "Spülen" }
     };
 
-    // Die 5 Sorten sauber verteilt auf Mars Hydro & Grow Box
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v3')) || [
-      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", phase: "Blütewoche 3" }
+    // Heute als ISO-Datum YYYY-MM-DD
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // Die 5 Sorten mit Phasen-Typ und Startdatum
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v4')) || [
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
+      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
+      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
+      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
+      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", phaseType: "blüte", startDate: todayStr }
     ];
+
+    let activeEditingPlantId = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchLiveKlima();
@@ -579,6 +641,27 @@
       document.getElementById('res-silution').innerText = calcVal(data.silution);
     }
 
+    // Automatische Errechnung der Woche und des Tages
+    function calculatePhaseString(plant) {
+      if (!plant.startDate) return "Kein Datum festgelegt";
+      
+      const start = new Date(plant.startDate);
+      const now = new Date();
+      
+      // Tagesdifferenz berechnen
+      const diffTime = Math.max(0, now - start);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      const week = Math.floor(diffDays / 7) + 1;
+      const day = diffDays + 1;
+
+      if (plant.phaseType === 'veg') {
+        return `Veg-Woche ${week} (Tag ${day})`;
+      } else {
+        return `Blütewoche ${week} (Tag ${day})`;
+      }
+    }
+
     function renderPlants() {
       const container = document.getElementById('plants-container');
       container.innerHTML = "";
@@ -615,24 +698,47 @@
     function createPlantCard(p) {
       const card = document.createElement('div');
       card.className = 'plant-card';
-      card.onclick = () => editPlant(p.id - 1);
+      card.onclick = () => openPlantModal(p.id);
+      
+      const phaseDisplay = calculatePhaseString(p);
+
       card.innerHTML = `
         <span class="box-tag">${p.time}</span>
         <h3>${p.name}</h3>
         <div class="plant-strain">${p.strain}</div>
-        <span class="plant-tag">${p.phase}</span>
+        <span class="plant-tag">${phaseDisplay}</span>
       `;
       return card;
     }
 
-    function editPlant(index) {
-      const p = plantsData[index];
-      const newPhase = prompt("Aktuelle Phase/Woche für " + p.name + " (z.B. Vegetation, BW 4):", p.phase);
-      if (newPhase !== null) {
-        p.phase = newPhase;
-        localStorage.setItem('creamyp_plants_v3', JSON.stringify(plantsData));
+    // Modal-Funktionen
+    function openPlantModal(plantId) {
+      activeEditingPlantId = plantId;
+      const plant = plantsData.find(p => p.id === plantId);
+      if (!plant) return;
+
+      document.getElementById('modalPlantTitle').innerText = plant.name + " anpassen";
+      document.getElementById('modalPlantPhaseType').value = plant.phaseType || "blüte";
+      document.getElementById('modalPlantStartDate').value = plant.startDate || todayStr;
+
+      document.getElementById('plantModal').classList.add('active');
+    }
+
+    function closePlantModal() {
+      document.getElementById('plantModal').classList.remove('active');
+      activeEditingPlantId = null;
+    }
+
+    function savePlantModal() {
+      if (!activeEditingPlantId) return;
+      const plant = plantsData.find(p => p.id === activeEditingPlantId);
+      if (plant) {
+        plant.phaseType = document.getElementById('modalPlantPhaseType').value;
+        plant.startDate = document.getElementById('modalPlantStartDate').value;
+        localStorage.setItem('creamyp_plants_v4', JSON.stringify(plantsData));
         renderPlants();
       }
+      closePlantModal();
     }
 
     function submitLog(e) {
