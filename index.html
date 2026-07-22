@@ -202,6 +202,21 @@
       margin-top: 8px;
     }
 
+    .btn-back {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 14px;
+      box-shadow: none;
+      width: auto;
+    }
+
     /* Düngerechner Ergebnis-Tabelle */
     .calc-table {
       width: 100%;
@@ -235,7 +250,7 @@
       display: inline-block;
     }
 
-    /* Setup Cards im Dashboard */
+    /* Dashboard Setup Cards */
     .setup-card-box {
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--card-border);
@@ -253,23 +268,42 @@
       margin-bottom: 6px;
     }
 
-    .setup-status-tag {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 10px;
-    }
-
-    /* Growbox Badges & Pflanzen Grid */
-    .box-header {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--plant-green);
-      margin: 12px 0 8px 0;
+    /* Zelt-Kacheln in Ebene 1 */
+    .box-tile-card {
+      background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9));
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      cursor: pointer;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      transition: transform 0.15s, border-color 0.15s;
     }
 
+    .box-tile-card:active {
+      transform: scale(0.98);
+      border-color: var(--plant-green);
+    }
+
+    .box-tile-info h3 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .box-tile-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .box-tile-arrow {
+      font-size: 20px;
+      color: var(--plant-green);
+    }
+
+    /* Pflanzen Grid in Ebene 2 */
     .plants-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -319,15 +353,6 @@
       background: var(--bloom-pink-bg);
       color: var(--bloom-pink);
       border: 1px solid rgba(255, 117, 195, 0.3);
-    }
-
-    .box-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text-muted);
-      float: right;
     }
 
     /* Modal Dialog */
@@ -473,7 +498,6 @@
           <strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
         </div>
 
-        <!-- Optionaler Manueller Override -->
         <details style="margin-bottom: 14px; font-size: 12px; color: var(--text-muted);">
           <summary style="cursor: pointer; margin-bottom: 6px;">Manuelle Phase erzwingen (Optional)</summary>
           <select id="calc-phase-override" onchange="autoCalculateFertilizer(true)" style="margin-top: 6px;">
@@ -552,21 +576,36 @@
       </div>
     </div>
 
-    <!-- TAB 5: ZELTE & SORTEN -->
+    <!-- TAB 5: ZELTE (2-STUFIGE ANSICHT) -->
     <div id="tab-plants" class="tab-content">
       <div class="card">
-        <h2>Deine Growboxen</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Pflanze, um Phase & Datum einzustellen:</p>
         
-        <div id="plants-container">
-          <!-- Dynamischer Aufbau durch JS -->
+        <!-- EBENE 1: ZELT-KACHELN -->
+        <div id="box-overview-view">
+          <h2>Deine Growboxen</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle eine Growbox, um die Pflanzen darin zu öffnen:</p>
+          <div id="box-tiles-container">
+            <!-- Dynamisch via JS -->
+          </div>
         </div>
+
+        <!-- EBENE 2: PFLANZEN IN SELECTED BOX -->
+        <div id="box-detail-view" style="display: none;">
+          <button type="button" class="btn-back" onclick="showBoxOverview()">← Zurück zu den Zelten</button>
+          <h2 id="selected-box-title" style="color: var(--plant-green); margin-bottom: 4px;">⛺ Zelt Name</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Pflanze für Einstellungen:</p>
+
+          <div id="selected-box-plants-grid" class="plants-grid">
+            <!-- Dynamisch via JS -->
+          </div>
+        </div>
+
       </div>
     </div>
 
   </div>
 
-  <!-- Modal Dialog zum Bearbeiten der Pflanzen -->
+  <!-- Modal Dialog -->
   <div class="modal-overlay" id="plantModal">
     <div class="modal-card">
       <h3 id="modalPlantTitle" style="color: var(--plant-green); margin-bottom: 12px;">Pflanze anpassen</h3>
@@ -633,8 +672,8 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Storage Key v6
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v6')) || [
+    // Storage Key v7
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v7')) || [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
       { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
@@ -643,12 +682,13 @@
     ];
 
     let activeEditingPlantId = null;
+    let currentSelectedBox = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchLiveKlima();
       renderDashboardSetup();
       autoCalculateFertilizer();
-      renderPlants();
+      renderBoxTiles();
     });
 
     function fetchLiveKlima() {
@@ -682,9 +722,12 @@
       document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
       element.classList.add('active');
+
+      if(tabName === 'plants') {
+        showBoxOverview();
+      }
     }
 
-    // Hilfsfunktion: Berechnet Differenz-Tage und Wochen
     function getDaysAndWeeks(startDateStr) {
       if (!startDateStr) return { days: 1, week: 1 };
       const start = new Date(startDateStr);
@@ -695,7 +738,7 @@
       return { days, week };
     }
 
-    // DASHBOARD SETUP RENDERN
+    // DASHBOARD RENDERN
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
@@ -788,6 +831,63 @@
       document.getElementById('res-silution').innerText = calcVal(data.silution);
     }
 
+    // EBENE 1: ZELT-KACHELN RENDERN
+    function renderBoxTiles() {
+      const container = document.getElementById('box-tiles-container');
+      container.innerHTML = "";
+
+      const boxes = ["Mars Hydro", "Grow Box"];
+
+      boxes.forEach(boxName => {
+        const boxPlants = plantsData.filter(p => p.box === boxName);
+        const plantCount = boxPlants.length;
+        
+        let statusText = "Leer";
+        if (plantCount > 0) {
+          const refPlant = boxPlants[0];
+          const { days, week } = getDaysAndWeeks(refPlant.startDate);
+          statusText = refPlant.phaseType === 'veg' ? `🌱 Veg-Tag ${days}` : `🌸 Blütetag ${days}`;
+        }
+
+        const tile = document.createElement('div');
+        tile.className = 'box-tile-card';
+        tile.onclick = () => openBoxDetail(boxName);
+
+        tile.innerHTML = `
+          <div class="box-tile-info">
+            <h3>⛺ ${boxName}</h3>
+            <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • ${statusText}</p>
+          </div>
+          <div class="box-tile-arrow">➔</div>
+        `;
+        container.appendChild(tile);
+      });
+    }
+
+    // EBENE 2: DETAILS ZU EINEM ZELT ANZEIGEN
+    function openBoxDetail(boxName) {
+      currentSelectedBox = boxName;
+      document.getElementById('box-overview-view').style.display = 'none';
+      document.getElementById('box-detail-view').style.display = 'block';
+
+      document.getElementById('selected-box-title').innerText = "⛺ " + boxName;
+
+      const grid = document.getElementById('selected-box-plants-grid');
+      grid.innerHTML = "";
+
+      const boxPlants = plantsData.filter(p => p.box === boxName);
+      boxPlants.forEach(p => {
+        grid.appendChild(createPlantCard(p));
+      });
+    }
+
+    function showBoxOverview() {
+      document.getElementById('box-detail-view').style.display = 'none';
+      document.getElementById('box-overview-view').style.display = 'block';
+      currentSelectedBox = null;
+      renderBoxTiles();
+    }
+
     function calculatePhaseString(plant) {
       const { days, week } = getDaysAndWeeks(plant.startDate);
       if (plant.phaseType === 'veg') {
@@ -795,37 +895,6 @@
       } else {
         return `Blütewoche ${week} (Tag ${days})`;
       }
-    }
-
-    function renderPlants() {
-      const container = document.getElementById('plants-container');
-      container.innerHTML = "";
-
-      const box1Title = document.createElement('div');
-      box1Title.className = 'box-header';
-      box1Title.innerHTML = '⛺ Mars Hydro (Hauptzelt - 8-9 W.)';
-      container.appendChild(box1Title);
-
-      const grid1 = document.createElement('div');
-      grid1.className = 'plants-grid';
-
-      plantsData.filter(p => p.box === "Mars Hydro").forEach((p) => {
-        grid1.appendChild(createPlantCard(p));
-      });
-      container.appendChild(grid1);
-
-      const box2Title = document.createElement('div');
-      box2Title.className = 'box-header';
-      box2Title.innerHTML = '⛺ Grow Box (Silver Haze - 10-11 W.)';
-      container.appendChild(box2Title);
-
-      const grid2 = document.createElement('div');
-      grid2.className = 'plants-grid';
-
-      plantsData.filter(p => p.box === "Grow Box").forEach((p) => {
-        grid2.appendChild(createPlantCard(p));
-      });
-      container.appendChild(grid2);
     }
 
     function createPlantCard(p) {
@@ -869,11 +938,16 @@
       if (plant) {
         plant.phaseType = document.getElementById('modalPlantPhaseType').value;
         plant.startDate = document.getElementById('modalPlantStartDate').value;
-        localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
+        localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
         
-        renderPlants();
         renderDashboardSetup();
         autoCalculateFertilizer();
+
+        if (currentSelectedBox) {
+          openBoxDetail(currentSelectedBox);
+        } else {
+          renderBoxTiles();
+        }
       }
       closePlantModal();
     }
