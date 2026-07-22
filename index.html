@@ -21,16 +21,13 @@
       --card-bg: #181f1b;
       --card-border: #26332c;
       
-      /* Hauptfarben */
       --primary-purple: #9b51e0;
       --primary-pink: #ff75c3;
       
-      /* Botanische Grüntöne */
       --plant-green: #2ecc71;
       --plant-green-dark: #27ae60;
       --plant-green-bg: rgba(46, 204, 113, 0.15);
       
-      /* Blüte Farben */
       --bloom-pink: #ff75c3;
       --bloom-pink-bg: rgba(255, 117, 195, 0.15);
 
@@ -54,7 +51,7 @@
       min-height: 100vh;
     }
 
-    /* Header mit Lila-Gradient passend zum Logo */
+    /* Header */
     header {
       background: linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(255, 117, 195, 0.2));
       padding-top: max(12px, env(safe-area-inset-top)); 
@@ -185,7 +182,6 @@
       border-color: var(--plant-green);
     }
 
-    /* Botanischer Grüner Button */
     .btn {
       width: 100%;
       padding: 14px;
@@ -239,6 +235,30 @@
       display: inline-block;
     }
 
+    /* Setup Cards im Dashboard */
+    .setup-card-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .setup-card-box h3 {
+      font-size: 15px;
+      color: var(--plant-green);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .setup-status-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
     /* Growbox Badges & Pflanzen Grid */
     .box-header {
       font-size: 14px;
@@ -264,16 +284,10 @@
       padding: 12px;
       position: relative;
       cursor: pointer;
-      transition: border-color 0.2s;
     }
 
-    .plant-card.veg-card {
-      border-left: 3px solid var(--plant-green);
-    }
-
-    .plant-card.bloom-card {
-      border-left: 3px solid var(--primary-pink);
-    }
+    .plant-card.veg-card { border-left: 3px solid var(--plant-green); }
+    .plant-card.bloom-card { border-left: 3px solid var(--primary-pink); }
 
     .plant-card h3 {
       font-size: 14px;
@@ -287,7 +301,6 @@
       margin-bottom: 8px;
     }
 
-    /* Farbcodes für Tags (Grün für Vegi, Rosa/Lila für Blüte) */
     .plant-tag {
       font-size: 11px;
       font-weight: 600;
@@ -317,7 +330,7 @@
       float: right;
     }
 
-    /* Modal Pop-Up Dialog */
+    /* Modal Dialog */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -330,9 +343,7 @@
       padding: 16px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-card {
       background: var(--card-bg);
@@ -417,9 +428,10 @@
       </div>
 
       <div class="card">
-        <h2>Setup Übersicht</h2>
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 6px;"><strong>⛺ Mars Hydro:</strong> 4 Sorten (8-9 W. Blüte)</p>
-        <p style="font-size: 14px; color: var(--text-muted);"><strong>⛺ Grow Box:</strong> Silver Haze (10-11 W. Blüte)</p>
+        <h2>Aktuelle Setups & Status</h2>
+        <div id="dashboard-setup-container">
+          <!-- Dynamische Generierung durch JS -->
+        </div>
       </div>
     </div>
 
@@ -438,19 +450,34 @@
       </div>
     </div>
 
-    <!-- TAB 3: DÜNGERECHNER -->
+    <!-- TAB 3: DÜNGERECHNER (SMART AUTO) -->
     <div id="tab-calc" class="tab-content">
       <div class="card">
-        <h2>Düngerechner</h2>
+        <h2>Smarter Düngerechner</h2>
         
         <div class="form-group">
-          <label>Wassermenge (in Litern):</label>
-          <input type="number" id="calc-water" value="10" step="0.5" oninput="calculateFertilizer()">
+          <label>1. Growbox / Zelt wählen:</label>
+          <select id="calc-box" onchange="autoCalculateFertilizer()">
+            <option value="Mars Hydro">⛺ Mars Hydro (4 Sorten)</option>
+            <option value="Grow Box">⛺ Grow Box (Silver Haze)</option>
+          </select>
         </div>
 
         <div class="form-group">
-          <label>Woche / Phase wählen:</label>
-          <select id="calc-phase" onchange="calculateFertilizer()">
+          <label>2. Wassermenge (in Litern):</label>
+          <input type="number" id="calc-water" value="10" step="0.5" oninput="autoCalculateFertilizer()">
+        </div>
+
+        <div style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
+          <span>Status im Zelt:</span>
+          <strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
+        </div>
+
+        <!-- Optionaler Manueller Override -->
+        <details style="margin-bottom: 14px; font-size: 12px; color: var(--text-muted);">
+          <summary style="cursor: pointer; margin-bottom: 6px;">Manuelle Phase erzwingen (Optional)</summary>
+          <select id="calc-phase-override" onchange="autoCalculateFertilizer(true)" style="margin-top: 6px;">
+            <option value="auto">-- Automatisch vom Zelt übernehmen --</option>
             <option value="veg">🌱 Vegetationsphase (EC 1.0)</option>
             <option value="bw1">🌸 Blütewoche 1 (EC 1.4)</option>
             <option value="bw2">🌸 Blütewoche 2 (EC 1.7)</option>
@@ -458,15 +485,15 @@
             <option value="bw4">🌸 Blütewoche 4 (EC 1.9)</option>
             <option value="bw5">🌸 Blütewoche 5 (EC 1.9)</option>
             <option value="bw6">🌸 Blütewoche 6 Peak (EC 1.9)</option>
-            <option value="bw6_ext">🌿 BW 6+ Extra Peak (Silver Haze EC 1.9)</option>
+            <option value="bw6_ext">🌿 BW 6+ Extra Peak (EC 1.9)</option>
             <option value="bw7">🌸 Blütewoche 7 (EC 1.7)</option>
-            <option value="bw7_ext">🌿 BW 7+ Extra Reduzierung (Silver Haze EC 1.7)</option>
+            <option value="bw7_ext">🌿 BW 7+ Extra Reduzierung (EC 1.7)</option>
             <option value="bw8">🌸 Blütewoche 8 (EC 1.4)</option>
             <option value="flush">💧 Vor Ernte / Spülen</option>
           </select>
-        </div>
+        </details>
 
-        <div style="margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--card-border);">
+        <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--card-border);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-size: 13px; color: var(--text-muted);">Mischung für <strong id="calc-liters-label" style="color: #fff;">10</strong> Liter:</span>
             <div><span class="sensor-label">ZIEL-EC</span> <span class="ec-badge" id="res-ec">1.0</span></div>
@@ -525,14 +552,14 @@
       </div>
     </div>
 
-    <!-- TAB 5: PFLANZENPROFILE -->
+    <!-- TAB 5: ZELTE & SORTEN -->
     <div id="tab-plants" class="tab-content">
       <div class="card">
-        <h2>Deine 5 Sorten & Zelte</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Karte, um Phase & Startdatum anzupassen:</p>
+        <h2>Deine Growboxen</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Pflanze, um Phase & Datum einzustellen:</p>
         
         <div id="plants-container">
-          <!-- Wird per JS dynamisch aufgebaut -->
+          <!-- Dynamischer Aufbau durch JS -->
         </div>
       </div>
     </div>
@@ -581,16 +608,14 @@
       <span>Log</span>
     </div>
     <div class="nav-item" onclick="switchTab('plants', this)">
-      <span class="icon">🪴</span>
-      <span>Sorten</span>
+      <span class="icon">⛺</span>
+      <span>Zelte</span>
     </div>
   </nav>
 
   <script>
-    // DEIN GOOGLE BACKEND LINK:
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
 
-    // Das BioNova Schema (Basis: 10 Liter)
     const SCHEME_10L = {
       veg:     { cocoa: 9,  cocob: 9,  roots: 8, xcel: 5,  tml: 6, bnzym: 7, vitasol: 0,  silution: 2, ec: "1.0" },
       bw1:     { cocoa: 13, cocob: 13, roots: 7, xcel: 5,  tml: 6, bnzym: 7, vitasol: 0,  silution: 2, ec: "1.4" },
@@ -608,8 +633,8 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // v5 Speicher für die Farbcodes
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v5')) || [
+    // Storage Key v6
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v6')) || [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
       { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
@@ -621,7 +646,8 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchLiveKlima();
-      calculateFertilizer();
+      renderDashboardSetup();
+      autoCalculateFertilizer();
       renderPlants();
     });
 
@@ -658,12 +684,96 @@
       element.classList.add('active');
     }
 
-    function calculateFertilizer() {
+    // Hilfsfunktion: Berechnet Differenz-Tage und Wochen
+    function getDaysAndWeeks(startDateStr) {
+      if (!startDateStr) return { days: 1, week: 1 };
+      const start = new Date(startDateStr);
+      const now = new Date();
+      const diffTime = Math.max(0, now - start);
+      const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      const week = Math.floor((days - 1) / 7) + 1;
+      return { days, week };
+    }
+
+    // DASHBOARD SETUP RENDERN
+    function renderDashboardSetup() {
+      const container = document.getElementById('dashboard-setup-container');
+      container.innerHTML = "";
+
+      const boxes = ["Mars Hydro", "Grow Box"];
+
+      boxes.forEach(boxName => {
+        const boxPlants = plantsData.filter(p => p.box === boxName);
+        if (boxPlants.length === 0) return;
+
+        const refPlant = boxPlants[0];
+        const { days, week } = getDaysAndWeeks(refPlant.startDate);
+        const isVeg = refPlant.phaseType === 'veg';
+        
+        const statusText = isVeg ? `🌱 Veg-Tag ${days} (Woche ${week})` : `🌸 Blütetag ${days} (Woche ${week})`;
+        const tagClass = isVeg ? 'tag-veg' : 'tag-bloom';
+
+        const card = document.createElement('div');
+        card.className = 'setup-card-box';
+        
+        const strainNames = boxPlants.map(p => p.name).join(', ');
+
+        card.innerHTML = `
+          <h3>
+            <span>⛺ ${boxName}</span>
+            <span class="plant-tag ${tagClass}">${statusText}</span>
+          </h3>
+          <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">💡 Setup: LED Beleuchtung | Schema: BioNova Coco</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // AUTOMATISCHER DÜNGERECHNER
+    function autoCalculateFertilizer(isOverride = false) {
+      const selectedBox = document.getElementById('calc-box').value;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
-      const phaseKey = document.getElementById('calc-phase').value;
-      const data = SCHEME_10L[phaseKey];
+      const overrideKey = document.getElementById('calc-phase-override').value;
 
       document.getElementById('calc-liters-label').innerText = liters;
+
+      let targetPhaseKey = "veg";
+      let statusLabel = "";
+
+      if (isOverride && overrideKey !== "auto") {
+        targetPhaseKey = overrideKey;
+        statusLabel = "Manuell gewählt";
+      } else {
+        const boxPlants = plantsData.filter(p => p.box === selectedBox);
+        if (boxPlants.length > 0) {
+          const refPlant = boxPlants[0];
+          const { days, week } = getDaysAndWeeks(refPlant.startDate);
+          
+          if (refPlant.phaseType === 'veg') {
+            targetPhaseKey = "veg";
+            statusLabel = `🌱 Veg-Tag ${days} (Woche ${week})`;
+          } else {
+            statusLabel = `🌸 Blütetag ${days} (Woche ${week})`;
+            if (week === 1) targetPhaseKey = "bw1";
+            else if (week === 2) targetPhaseKey = "bw2";
+            else if (week === 3) targetPhaseKey = "bw3";
+            else if (week === 4) targetPhaseKey = "bw4";
+            else if (week === 5) targetPhaseKey = "bw5";
+            else if (week === 6) targetPhaseKey = "bw6";
+            else if (week === 7 && selectedBox === "Grow Box") targetPhaseKey = "bw6_ext";
+            else if (week === 7) targetPhaseKey = "bw7";
+            else if (week === 8 && selectedBox === "Grow Box") targetPhaseKey = "bw7_ext";
+            else if (week === 8) targetPhaseKey = "bw8";
+            else if (week >= 9) targetPhaseKey = "flush";
+            else targetPhaseKey = "bw8";
+          }
+        }
+      }
+
+      document.getElementById('calc-detected-status').innerText = statusLabel;
+
+      const data = SCHEME_10L[targetPhaseKey] || SCHEME_10L.veg;
       document.getElementById('res-ec').innerText = data.ec;
 
       const calcVal = (base10) => ((base10 / 10) * liters).toFixed(1) + " ml";
@@ -679,21 +789,11 @@
     }
 
     function calculatePhaseString(plant) {
-      if (!plant.startDate) return "Kein Datum festgelegt";
-      
-      const start = new Date(plant.startDate);
-      const now = new Date();
-      
-      const diffTime = Math.max(0, now - start);
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      const week = Math.floor(diffDays / 7) + 1;
-      const day = diffDays + 1;
-
+      const { days, week } = getDaysAndWeeks(plant.startDate);
       if (plant.phaseType === 'veg') {
-        return `Veg-Woche ${week} (Tag ${day})`;
+        return `Veg-Woche ${week} (Tag ${days})`;
       } else {
-        return `Blütewoche ${week} (Tag ${day})`;
+        return `Blütewoche ${week} (Tag ${days})`;
       }
     }
 
@@ -701,10 +801,9 @@
       const container = document.getElementById('plants-container');
       container.innerHTML = "";
 
-      // Mars Hydro Rendern
       const box1Title = document.createElement('div');
       box1Title.className = 'box-header';
-      box1Title.innerHTML = '⛺ Mars Hydro (8-9 Wochen)';
+      box1Title.innerHTML = '⛺ Mars Hydro (Hauptzelt - 8-9 W.)';
       container.appendChild(box1Title);
 
       const grid1 = document.createElement('div');
@@ -715,10 +814,9 @@
       });
       container.appendChild(grid1);
 
-      // Grow Box Rendern
       const box2Title = document.createElement('div');
       box2Title.className = 'box-header';
-      box2Title.innerHTML = '⛺ Grow Box (Silver Haze - 10-11 Wochen)';
+      box2Title.innerHTML = '⛺ Grow Box (Silver Haze - 10-11 W.)';
       container.appendChild(box2Title);
 
       const grid2 = document.createElement('div');
@@ -732,7 +830,6 @@
 
     function createPlantCard(p) {
       const card = document.createElement('div');
-      
       const isVeg = p.phaseType === 'veg';
       card.className = `plant-card ${isVeg ? 'veg-card' : 'bloom-card'}`;
       card.onclick = () => openPlantModal(p.id);
@@ -772,8 +869,11 @@
       if (plant) {
         plant.phaseType = document.getElementById('modalPlantPhaseType').value;
         plant.startDate = document.getElementById('modalPlantStartDate').value;
-        localStorage.setItem('creamyp_plants_v5', JSON.stringify(plantsData));
+        localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
+        
         renderPlants();
+        renderDashboardSetup();
+        autoCalculateFertilizer();
       }
       closePlantModal();
     }
