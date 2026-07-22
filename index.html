@@ -212,7 +212,6 @@
       font-weight: 600;
       cursor: pointer;
       display: inline-block;
-      margin-bottom: 14px;
       box-shadow: none;
       width: auto;
     }
@@ -335,12 +334,14 @@
       margin-bottom: 8px;
     }
 
+    /* VT / BT Badges */
     .plant-tag {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 4px 10px;
       border-radius: 12px;
       display: inline-block;
+      letter-spacing: 0.5px;
     }
 
     .plant-tag.tag-veg {
@@ -353,6 +354,15 @@
       background: var(--bloom-pink-bg);
       color: var(--bloom-pink);
       border: 1px solid rgba(255, 117, 195, 0.3);
+    }
+
+    .box-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      float: right;
     }
 
     /* Modal Dialog */
@@ -591,9 +601,13 @@
 
         <!-- EBENE 2: PFLANZEN IN SELECTED BOX -->
         <div id="box-detail-view" style="display: none;">
-          <button type="button" class="btn-back" onclick="showBoxOverview()">← Zurück zu den Zelten</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
+            <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">⚙️ Phase anpassen</button>
+          </div>
+
           <h2 id="selected-box-title" style="color: var(--plant-green); margin-bottom: 4px;">⛺ Zelt Name</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Pflanze für Einstellungen:</p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Pflanzen in diesem Zelt:</p>
 
           <div id="selected-box-plants-grid" class="plants-grid">
             <!-- Dynamisch via JS -->
@@ -605,14 +619,14 @@
 
   </div>
 
-  <!-- Modal Dialog -->
-  <div class="modal-overlay" id="plantModal">
+  <!-- Modal Dialog für Zelt-Phase & Datum -->
+  <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
-      <h3 id="modalPlantTitle" style="color: var(--plant-green); margin-bottom: 12px;">Pflanze anpassen</h3>
+      <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
       
       <div class="form-group">
-        <label>Aktuelle Phase:</label>
-        <select id="modalPlantPhaseType">
+        <label>Aktuelle Phase des Zelts:</label>
+        <select id="modalBoxPhaseType">
           <option value="veg">🌱 Vegetationsphase</option>
           <option value="blüte">🌸 Blütephase</option>
         </select>
@@ -620,11 +634,11 @@
 
       <div class="form-group">
         <label>Startdatum dieser Phase:</label>
-        <input type="date" id="modalPlantStartDate">
+        <input type="date" id="modalBoxStartDate">
       </div>
 
-      <button type="button" class="btn" onclick="savePlantModal()">Speichern</button>
-      <button type="button" class="btn btn-secondary" onclick="closePlantModal()">Abbrechen</button>
+      <button type="button" class="btn" onclick="saveBoxModal()">Für das Zelt speichern</button>
+      <button type="button" class="btn btn-secondary" onclick="closeBoxModal()">Abbrechen</button>
     </div>
   </div>
 
@@ -672,16 +686,22 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Storage Key v7
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v7')) || [
-      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
-      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
-      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
-      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", phaseType: "blüte", startDate: todayStr },
-      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", phaseType: "blüte", startDate: todayStr }
+    // Datenhaltung pro Zelt (v8)
+    let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
+      "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
+      "Grow Box": { phaseType: "blüte", startDate: todayStr }
+    };
+
+    // Feste Zuordnung der Sorten zu den Zelten
+    let plantsData = [
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen" },
+      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen" },
+      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen" },
+      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen" },
+      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen" }
     ];
 
-    let activeEditingPlantId = null;
+    let activeEditingBox = null;
     let currentSelectedBox = null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -728,14 +748,20 @@
       }
     }
 
-    function getDaysAndWeeks(startDateStr) {
-      if (!startDateStr) return { days: 1, week: 1 };
-      const start = new Date(startDateStr);
+    // Zelt-Informationen ausrechnen (VT / BT Tags)
+    function getBoxInfo(boxName) {
+      const box = boxesData[boxName] || { phaseType: 'blüte', startDate: todayStr };
+      const start = new Date(box.startDate || todayStr);
       const now = new Date();
       const diffTime = Math.max(0, now - start);
       const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
       const week = Math.floor((days - 1) / 7) + 1;
-      return { days, week };
+      const isVeg = box.phaseType === 'veg';
+      
+      const tagText = isVeg ? `VT${days}` : `BT${days}`;
+      const statusText = isVeg ? `🌱 VT${days} (Woche ${week})` : `🌸 BT${days} (Woche ${week})`;
+
+      return { days, week, isVeg, tagText, statusText };
     }
 
     // DASHBOARD RENDERN
@@ -749,12 +775,8 @@
         const boxPlants = plantsData.filter(p => p.box === boxName);
         if (boxPlants.length === 0) return;
 
-        const refPlant = boxPlants[0];
-        const { days, week } = getDaysAndWeeks(refPlant.startDate);
-        const isVeg = refPlant.phaseType === 'veg';
-        
-        const statusText = isVeg ? `🌱 Veg-Tag ${days} (Woche ${week})` : `🌸 Blütetag ${days} (Woche ${week})`;
-        const tagClass = isVeg ? 'tag-veg' : 'tag-bloom';
+        const info = getBoxInfo(boxName);
+        const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
 
         const card = document.createElement('div');
         card.className = 'setup-card-box';
@@ -764,7 +786,7 @@
         card.innerHTML = `
           <h3>
             <span>⛺ ${boxName}</span>
-            <span class="plant-tag ${tagClass}">${statusText}</span>
+            <span class="plant-tag ${tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
           <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">💡 Setup: LED Beleuchtung | Schema: BioNova Coco</p>
@@ -788,29 +810,25 @@
         targetPhaseKey = overrideKey;
         statusLabel = "Manuell gewählt";
       } else {
-        const boxPlants = plantsData.filter(p => p.box === selectedBox);
-        if (boxPlants.length > 0) {
-          const refPlant = boxPlants[0];
-          const { days, week } = getDaysAndWeeks(refPlant.startDate);
-          
-          if (refPlant.phaseType === 'veg') {
-            targetPhaseKey = "veg";
-            statusLabel = `🌱 Veg-Tag ${days} (Woche ${week})`;
-          } else {
-            statusLabel = `🌸 Blütetag ${days} (Woche ${week})`;
-            if (week === 1) targetPhaseKey = "bw1";
-            else if (week === 2) targetPhaseKey = "bw2";
-            else if (week === 3) targetPhaseKey = "bw3";
-            else if (week === 4) targetPhaseKey = "bw4";
-            else if (week === 5) targetPhaseKey = "bw5";
-            else if (week === 6) targetPhaseKey = "bw6";
-            else if (week === 7 && selectedBox === "Grow Box") targetPhaseKey = "bw6_ext";
-            else if (week === 7) targetPhaseKey = "bw7";
-            else if (week === 8 && selectedBox === "Grow Box") targetPhaseKey = "bw7_ext";
-            else if (week === 8) targetPhaseKey = "bw8";
-            else if (week >= 9) targetPhaseKey = "flush";
-            else targetPhaseKey = "bw8";
-          }
+        const info = getBoxInfo(selectedBox);
+        statusLabel = info.statusText;
+
+        if (info.isVeg) {
+          targetPhaseKey = "veg";
+        } else {
+          const w = info.week;
+          if (w === 1) targetPhaseKey = "bw1";
+          else if (w === 2) targetPhaseKey = "bw2";
+          else if (w === 3) targetPhaseKey = "bw3";
+          else if (w === 4) targetPhaseKey = "bw4";
+          else if (w === 5) targetPhaseKey = "bw5";
+          else if (w === 6) targetPhaseKey = "bw6";
+          else if (w === 7 && selectedBox === "Grow Box") targetPhaseKey = "bw6_ext";
+          else if (w === 7) targetPhaseKey = "bw7";
+          else if (w === 8 && selectedBox === "Grow Box") targetPhaseKey = "bw7_ext";
+          else if (w === 8) targetPhaseKey = "bw8";
+          else if (w >= 9) targetPhaseKey = "flush";
+          else targetPhaseKey = "bw8";
         }
       }
 
@@ -841,13 +859,7 @@
       boxes.forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
         const plantCount = boxPlants.length;
-        
-        let statusText = "Leer";
-        if (plantCount > 0) {
-          const refPlant = boxPlants[0];
-          const { days, week } = getDaysAndWeeks(refPlant.startDate);
-          statusText = refPlant.phaseType === 'veg' ? `🌱 Veg-Tag ${days}` : `🌸 Blütetag ${days}`;
-        }
+        const info = getBoxInfo(boxName);
 
         const tile = document.createElement('div');
         tile.className = 'box-tile-card';
@@ -856,7 +868,7 @@
         tile.innerHTML = `
           <div class="box-tile-info">
             <h3>⛺ ${boxName}</h3>
-            <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • ${statusText}</p>
+            <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color: ${info.isVeg ? 'var(--plant-green)' : 'var(--bloom-pink)'}">${info.tagText}</strong></p>
           </div>
           <div class="box-tile-arrow">➔</div>
         `;
@@ -888,68 +900,60 @@
       renderBoxTiles();
     }
 
-    function calculatePhaseString(plant) {
-      const { days, week } = getDaysAndWeeks(plant.startDate);
-      if (plant.phaseType === 'veg') {
-        return `Veg-Woche ${week} (Tag ${days})`;
-      } else {
-        return `Blütewoche ${week} (Tag ${days})`;
-      }
-    }
-
     function createPlantCard(p) {
+      const info = getBoxInfo(p.box);
       const card = document.createElement('div');
-      const isVeg = p.phaseType === 'veg';
-      card.className = `plant-card ${isVeg ? 'veg-card' : 'bloom-card'}`;
-      card.onclick = () => openPlantModal(p.id);
       
-      const phaseDisplay = calculatePhaseString(p);
-      const tagClass = isVeg ? 'tag-veg' : 'tag-bloom';
+      card.className = `plant-card ${info.isVeg ? 'veg-card' : 'bloom-card'}`;
+      card.onclick = () => openBoxModal(p.box);
+      
+      const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
 
       card.innerHTML = `
         <span class="box-tag">${p.time}</span>
         <h3>${p.name}</h3>
         <div class="plant-strain">${p.strain}</div>
-        <span class="plant-tag ${tagClass}">${phaseDisplay}</span>
+        <span class="plant-tag ${tagClass}">${info.tagText}</span>
       `;
       return card;
     }
 
-    function openPlantModal(plantId) {
-      activeEditingPlantId = plantId;
-      const plant = plantsData.find(p => p.id === plantId);
-      if (!plant) return;
+    // MODAL FÜR ZELT-DATEN
+    function openBoxModal(boxName) {
+      activeEditingBox = boxName;
+      const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr };
 
-      document.getElementById('modalPlantTitle').innerText = plant.name + " anpassen";
-      document.getElementById('modalPlantPhaseType').value = plant.phaseType || "blüte";
-      document.getElementById('modalPlantStartDate').value = plant.startDate || todayStr;
+      document.getElementById('modalBoxTitle').innerText = "⛺ " + boxName + " anpassen";
+      document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
+      document.getElementById('modalBoxStartDate').value = box.startDate || todayStr;
 
-      document.getElementById('plantModal').classList.add('active');
+      document.getElementById('boxModal').classList.add('active');
     }
 
-    function closePlantModal() {
-      document.getElementById('plantModal').classList.remove('active');
-      activeEditingPlantId = null;
+    function closeBoxModal() {
+      document.getElementById('boxModal').classList.remove('active');
+      activeEditingBox = null;
     }
 
-    function savePlantModal() {
-      if (!activeEditingPlantId) return;
-      const plant = plantsData.find(p => p.id === activeEditingPlantId);
-      if (plant) {
-        plant.phaseType = document.getElementById('modalPlantPhaseType').value;
-        plant.startDate = document.getElementById('modalPlantStartDate').value;
-        localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
-        
-        renderDashboardSetup();
-        autoCalculateFertilizer();
+    function saveBoxModal() {
+      if (!activeEditingBox) return;
 
-        if (currentSelectedBox) {
-          openBoxDetail(currentSelectedBox);
-        } else {
-          renderBoxTiles();
-        }
+      boxesData[activeEditingBox] = {
+        phaseType: document.getElementById('modalBoxPhaseType').value,
+        startDate: document.getElementById('modalBoxStartDate').value
+      };
+
+      localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+
+      renderDashboardSetup();
+      autoCalculateFertilizer();
+      renderBoxTiles();
+
+      if (currentSelectedBox) {
+        openBoxDetail(currentSelectedBox);
       }
-      closePlantModal();
+
+      closeBoxModal();
     }
 
     function submitLog(e) {
