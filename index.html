@@ -346,8 +346,8 @@
 
       <div class="card">
         <h2>Setup Übersicht</h2>
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 6px;"><strong>⛺Mars Hydro (Hauptzelt):</strong> 4 Sorten (8-9 W. Blüte)</p>
-        <p style="font-size: 14px; color: var(--text-muted);"><strong>⛺Grow Box 60x60 (Haze-Zelt):</strong> Silver Haze (10-11 W. Blüte)</p>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 6px;"><strong>⛺ Mars Hydro:</strong> 4 Sorten (8-9 W. Blüte)</p>
+        <p style="font-size: 14px; color: var(--text-muted);"><strong>⛺ Grow Box:</strong> Silver Haze (10-11 W. Blüte)</p>
       </div>
     </div>
 
@@ -422,13 +422,13 @@
           <div class="form-group">
             <label>Zelt / Pflanze wählen</label>
             <select id="log-plant">
-              <option value="Zelt 1 (Hauptzelt)">Zelt 1 (Hauptzelt - Alle)</option>
-              <option value="Zelt 2 (Silver Haze)">Zelt 2 (Silver Haze Zelt)</option>
-              <option value="Swiss Watch">Swiss Watch (Zelt 1)</option>
-              <option value="Jelly Donutz">Jelly Donutz (Zelt 1)</option>
-              <option value="Super Boof">Super Boof (Zelt 1)</option>
-              <option value="Blue Zlime">Blue Zlime (Zelt 1)</option>
-              <option value="Silver Haze">Silver Haze (Zelt 2)</option>
+              <option value="Mars Hydro">Mars Hydro (Alle)</option>
+              <option value="Grow Box">Grow Box (Silver Haze)</option>
+              <option value="Swiss Watch">Swiss Watch (Mars Hydro)</option>
+              <option value="Jelly Donutz">Jelly Donutz (Mars Hydro)</option>
+              <option value="Super Boof">Super Boof (Mars Hydro)</option>
+              <option value="Blue Zlime">Blue Zlime (Mars Hydro)</option>
+              <option value="Silver Haze">Silver Haze (Grow Box)</option>
             </select>
           </div>
           <div class="form-group">
@@ -460,7 +460,7 @@
         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Tippe auf eine Karte, um Phase oder Infos zu ändern:</p>
         
         <div id="plants-container">
-          <!-- Wird per JavaScript dinamisch generiert -->
+          <!-- Wird per JavaScript dynamisch generiert -->
         </div>
       </div>
     </div>
@@ -492,7 +492,7 @@
   </nav>
 
   <script>
-    // DEIN GOOGLE BACKEND LINK HIER EINTRAGEN:
+    // DEIN GOOGLE BACKEND LINK:
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
 
     // Das BioNova Schema (Basis: 10 Liter)
@@ -511,13 +511,13 @@
       flush:   { cocoa: 0,  cocob: 0,  roots: 0, xcel: 0,  tml: 0, bnzym: 7, vitasol: 8,  silution: 0, ec: "Spülen" }
     };
 
-    // Die 5 echten Sorten verteilt auf 2 Zelte
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v2')) || [
-      { id: 1, name: "Swiss Watch", box: "Zelt 1", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 2, name: "Jelly Donutz", box: "Zelt 1", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 3, name: "Super Boof", box: "Zelt 1", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 4, name: "Blue Zlime", box: "Zelt 1", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", phase: "Blütewoche 3" },
-      { id: 5, name: "Silver Haze", box: "Zelt 2", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", phase: "Blütewoche 3" }
+    // Die 5 Sorten sauber verteilt auf Mars Hydro & Grow Box
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v3')) || [
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", phase: "Blütewoche 3" },
+      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", phase: "Blütewoche 3" },
+      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", phase: "Blütewoche 3" },
+      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", phase: "Blütewoche 3" },
+      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", phase: "Blütewoche 3" }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -583,30 +583,30 @@
       const container = document.getElementById('plants-container');
       container.innerHTML = "";
 
-      //Mars Hydro Rendern
+      // Mars Hydro Rendern
       const box1Title = document.createElement('div');
       box1Title.className = 'box-header';
-      box1Title.innerHTML = '⛺Mars Hydro (Hauptzelt - 8-9 Wochen)';
+      box1Title.innerHTML = '⛺ Mars Hydro (8-9 Wochen)';
       container.appendChild(box1Title);
 
       const grid1 = document.createElement('div');
       grid1.className = 'plants-grid';
 
-      plantsData.filter(p => p.box === "Zelt 1").forEach((p) => {
+      plantsData.filter(p => p.box === "Mars Hydro").forEach((p) => {
         grid1.appendChild(createPlantCard(p));
       });
       container.appendChild(grid1);
 
-      //Grow Box 60x60 Rendern
+      // Grow Box Rendern
       const box2Title = document.createElement('div');
       box2Title.className = 'box-header';
-      box2Title.innerHTML = '⛺Grow Box 60x60 (Haze Zelt - 10-11 Wochen)';
+      box2Title.innerHTML = '⛺ Grow Box (Silver Haze - 10-11 Wochen)';
       container.appendChild(box2Title);
 
       const grid2 = document.createElement('div');
       grid2.className = 'plants-grid';
 
-      plantsData.filter(p => p.box === "Zelt 2").forEach((p) => {
+      plantsData.filter(p => p.box === "Grow Box").forEach((p) => {
         grid2.appendChild(createPlantCard(p));
       });
       container.appendChild(grid2);
@@ -630,7 +630,7 @@
       const newPhase = prompt("Aktuelle Phase/Woche für " + p.name + " (z.B. Vegetation, BW 4):", p.phase);
       if (newPhase !== null) {
         p.phase = newPhase;
-        localStorage.setItem('creamyp_plants_v2', JSON.stringify(plantsData));
+        localStorage.setItem('creamyp_plants_v3', JSON.stringify(plantsData));
         renderPlants();
       }
     }
