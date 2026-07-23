@@ -753,42 +753,45 @@
     });
 
     // Holt Klima + Cloud-Setups beim App-Start
-    function fetchInitialData() {
-      if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
+function fetchInitialData() {
+  if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
+  
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      // SMART FALLBACK: Funktioniert mit altem AND neuem Backend-Format!
+      const latest = (data && data.latest) ? data.latest : data;
       
-      fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-          // 1. Zelt-Setups aus der Cloud übernehmen
-          if (data && data.boxes) {
-            boxesData = data.boxes;
-            localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
-          }
-          
-          // 2. Aktuelle Klimadaten
-          if (data && data.latest && data.latest.temp !== '--') {
-            document.getElementById('val-temp').innerText = data.latest.temp + "°C";
-            document.getElementById('val-humidity').innerText = data.latest.humidity + "%";
-            document.getElementById('val-time').innerText = data.latest.time || "Aktiv";
-            calculateVPD(parseFloat(data.latest.temp), parseFloat(data.latest.humidity));
-          }
+      // 1. Zelt-Setups aus der Cloud übernehmen (falls im neuen Format vorhanden)
+      if (data && data.boxes) {
+        boxesData = data.boxes;
+        localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+      }
+      
+      // 2. Aktuelle Klimadaten anzeigen
+      if (latest && latest.temp !== undefined && latest.temp !== '--') {
+        document.getElementById('val-temp').innerText = latest.temp + "°C";
+        document.getElementById('val-humidity').innerText = latest.humidity + "%";
+        document.getElementById('val-time').innerText = latest.time || "Aktiv";
+        calculateVPD(parseFloat(latest.temp), parseFloat(latest.humidity));
+      }
 
-          // 3. Klimadaten-Historie cachen
-          if (data && data.history) {
-            klimaHistoryCache = data.history;
-          }
+      // 3. Klimadaten-Historie cachen
+      if (data && data.history) {
+        klimaHistoryCache = data.history;
+      }
 
-          renderDashboardSetup();
-          autoCalculateFertilizer();
-          renderBoxTiles();
-        })
-        .catch(err => {
-          console.error("Fehler beim Abrufen:", err);
-          renderDashboardSetup();
-          autoCalculateFertilizer();
-          renderBoxTiles();
-        });
-    }
+      renderDashboardSetup();
+      autoCalculateFertilizer();
+      renderBoxTiles();
+    })
+    .catch(err => {
+      console.error("Fehler beim Abrufen:", err);
+      renderDashboardSetup();
+      autoCalculateFertilizer();
+      renderBoxTiles();
+    });
+}
 
     function calculateVPD(temp, rh) {
       if (isNaN(temp) || isNaN(rh)) return;
