@@ -768,7 +768,7 @@
         <img id="plantImgPreview" src="" alt="Pflanzenbild" style="max-width: 100%; max-height: 200px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
 
-      <!-- Direktes Foto vom Handy hochladen -->
+      <!-- Foto vom Handy wählen -->
       <div class="form-group">
         <label>📷 Foto vom Handy wählen:</label>
         <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
@@ -831,18 +831,27 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
-      "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
-      "Grow Box": { phaseType: "blüte", startDate: todayStr }
-    };
-
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v2')) || [
+    // Standard-Pflanzen-Set
+    const DEFAULT_PLANTS = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF" },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
       { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", img: "" },
       { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", img: "" },
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
+
+    let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
+      "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
+      "Grow Box": { phaseType: "blüte", startDate: todayStr }
+    };
+
+    // KRISENFESTES LADEN VON plantsData (Erzwingt Standard, falls leer)
+    let loadedPlants = null;
+    try {
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v3'));
+    } catch(e) {}
+
+    let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
 
     let activeEditingBox = null;
     let currentSelectedBox = null;
@@ -934,7 +943,6 @@
         });
     }
 
-    // Chart.js mit exakter 0,1er VPD Skalierung
     function renderKlimaChart(historyData) {
       const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
       
@@ -968,8 +976,8 @@
               ticks: { 
                 color: '#2ecc71', 
                 font: { size: 9 },
-                stepSize: 0.1, // Exakte 0,1er Schritte
-                callback: function(val) { return Number(val).toFixed(1); } // Formatiert sauber (z.B. 0.8, 0.9, 1.0)
+                stepSize: 0.1,
+                callback: function(val) { return Number(val).toFixed(1); }
               }, 
               grid: { drawOnChartArea: false } 
             }
@@ -1225,7 +1233,6 @@
       return card;
     }
 
-    // Modal für Pflanzendetails mit Foto-Upload vom Handy
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
@@ -1233,7 +1240,7 @@
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
       document.getElementById('modalPlantImgUrl').value = plant.img || "";
-      document.getElementById('modalPlantFileInput').value = ""; // Resets File Input
+      document.getElementById('modalPlantFileInput').value = "";
       
       updatePlantImage(plant.img || "");
       renderPlantSpecificLogs();
@@ -1241,7 +1248,6 @@
       document.getElementById('plantDetailModal').classList.add('active');
     }
 
-    // Liest Bild-Datei direkt vom Handy aus (Base64)
     function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -1271,7 +1277,7 @@
     }
 
     function savePlantsDataLocally() {
-      localStorage.setItem('creamyp_plants_v2', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v3', JSON.stringify(plantsData));
     }
 
     function renderPlantSpecificLogs() {
