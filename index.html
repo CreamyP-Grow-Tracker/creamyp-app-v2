@@ -734,7 +734,7 @@
 
   </div>
 
-  <!-- Modal Dialog für Zelt-Phase & Pflanzen-Details -->
+  <!-- Modal Dialog für Zelt-Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
@@ -757,7 +757,7 @@
     </div>
   </div>
 
-  <!-- Modal für Pflanzendetails / Bild / Chronologischer Log -->
+  <!-- Modal für Pflanzendetails / Bild-Upload / Chronologischer Log -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 4px;">Pflanze</h3>
@@ -765,11 +765,17 @@
       
       <!-- Bild-Vorschau -->
       <div id="plantImgWrapper" style="margin-bottom: 12px; text-align: center; display: none;">
-        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="max-width: 100%; max-height: 180px; border-radius: 10px; border: 1px solid var(--card-border);">
+        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="max-width: 100%; max-height: 200px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+      </div>
+
+      <!-- Direktes Foto vom Handy hochladen -->
+      <div class="form-group">
+        <label>📷 Foto vom Handy wählen:</label>
+        <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
       </div>
 
       <div class="form-group">
-        <label>Bild-URL / Google Drive Link:</label>
+        <label>Oder Bild-URL / Google Drive Link:</label>
         <input type="url" id="modalPlantImgUrl" placeholder="https://..." onchange="updatePlantImage(this.value)">
       </div>
 
@@ -830,8 +836,8 @@
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
-    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v1')) || [
-      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "" },
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v2')) || [
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF" },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
       { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", img: "" },
       { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", img: "" },
@@ -928,6 +934,7 @@
         });
     }
 
+    // Chart.js mit exakter 0,1er VPD Skalierung
     function renderKlimaChart(historyData) {
       const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
       
@@ -955,7 +962,17 @@
           scales: {
             x: { ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } },
             y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71', font: { size: 9 }, maxTicksLimit: 5 }, grid: { drawOnChartArea: false } }
+            y1: { 
+              type: 'linear', 
+              position: 'right', 
+              ticks: { 
+                color: '#2ecc71', 
+                font: { size: 9 },
+                stepSize: 0.1, // Exakte 0,1er Schritte
+                callback: function(val) { return Number(val).toFixed(1); } // Formatiert sauber (z.B. 0.8, 0.9, 1.0)
+              }, 
+              grid: { drawOnChartArea: false } 
+            }
           },
           plugins: { legend: { labels: { color: '#f3f7f4', font: { size: 10 }, boxWidth: 10, padding: 8 } } }
         }
@@ -1040,7 +1057,6 @@
       });
     }
 
-    // AUTOMATISCHER DÜNGERECHNER MIT SILVER HAZE LOGIK & PHASEN-FARBEN
     function autoCalculateFertilizer(isOverride = false) {
       const selectedBox = document.getElementById('calc-box').value;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
@@ -1065,22 +1081,20 @@
           targetPhaseKey = "veg";
         } else {
           const w = info.week;
-          // Silver Haze Spezial-Schema
           if (selectedBox === "Grow Box") {
             if (w === 1) targetPhaseKey = "bw1";
             else if (w === 2) targetPhaseKey = "bw2";
             else if (w === 3) targetPhaseKey = "bw3";
             else if (w === 4) targetPhaseKey = "bw4";
             else if (w === 5) targetPhaseKey = "bw5";
-            else if (w === 6) targetPhaseKey = "bw6";     // Peak
-            else if (w === 7) targetPhaseKey = "bw6_ext"; // Peak Extra
-            else if (w === 8) targetPhaseKey = "bw7";     // Reduzierung 1
-            else if (w === 9) targetPhaseKey = "bw7_ext"; // Reduzierung 1 Extra
-            else if (w === 10) targetPhaseKey = "bw8";    // Reduzierung 2
-            else if (w >= 11) targetPhaseKey = "flush";   // Spülen
+            else if (w === 6) targetPhaseKey = "bw6";
+            else if (w === 7) targetPhaseKey = "bw6_ext";
+            else if (w === 8) targetPhaseKey = "bw7";
+            else if (w === 9) targetPhaseKey = "bw7_ext";
+            else if (w === 10) targetPhaseKey = "bw8";
+            else if (w >= 11) targetPhaseKey = "flush";
             else targetPhaseKey = "bw8";
           } else {
-            // Standard-Schema
             if (w === 1) targetPhaseKey = "bw1";
             else if (w === 2) targetPhaseKey = "bw2";
             else if (w === 3) targetPhaseKey = "bw3";
@@ -1097,7 +1111,6 @@
 
       document.getElementById('calc-detected-status').innerText = statusLabel;
 
-      // Farbliches Design an Phase anpassen (Grün für Veg | Pink/Magenta für Blüte)
       const ecBadge = document.getElementById('res-ec');
       const statusBox = document.getElementById('calc-status-box');
       
@@ -1114,7 +1127,6 @@
       const data = SCHEME_10L[targetPhaseKey] || SCHEME_10L.veg;
       ecBadge.innerText = data.ec;
 
-      // Einzelne Dünger berechnen & 0ml Elemente ausblenden
       const components = [
         { id: 'cocoa', val: data.cocoa },
         { id: 'cocob', val: data.cocob },
@@ -1138,7 +1150,7 @@
         }
 
         if (calculatedMl <= 0) {
-          row.style.display = 'none'; // Ausblenden bei 0 ml
+          row.style.display = 'none';
         } else {
           row.style.display = 'table-row';
           valElem.innerText = calculatedMl.toFixed(1) + " ml";
@@ -1213,7 +1225,7 @@
       return card;
     }
 
-    // Modal für Pflanzen-Detail mit Bild & Log
+    // Modal für Pflanzendetails mit Foto-Upload vom Handy
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
@@ -1221,11 +1233,25 @@
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
       document.getElementById('modalPlantImgUrl').value = plant.img || "";
+      document.getElementById('modalPlantFileInput').value = ""; // Resets File Input
       
       updatePlantImage(plant.img || "");
       renderPlantSpecificLogs();
 
       document.getElementById('plantDetailModal').classList.add('active');
+    }
+
+    // Liest Bild-Datei direkt vom Handy aus (Base64)
+    function handlePlantFileUpload(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Url = e.target.result;
+          document.getElementById('modalPlantImgUrl').value = "";
+          updatePlantImage(base64Url);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 
     function updatePlantImage(url) {
@@ -1245,7 +1271,7 @@
     }
 
     function savePlantsDataLocally() {
-      localStorage.setItem('creamyp_plants_v1', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v2', JSON.stringify(plantsData));
     }
 
     function renderPlantSpecificLogs() {
@@ -1255,7 +1281,6 @@
       const pName = currentDetailPlant.name;
       const bName = currentDetailPlant.box;
 
-      // Filtert Logs nach Pflanzenname oder Zeltname
       const matchingLogs = globalLogsCache.filter(l => l.plant === pName || l.plant === bName);
 
       if (matchingLogs.length === 0) {
