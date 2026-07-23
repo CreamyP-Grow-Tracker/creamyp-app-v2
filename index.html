@@ -849,8 +849,9 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    const SWISS_WATCH_IMG = "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF";
+    const SWISS_WATCH_IMG = "https://drive.google.com/uc?export=view&id=13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF";
 
+    // KERN-LISTE ALLER 5 PFLANZEN
     const DEFAULT_PLANTS = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: SWISS_WATCH_IMG },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
@@ -859,6 +860,31 @@
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
+    // SELBSTHEILENDE ZUSAMMENFÜHRUNG: Garantiert, dass nie Pflanzen verloren gehen
+    function ensureAllPlantsExist(incomingPlants) {
+      if (!Array.isArray(incomingPlants) || incomingPlants.length === 0) {
+        return DEFAULT_PLANTS;
+      }
+
+      let result = [];
+      
+      DEFAULT_PLANTS.forEach(defPlant => {
+        const found = incomingPlants.find(p => p.name === defPlant.name || p.id === defPlant.id);
+        if (found) {
+          // Falls Schweizer Uhr kein Bild hat, bekommt sie das Standardbild
+          if (found.name === "Swiss Watch" && (!found.img || found.img.trim() === "")) {
+            found.img = SWISS_WATCH_IMG;
+          }
+          result.push(found);
+        } else {
+          // Stellt fehlende Pflanze sofort aus DEFAULT her
+          result.push(defPlant);
+        }
+      });
+
+      return result;
+    }
+
     let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
       "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
@@ -866,16 +892,10 @@
 
     let loadedPlants = null;
     try {
-      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v8'));
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v10'));
     } catch(e) {}
 
-    let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
-
-    plantsData.forEach(p => {
-      if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
-        p.img = SWISS_WATCH_IMG;
-      }
-    });
+    let plantsData = ensureAllPlantsExist(loadedPlants);
 
     let activeEditingBox = null;
     let currentSelectedBox = null;
@@ -910,14 +930,14 @@
             localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
           }
 
-          if (data && data.plants && Array.isArray(data.plants) && data.plants.length > 0) {
-            plantsData = data.plants;
-            plantsData.forEach(p => {
-              if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
-                p.img = SWISS_WATCH_IMG;
-              }
-            });
-            localStorage.setItem('creamyp_plants_v8', JSON.stringify(plantsData));
+          if (data && data.plants) {
+            plantsData = ensureAllPlantsExist(data.plants);
+            localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
+            
+            // Falls Daten aus der Cloud unvollständig waren, reparieren wir sie direkt in der Cloud
+            if (Array.isArray(data.plants) && data.plants.length < 5) {
+              savePlantsDataCloudAndLocal();
+            }
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -1373,7 +1393,7 @@
     }
 
     function savePlantsDataCloudAndLocal() {
-      localStorage.setItem('creamyp_plants_v8', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
 
       fetch(API_URL, {
         method: "POST",
