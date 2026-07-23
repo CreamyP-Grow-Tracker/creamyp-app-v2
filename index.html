@@ -840,43 +840,110 @@ function fetchInitialData() {
         });
     }
 
-    // Rendere Chart.js Diagramm
-    function renderKlimaChart(historyData) {
-      const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
-      
-      const labels = historyData.map(d => d.time);
-      const temps = historyData.map(d => d.temp);
-      const hums = historyData.map(d => d.humidity);
-      const vpds = historyData.map(d => d.vpd);
+    // Rendere Chart.js Diagramm (Kompakt & Aufgeräumt)
+function renderKlimaChart(historyData) {
+  const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
+  
+  const labels = historyData.map(d => d.time);
+  const temps = historyData.map(d => d.temp);
+  const hums = historyData.map(d => d.humidity);
+  const vpds = historyData.map(d => d.vpd);
 
-      if (klimaChartInstance) {
-        klimaChartInstance.destroy();
-      }
+  if (klimaChartInstance) {
+    klimaChartInstance.destroy();
+  }
 
-      klimaChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', tension: 0.3, yAxisID: 'y' },
-            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', tension: 0.3, yAxisID: 'y' },
-            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', tension: 0.3, yAxisID: 'y1' }
-          ]
+  klimaChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { 
+          label: 'Temp (°C)', 
+          data: temps, 
+          borderColor: '#ff9f43', 
+          backgroundColor: 'rgba(255,159,67,0.1)', 
+          borderWidth: 2,
+          pointRadius: 0, 
+          pointHoverRadius: 4,
+          tension: 0.3, 
+          yAxisID: 'y' 
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { ticks: { color: '#8e9e94', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71' }, grid: { drawOnChartArea: false } }
-          },
-          plugins: {
-            legend: { labels: { color: '#f3f7f4', font: { size: 10 } } }
-          }
+        { 
+          label: 'Feuchte (%)', 
+          data: hums, 
+          borderColor: '#54a0ff', 
+          backgroundColor: 'rgba(84,160,255,0.1)', 
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          tension: 0.3, 
+          yAxisID: 'y' 
+        },
+        { 
+          label: 'VPD (kPa)', 
+          data: vpds, 
+          borderColor: '#2ecc71', 
+          backgroundColor: 'rgba(46,204,113,0.1)', 
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          tension: 0.3, 
+          yAxisID: 'y1' 
         }
-      });
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        x: { 
+          ticks: { 
+            color: '#8e9e94', 
+            font: { size: 9 },
+            maxTicksLimit: 5,
+            maxRotation: 0
+          }, 
+          grid: { color: 'rgba(255,255,255,0.05)' } 
+        },
+        y: { 
+          type: 'linear', 
+          position: 'left', 
+          ticks: { 
+            color: '#8e9e94',
+            font: { size: 9 },
+            maxTicksLimit: 5
+          }, 
+          grid: { color: 'rgba(255,255,255,0.05)' } 
+        },
+        y1: { 
+          type: 'linear', 
+          position: 'right', 
+          ticks: { 
+            color: '#2ecc71',
+            font: { size: 9 },
+            maxTicksLimit: 5
+          }, 
+          grid: { drawOnChartArea: false } 
+        }
+      },
+      plugins: {
+        legend: { 
+          labels: { 
+            color: '#f3f7f4', 
+            font: { size: 10 },
+            boxWidth: 10,
+            padding: 8
+          } 
+        }
+      }
     }
+  });
+}
 
     function switchTab(tabName, element) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
