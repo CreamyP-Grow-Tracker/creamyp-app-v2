@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   
-  <!-- PWA & Vollbild Befehle für iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CreamyP V2">
@@ -12,8 +11,9 @@
 
   <title>CreamyP Grow Tracker V2</title>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts & Chart.js -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
@@ -51,39 +51,39 @@
       min-height: 100vh;
     }
 
-/* Header */
-header {
-  background: linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(255, 117, 195, 0.2));
-  padding-top: max(16px, env(safe-area-inset-top)); 
-  padding-bottom: 24px; /* ← Erhöht: Macht den lila Balken ca. 1 cm weiter nach unten */
-  padding-left: 16px;
-  padding-right: 16px;
-  text-align: center;
-  border-bottom: 1px solid var(--card-border);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    /* Header (Höher & vergrößertes Logo) */
+    header {
+      background: linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(255, 117, 195, 0.2));
+      padding-top: max(16px, env(safe-area-inset-top)); 
+      padding-bottom: 24px;
+      padding-left: 16px;
+      padding-right: 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.logo-wrapper {
-  background-color: #fff;
-  padding: 8px 24px; /* ← Erhöht: Weißer Kapsel-Hintergrund wird breiter & höher */
-  border-radius: 32px; /* ← Angepasst für die neue Größe */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .logo-wrapper {
+      background-color: #fff;
+      padding: 8px 24px;
+      border-radius: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.app-logo {
-  max-height: 58px; /* ← Erhöht von 38px auf 58px: Macht das Logo selbst deutlich größer */
-  width: auto;
-  display: block;
-}
+    .app-logo {
+      max-height: 58px;
+      width: auto;
+      display: block;
+    }
 
     /* Main Container & Tabs */
     .container {
@@ -126,6 +126,16 @@ header {
       align-items: center;
     }
 
+    /* Anklickbare Klima Kachel */
+    .clickable-klima {
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .clickable-klima:active {
+      transform: scale(0.98);
+    }
+
     /* Sensor Grid */
     .sensor-grid {
       display: grid;
@@ -154,6 +164,38 @@ header {
     }
 
     .badge-good { color: var(--plant-green); }
+
+    /* Ausklappbares Chart-Sektion */
+    #chart-dropdown {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--card-border);
+    }
+
+    .chart-btn-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+
+    .btn-timefilter {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-timefilter.active {
+      background: var(--plant-green-bg);
+      color: var(--plant-green);
+      border-color: rgba(46, 204, 113, 0.4);
+    }
 
     /* Forms & Inputs */
     .form-group {
@@ -334,7 +376,6 @@ header {
       margin-bottom: 8px;
     }
 
-    /* VT / BT Badges */
     .plant-tag {
       font-size: 11px;
       font-weight: 700;
@@ -443,8 +484,8 @@ header {
 
     <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
-      <div class="card">
-        <h2>Live Klima (Inkbird) <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online</span></h2>
+      <div class="card clickable-klima" onclick="toggleKlimaChart()">
+        <h2>Live Klima (Inkbird) <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box">
             <div class="sensor-label">TEMP</div>
@@ -459,6 +500,16 @@ header {
             <div class="sensor-val badge-good" id="val-vpd">--</div>
             <div class="sensor-label" id="val-time">Lädt...</div>
           </div>
+        </div>
+
+        <!-- AUSKLAPPBARES KLIMA DIAGRAMM -->
+        <div id="chart-dropdown" onclick="event.stopPropagation()">
+          <div class="chart-btn-group">
+            <button type="button" class="btn-timefilter active" onclick="loadKlimaHistory(3, this)">3 Tage</button>
+            <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(7, this)">7 Tage</button>
+            <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(14, this)">14 Tage</button>
+          </div>
+          <canvas id="klimaChartCanvas" style="width: 100%; height: 220px;"></canvas>
         </div>
       </div>
 
@@ -485,7 +536,7 @@ header {
       </div>
     </div>
 
-    <!-- TAB 3: DÜNGERECHNER (SMART AUTO) -->
+    <!-- TAB 3: DÜNGERECHNER -->
     <div id="tab-calc" class="tab-content">
       <div class="card">
         <h2>Smarter Düngerechner</h2>
@@ -586,20 +637,15 @@ header {
       </div>
     </div>
 
-    <!-- TAB 5: ZELTE (2-STUFIGE ANSICHT) -->
+    <!-- TAB 5: ZELTE -->
     <div id="tab-plants" class="tab-content">
       <div class="card">
-        
-        <!-- EBENE 1: ZELT-KACHELN -->
         <div id="box-overview-view">
           <h2>Deine Growboxen</h2>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle eine Growbox, um die Pflanzen darin zu öffnen:</p>
-          <div id="box-tiles-container">
-            <!-- Dynamisch via JS -->
-          </div>
+          <div id="box-tiles-container"></div>
         </div>
 
-        <!-- EBENE 2: PFLANZEN IN SELECTED BOX -->
         <div id="box-detail-view" style="display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
@@ -609,17 +655,14 @@ header {
           <h2 id="selected-box-title" style="color: var(--plant-green); margin-bottom: 4px;">⛺ Zelt Name</h2>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Pflanzen in diesem Zelt:</p>
 
-          <div id="selected-box-plants-grid" class="plants-grid">
-            <!-- Dynamisch via JS -->
-          </div>
+          <div id="selected-box-plants-grid" class="plants-grid"></div>
         </div>
-
       </div>
     </div>
 
   </div>
 
-  <!-- Modal Dialog für Zelt-Phase & Datum -->
+  <!-- Modal Dialog für Zelt-Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
@@ -645,15 +688,15 @@ header {
   <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('dashboard', this)">
-      <span class="icon">🏠</span>
+      <span class="icon">📊</span>
       <span>Home</span>
     </div>
     <div class="nav-item" onclick="switchTab('plan', this)">
-      <span class="icon">📆</span>
+      <span class="icon">📅</span>
       <span>Plan</span>
     </div>
     <div class="nav-item" onclick="switchTab('calc', this)">
-      <span class="icon">🧮</span>
+      <span class="icon">🧪</span>
       <span>Rechner</span>
     </div>
     <div class="nav-item" onclick="switchTab('log', this)">
@@ -686,13 +729,12 @@ header {
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Datenhaltung pro Zelt (v8)
+    // Standard-Fallback für Zelt-Daten
     let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
       "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
-    // Feste Zuordnung der Sorten zu den Zelten
     let plantsData = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen" },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen" },
@@ -703,30 +745,49 @@ header {
 
     let activeEditingBox = null;
     let currentSelectedBox = null;
+    let klimaChartInstance = null;
+    let klimaHistoryCache = [];
 
     window.addEventListener('DOMContentLoaded', () => {
-      fetchLiveKlima();
-      renderDashboardSetup();
-      autoCalculateFertilizer();
-      renderBoxTiles();
+      fetchInitialData();
     });
 
-    function fetchLiveKlima() {
+    // Holt Klima + Cloud-Setups beim App-Start
+    function fetchInitialData() {
       if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
       
       fetch(API_URL)
         .then(res => res.json())
         .then(data => {
-          if (data && data.temp !== '--') {
-            document.getElementById('val-temp').innerText = data.temp + "°C";
-            document.getElementById('val-humidity').innerText = data.humidity + "%";
-            document.getElementById('val-time').innerText = data.time || "Aktiv";
-            calculateVPD(parseFloat(data.temp), parseFloat(data.humidity));
-          } else {
-            document.getElementById('val-time').innerText = "Warte auf Daten";
+          // 1. Zelt-Setups aus der Cloud übernehmen
+          if (data && data.boxes) {
+            boxesData = data.boxes;
+            localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
           }
+          
+          // 2. Aktuelle Klimadaten
+          if (data && data.latest && data.latest.temp !== '--') {
+            document.getElementById('val-temp').innerText = data.latest.temp + "°C";
+            document.getElementById('val-humidity').innerText = data.latest.humidity + "%";
+            document.getElementById('val-time').innerText = data.latest.time || "Aktiv";
+            calculateVPD(parseFloat(data.latest.temp), parseFloat(data.latest.humidity));
+          }
+
+          // 3. Klimadaten-Historie cachen
+          if (data && data.history) {
+            klimaHistoryCache = data.history;
+          }
+
+          renderDashboardSetup();
+          autoCalculateFertilizer();
+          renderBoxTiles();
         })
-        .catch(err => console.error("Fehler beim Abrufen:", err));
+        .catch(err => {
+          console.error("Fehler beim Abrufen:", err);
+          renderDashboardSetup();
+          autoCalculateFertilizer();
+          renderBoxTiles();
+        });
     }
 
     function calculateVPD(temp, rh) {
@@ -735,6 +796,76 @@ header {
       const avp = svp * (rh / 100);
       const vpd = (svp - avp).toFixed(2);
       document.getElementById('val-vpd').innerText = vpd;
+    }
+
+    // Toggle für Diagramm-Ausklappen
+    function toggleKlimaChart() {
+      const dropdown = document.getElementById('chart-dropdown');
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block';
+
+      if (!isVisible) {
+        if (klimaHistoryCache.length > 0) {
+          renderKlimaChart(klimaHistoryCache);
+        } else {
+          loadKlimaHistory(3);
+        }
+      }
+    }
+
+    // Lade Historie über API für bestimmte Tage
+    function loadKlimaHistory(days, btnElement) {
+      if (btnElement) {
+        document.querySelectorAll('.btn-timefilter').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
+
+      fetch(API_URL + "?days=" + days)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.history) {
+            klimaHistoryCache = data.history;
+            renderKlimaChart(data.history);
+          }
+        });
+    }
+
+    // Rendere Chart.js Diagramm
+    function renderKlimaChart(historyData) {
+      const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
+      
+      const labels = historyData.map(d => d.time);
+      const temps = historyData.map(d => d.temp);
+      const hums = historyData.map(d => d.humidity);
+      const vpds = historyData.map(d => d.vpd);
+
+      if (klimaChartInstance) {
+        klimaChartInstance.destroy();
+      }
+
+      klimaChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', tension: 0.3, yAxisID: 'y' },
+            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', tension: 0.3, yAxisID: 'y' },
+            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', tension: 0.3, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { ticks: { color: '#8e9e94', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71' }, grid: { drawOnChartArea: false } }
+          },
+          plugins: {
+            legend: { labels: { color: '#f3f7f4', font: { size: 10 } } }
+          }
+        }
+      });
     }
 
     function switchTab(tabName, element) {
@@ -748,7 +879,6 @@ header {
       }
     }
 
-    // Zelt-Informationen ausrechnen (VT / BT Tags)
     function getBoxInfo(boxName) {
       const box = boxesData[boxName] || { phaseType: 'blüte', startDate: todayStr };
       const start = new Date(box.startDate || todayStr);
@@ -764,7 +894,6 @@ header {
       return { days, week, isVeg, tagText, statusText };
     }
 
-    // DASHBOARD RENDERN
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
@@ -795,7 +924,6 @@ header {
       });
     }
 
-    // AUTOMATISCHER DÜNGERECHNER
     function autoCalculateFertilizer(isOverride = false) {
       const selectedBox = document.getElementById('calc-box').value;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
@@ -849,7 +977,6 @@ header {
       document.getElementById('res-silution').innerText = calcVal(data.silution);
     }
 
-    // EBENE 1: ZELT-KACHELN RENDERN
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
@@ -876,7 +1003,6 @@ header {
       });
     }
 
-    // EBENE 2: DETAILS ZU EINEM ZELT ANZEIGEN
     function openBoxDetail(boxName) {
       currentSelectedBox = boxName;
       document.getElementById('box-overview-view').style.display = 'none';
@@ -918,7 +1044,6 @@ header {
       return card;
     }
 
-    // MODAL FÜR ZELT-DATEN
     function openBoxModal(boxName) {
       activeEditingBox = boxName;
       const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr };
@@ -935,6 +1060,7 @@ header {
       activeEditingBox = null;
     }
 
+    // Speichert Zelt-Daten lokal & sendet sie zur dauerhaften Speicherung an Google Sheets
     function saveBoxModal() {
       if (!activeEditingBox) return;
 
@@ -944,6 +1070,14 @@ header {
       };
 
       localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+
+      // Synchronisation mit Google Sheets
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveBoxes", boxes: boxesData })
+      })
+      .then(() => console.log("Setups dauerhaft in Google Sheets gespeichert."))
+      .catch(err => console.error("Fehler beim Cloud-Speichern:", err));
 
       renderDashboardSetup();
       autoCalculateFertilizer();
