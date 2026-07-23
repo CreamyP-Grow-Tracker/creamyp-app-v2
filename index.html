@@ -106,15 +106,15 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-   /* Cards */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 20px; /* ⬅️ ERHÖHT: Besserer Abstand zur nächsten Kachel */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
+    /* Cards mit sauberem Abstand */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px; /* Sauberer Abstand nach unten */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
 
     .card h2 {
       font-size: 16px;
@@ -166,22 +166,23 @@
     .badge-good { color: var(--plant-green); }
 
     /* Ausklappbares Chart-Sektion mit oberer & unterer gestrichelter Linie */
-#chart-dropdown {
-  display: none;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--card-border);    /* Obere gestrichelte Linie */
-  border-bottom: 1px dashed var(--card-border); /* ⬇️ NEU: Untere gestrichelte Linie */
-  padding-bottom: 16px;                          /* ⬇️ NEU: Abstand nach unten zur Linie */
-  margin-bottom: 4px;
-}
-    
-.chart-wrapper {
-  position: relative;
-  height: 180px;
-  width: 100%;
-  margin-top: 8px;
-}
+    #chart-dropdown {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--card-border);
+      border-bottom: 1px dashed var(--card-border);
+      padding-bottom: 16px;
+      margin-bottom: 4px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 180px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
     .chart-btn-group {
       display: flex;
       gap: 8px;
@@ -518,8 +519,10 @@
             <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(7, this)">7 Tage</button>
             <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(14, this)">14 Tage</button>
           </div>
+          
           <div class="chart-wrapper">
-    <canvas id="klimaChartCanvas"></canvas>
+            <canvas id="klimaChartCanvas"></canvas>
+          </div>
         </div>
       </div>
 
@@ -763,45 +766,41 @@
     });
 
     // Holt Klima + Cloud-Setups beim App-Start
-function fetchInitialData() {
-  if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
-  
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-      // SMART FALLBACK: Funktioniert mit altem AND neuem Backend-Format!
-      const latest = (data && data.latest) ? data.latest : data;
+    function fetchInitialData() {
+      if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
       
-      // 1. Zelt-Setups aus der Cloud übernehmen (falls im neuen Format vorhanden)
-      if (data && data.boxes) {
-        boxesData = data.boxes;
-        localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
-      }
-      
-      // 2. Aktuelle Klimadaten anzeigen
-      if (latest && latest.temp !== undefined && latest.temp !== '--') {
-        document.getElementById('val-temp').innerText = latest.temp + "°C";
-        document.getElementById('val-humidity').innerText = latest.humidity + "%";
-        document.getElementById('val-time').innerText = latest.time || "Aktiv";
-        calculateVPD(parseFloat(latest.temp), parseFloat(latest.humidity));
-      }
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          const latest = (data && data.latest) ? data.latest : data;
+          
+          if (data && data.boxes) {
+            boxesData = data.boxes;
+            localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+          }
+          
+          if (latest && latest.temp !== undefined && latest.temp !== '--') {
+            document.getElementById('val-temp').innerText = latest.temp + "°C";
+            document.getElementById('val-humidity').innerText = latest.humidity + "%";
+            document.getElementById('val-time').innerText = latest.time || "Aktiv";
+            calculateVPD(parseFloat(latest.temp), parseFloat(latest.humidity));
+          }
 
-      // 3. Klimadaten-Historie cachen
-      if (data && data.history) {
-        klimaHistoryCache = data.history;
-      }
+          if (data && data.history) {
+            klimaHistoryCache = data.history;
+          }
 
-      renderDashboardSetup();
-      autoCalculateFertilizer();
-      renderBoxTiles();
-    })
-    .catch(err => {
-      console.error("Fehler beim Abrufen:", err);
-      renderDashboardSetup();
-      autoCalculateFertilizer();
-      renderBoxTiles();
-    });
-}
+          renderDashboardSetup();
+          autoCalculateFertilizer();
+          renderBoxTiles();
+        })
+        .catch(err => {
+          console.error("Fehler beim Abrufen:", err);
+          renderDashboardSetup();
+          autoCalculateFertilizer();
+          renderBoxTiles();
+        });
+    }
 
     function calculateVPD(temp, rh) {
       if (isNaN(temp) || isNaN(rh)) return;
@@ -844,109 +843,109 @@ function fetchInitialData() {
     }
 
     // Rendere Chart.js Diagramm (Kompakt & Aufgeräumt)
-function renderKlimaChart(historyData) {
-  const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
-  
-  const labels = historyData.map(d => d.time);
-  const temps = historyData.map(d => d.temp);
-  const hums = historyData.map(d => d.humidity);
-  const vpds = historyData.map(d => d.vpd);
+    function renderKlimaChart(historyData) {
+      const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
+      
+      const labels = historyData.map(d => d.time);
+      const temps = historyData.map(d => d.temp);
+      const hums = historyData.map(d => d.humidity);
+      const vpds = historyData.map(d => d.vpd);
 
-  if (klimaChartInstance) {
-    klimaChartInstance.destroy();
-  }
-
-  klimaChartInstance = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [
-        { 
-          label: 'Temp (°C)', 
-          data: temps, 
-          borderColor: '#ff9f43', 
-          backgroundColor: 'rgba(255,159,67,0.1)', 
-          borderWidth: 2,
-          pointRadius: 0, 
-          pointHoverRadius: 4,
-          tension: 0.3, 
-          yAxisID: 'y' 
-        },
-        { 
-          label: 'Feuchte (%)', 
-          data: hums, 
-          borderColor: '#54a0ff', 
-          backgroundColor: 'rgba(84,160,255,0.1)', 
-          borderWidth: 2,
-          pointRadius: 0,
-          pointHoverRadius: 4,
-          tension: 0.3, 
-          yAxisID: 'y' 
-        },
-        { 
-          label: 'VPD (kPa)', 
-          data: vpds, 
-          borderColor: '#2ecc71', 
-          backgroundColor: 'rgba(46,204,113,0.1)', 
-          borderWidth: 2,
-          pointRadius: 0,
-          pointHoverRadius: 4,
-          tension: 0.3, 
-          yAxisID: 'y1' 
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        x: { 
-          ticks: { 
-            color: '#8e9e94', 
-            font: { size: 9 },
-            maxTicksLimit: 5,
-            maxRotation: 0
-          }, 
-          grid: { color: 'rgba(255,255,255,0.05)' } 
-        },
-        y: { 
-          type: 'linear', 
-          position: 'left', 
-          ticks: { 
-            color: '#8e9e94',
-            font: { size: 9 },
-            maxTicksLimit: 5
-          }, 
-          grid: { color: 'rgba(255,255,255,0.05)' } 
-        },
-        y1: { 
-          type: 'linear', 
-          position: 'right', 
-          ticks: { 
-            color: '#2ecc71',
-            font: { size: 9 },
-            maxTicksLimit: 5
-          }, 
-          grid: { drawOnChartArea: false } 
-        }
-      },
-      plugins: {
-        legend: { 
-          labels: { 
-            color: '#f3f7f4', 
-            font: { size: 10 },
-            boxWidth: 10,
-            padding: 8
-          } 
-        }
+      if (klimaChartInstance) {
+        klimaChartInstance.destroy();
       }
+
+      klimaChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { 
+              label: 'Temp (°C)', 
+              data: temps, 
+              borderColor: '#ff9f43', 
+              backgroundColor: 'rgba(255,159,67,0.1)', 
+              borderWidth: 2,
+              pointRadius: 0, 
+              pointHoverRadius: 4,
+              tension: 0.3, 
+              yAxisID: 'y' 
+            },
+            { 
+              label: 'Feuchte (%)', 
+              data: hums, 
+              borderColor: '#54a0ff', 
+              backgroundColor: 'rgba(84,160,255,0.1)', 
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.3, 
+              yAxisID: 'y' 
+            },
+            { 
+              label: 'VPD (kPa)', 
+              data: vpds, 
+              borderColor: '#2ecc71', 
+              backgroundColor: 'rgba(46,204,113,0.1)', 
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.3, 
+              yAxisID: 'y1' 
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          scales: {
+            x: { 
+              ticks: { 
+                color: '#8e9e94', 
+                font: { size: 9 },
+                maxTicksLimit: 5,
+                maxRotation: 0
+              }, 
+              grid: { color: 'rgba(255,255,255,0.05)' } 
+            },
+            y: { 
+              type: 'linear', 
+              position: 'left', 
+              ticks: { 
+                color: '#8e9e94',
+                font: { size: 9 },
+                maxTicksLimit: 5
+              }, 
+              grid: { color: 'rgba(255,255,255,0.05)' } 
+            },
+            y1: { 
+              type: 'linear', 
+              position: 'right', 
+              ticks: { 
+                color: '#2ecc71',
+                font: { size: 9 },
+                maxTicksLimit: 5
+              }, 
+              grid: { drawOnChartArea: false } 
+            }
+          },
+          plugins: {
+            legend: { 
+              labels: { 
+                color: '#f3f7f4', 
+                font: { size: 10 },
+                boxWidth: 10,
+                padding: 8
+              } 
+            }
+          }
+        }
+      });
     }
-  });
-}
 
     function switchTab(tabName, element) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -1140,7 +1139,6 @@ function renderKlimaChart(historyData) {
       activeEditingBox = null;
     }
 
-    // Speichert Zelt-Daten lokal & sendet sie zur dauerhaften Speicherung an Google Sheets
     function saveBoxModal() {
       if (!activeEditingBox) return;
 
@@ -1151,7 +1149,6 @@ function renderKlimaChart(historyData) {
 
       localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
 
-      // Synchronisation mit Google Sheets
       fetch(API_URL, {
         method: "POST",
         body: JSON.stringify({ action: "saveBoxes", boxes: boxesData })
