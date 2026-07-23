@@ -361,7 +361,7 @@
       color: var(--plant-green);
     }
 
-    /* Pflanzen Grid */
+    /* Pflanzen Grid & Mini-Vorschaubild */
     .plants-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -391,6 +391,22 @@
       font-size: 11px;
       color: var(--text-muted);
       margin-bottom: 8px;
+    }
+
+    .plant-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    /* Das kleine Vorschaubild unten rechts in der Pflanze-Kachel */
+    .plant-card-thumb {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
     }
 
     .plant-tag {
@@ -834,7 +850,6 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Standard-Set mit absolut zuverlässiger Drive-Thumbnail URL
     const SWISS_WATCH_IMG = "https://drive.google.com/thumbnail?id=13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF&sz=w1000";
 
     const DEFAULT_PLANTS = [
@@ -850,15 +865,13 @@
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
-    // Speicher-Schlüssel v6 zur klaren Bereinigung von altem Browser-Cache
     let loadedPlants = null;
     try {
-      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v6'));
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v7'));
     } catch(e) {}
 
     let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
 
-    // Garantiert, dass Swiss Watch auf allen Plattformen ihr Standardbild hat, falls leer
     plantsData.forEach(p => {
       if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
         p.img = SWISS_WATCH_IMG;
@@ -873,7 +886,6 @@
     let globalLogsCache = [];
     let plantLogLimit = 5;
 
-    // Hilfsfunktion: Deutsche Tausender-Punkt Formatierung (z. B. 29.750)
     function formatNumberDE(val, decimals = 1) {
       if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
       return Number(val).toLocaleString('de-DE', {
@@ -906,7 +918,7 @@
                 p.img = SWISS_WATCH_IMG;
               }
             });
-            localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
+            localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -1257,6 +1269,7 @@
       renderBoxTiles();
     }
 
+    // ERSTELLT PFLANZEN-KACHELN MIT VORSCHAUBILD UNTEN RECHTS
     function createPlantCard(p) {
       const info = getBoxInfo(p.box);
       const card = document.createElement('div');
@@ -1265,12 +1278,20 @@
       card.onclick = () => openPlantDetailModal(p);
       
       const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
+      
+      // Falls ein Bild vorhanden ist, wird das Mini-Thumbnail gerendert
+      const imgThumbHtml = (p.img && p.img.trim() !== '') 
+        ? `<img src="${p.img}" class="plant-card-thumb" onerror="this.style.display='none'">` 
+        : '';
 
       card.innerHTML = `
         <span class="box-tag">${p.time}</span>
         <h3>${p.name}</h3>
         <div class="plant-strain">${p.strain}</div>
-        <span class="plant-tag ${tagClass}">${info.tagText}</span>
+        <div class="plant-card-footer">
+          <span class="plant-tag ${tagClass}">${info.tagText}</span>
+          ${imgThumbHtml}
+        </div>
       `;
       return card;
     }
@@ -1355,7 +1376,7 @@
     }
 
     function savePlantsDataCloudAndLocal() {
-      localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
 
       fetch(API_URL, {
         method: "POST",
