@@ -106,15 +106,15 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Cards */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
+   /* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 20px; /* ⬅️ ERHÖHT: Besserer Abstand zur nächsten Kachel */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
 
     .card h2 {
       font-size: 16px;
@@ -165,13 +165,16 @@
 
     .badge-good { color: var(--plant-green); }
 
-    /* Ausklappbares Chart-Sektion */
-    #chart-dropdown {
-      display: none;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--card-border);
-    }
+    /* Ausklappbares Chart-Sektion mit oberer & unterer gestrichelter Linie */
+#chart-dropdown {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--card-border);    /* Obere gestrichelte Linie */
+  border-bottom: 1px dashed var(--card-border); /* ⬇️ NEU: Untere gestrichelte Linie */
+  padding-bottom: 16px;                          /* ⬇️ NEU: Abstand nach unten zur Linie */
+  margin-bottom: 4px;
+}
     
 .chart-wrapper {
   position: relative;
