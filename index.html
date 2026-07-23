@@ -400,7 +400,6 @@
       margin-top: 6px;
     }
 
-    /* Das kleine Vorschaubild unten rechts in der Pflanze-Kachel */
     .plant-card-thumb {
       width: 34px;
       height: 34px;
@@ -850,7 +849,7 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    const SWISS_WATCH_IMG = "https://drive.google.com/thumbnail?id=13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF&sz=w1000";
+    const SWISS_WATCH_IMG = "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF";
 
     const DEFAULT_PLANTS = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: SWISS_WATCH_IMG },
@@ -867,7 +866,7 @@
 
     let loadedPlants = null;
     try {
-      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v7'));
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v8'));
     } catch(e) {}
 
     let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
@@ -918,7 +917,7 @@
                 p.img = SWISS_WATCH_IMG;
               }
             });
-            localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
+            localStorage.setItem('creamyp_plants_v8', JSON.stringify(plantsData));
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -1269,7 +1268,6 @@
       renderBoxTiles();
     }
 
-    // ERSTELLT PFLANZEN-KACHELN MIT VORSCHAUBILD UNTEN RECHTS
     function createPlantCard(p) {
       const info = getBoxInfo(p.box);
       const card = document.createElement('div');
@@ -1279,7 +1277,6 @@
       
       const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
       
-      // Falls ein Bild vorhanden ist, wird das Mini-Thumbnail gerendert
       const imgThumbHtml = (p.img && p.img.trim() !== '') 
         ? `<img src="${p.img}" class="plant-card-thumb" onerror="this.style.display='none'">` 
         : '';
@@ -1376,7 +1373,7 @@
     }
 
     function savePlantsDataCloudAndLocal() {
-      localStorage.setItem('creamyp_plants_v7', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v8', JSON.stringify(plantsData));
 
       fetch(API_URL, {
         method: "POST",
