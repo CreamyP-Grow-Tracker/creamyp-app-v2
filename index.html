@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -126,12 +127,12 @@
       align-items: center;
     }
 
-    .clickable-klima {
+    .clickable-card {
       cursor: pointer;
       transition: transform 0.15s;
     }
 
-    .clickable-klima:active {
+    .clickable-card:active {
       transform: scale(0.98);
     }
 
@@ -165,14 +166,12 @@
     .badge-good { color: var(--plant-green); }
 
     /* Chart Dropdown */
-    #chart-dropdown {
+    #chart-dropdown, #strom-dropdown {
       display: none;
       margin-top: 16px;
       padding-top: 16px;
       border-top: 1px dashed var(--card-border);
-      border-bottom: 1px dashed var(--card-border);
-      padding-bottom: 16px;
-      margin-bottom: 4px;
+      padding-bottom: 4px;
     }
 
     .chart-wrapper {
@@ -290,7 +289,6 @@
       color: var(--plant-green);
     }
 
-    /* Dynamic Phase Colors */
     .ec-badge {
       background: linear-gradient(135deg, #27ae60, #2ecc71);
       color: #0b140e;
@@ -522,7 +520,7 @@
     <div id="tab-dashboard" class="tab-content active">
       
       <!-- Live Klima Kachel -->
-      <div class="card clickable-klima" onclick="toggleKlimaChart()">
+      <div class="card clickable-card" onclick="toggleKlimaChart()">
         <h2>Live Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box">
@@ -558,31 +556,39 @@
         <div id="dashboard-setup-container"></div>
       </div>
 
-      <!-- Stromverbrauch Kachel -->
-      <div class="card">
-        <h2>⚡ Stromverbrauch & Analytics</h2>
-        <div class="sensor-grid" style="margin-bottom: 14px;">
+      <!-- Stromverbrauch Kachel (Ausklappbar & Clean) -->
+      <div class="card clickable-card" onclick="toggleStromDropdown()">
+        <h2>Stromverbrauch <span style="font-size: 12px; color: var(--text-muted);">▾</span></h2>
+        <div class="sensor-grid">
           <div class="sensor-box">
             <div class="sensor-label">STAND</div>
-            <div class="sensor-val" id="strom-val-stand" style="font-size: 15px;">-- kWh</div>
+            <div class="sensor-val" id="strom-val-stand" style="font-size: 14px;">-- kWh</div>
           </div>
           <div class="sensor-box">
             <div class="sensor-label">Ø TAG</div>
-            <div class="sensor-val" id="strom-val-daily" style="font-size: 15px; color: var(--plant-green);">-- kWh</div>
+            <div class="sensor-val" id="strom-val-daily" style="font-size: 14px; color: var(--plant-green);">-- kWh</div>
           </div>
           <div class="sensor-box">
-            <div class="sensor-label">PROGNOSE</div>
-            <div class="sensor-val" id="strom-val-cost" style="font-size: 15px; color: var(--primary-pink);">-- €/Monat</div>
+            <div class="sensor-label">JAHRESPROGNOSE</div>
+            <div class="sensor-val" id="strom-val-yearly" style="font-size: 13px; color: var(--primary-pink);">-- kWh</div>
           </div>
         </div>
 
-        <form id="stromForm" onsubmit="submitStrom(event)">
-          <div class="form-group" style="margin-bottom: 8px;">
-            <label>Neuer Zählerstand (kWh)</label>
-            <input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 1450.5" required>
+        <!-- Ausklappbarer Bereich -->
+        <div id="strom-dropdown" onclick="event.stopPropagation()">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
+            <span class="sensor-label">MONATSPROGNOSE</span>
+            <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
-          <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
-        </form>
+
+          <form id="stromForm" onsubmit="submitStrom(event)">
+            <div class="form-group" style="margin-bottom: 8px;">
+              <label>Neuer Zählerstand (kWh):</label>
+              <input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 1450.5" required>
+            </div>
+            <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
+          </form>
+        </div>
       </div>
 
     </div>
@@ -702,7 +708,6 @@
         </form>
       </div>
 
-      <!-- Bisherige Logs -->
       <div class="card">
         <h2>Bisherige Log-Einträge</h2>
         <div id="recent-logs-list">Lädt...</div>
@@ -757,33 +762,32 @@
     </div>
   </div>
 
-  <!-- Modal für Pflanzendetails / Bild-Upload / Chronologischer Log -->
+  <!-- MODAL FÜR PFLANZEN-DETAILS (NEUER STRUKTURIERTER AUFBAU) -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
-      <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 4px;">Pflanze</h3>
-      <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;"></p>
       
-      <!-- Bild-Vorschau -->
-      <div id="plantImgWrapper" style="margin-bottom: 12px; text-align: center; display: none;">
-        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="max-width: 100%; max-height: 200px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+      <!-- 1. GROSSES FOTO OBEN -->
+      <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
+        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
 
-      <!-- Foto vom Handy wählen -->
-      <div class="form-group">
-        <label>📷 Foto vom Handy wählen:</label>
+      <!-- 2. PFLANZEN INFOS & EXAKTER TAG -->
+      <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 2px;">Pflanze</h3>
+      <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
+      <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
+
+      <!-- 3. CHRONOLOGISCHES LOGBUCH -->
+      <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Chronologisches Logbuch:</h4>
+      <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
+      <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 8px; margin-bottom: 16px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
+
+      <!-- 4. UPLOAD BUTTON UNTEN (OHNE SMILEY, CLEAN) -->
+      <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 6px;">
+        <label>Foto hinzufügen:</label>
         <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
       </div>
 
-      <div class="form-group">
-        <label>Oder Bild-URL / Google Drive Link:</label>
-        <input type="url" id="modalPlantImgUrl" placeholder="https://..." onchange="updatePlantImage(this.value)">
-      </div>
-
-      <h4 style="font-size: 13px; color: #fff; margin-top: 14px; margin-bottom: 8px;">Chronologisches Logbuch:</h4>
-      <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px;"></div>
-
-      <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 12px; padding: 8px; margin-top: 8px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
-      <button type="button" class="btn btn-secondary" style="margin-top: 12px;" onclick="closePlantDetailModal()">Schließen</button>
+      <button type="button" class="btn btn-secondary" style="margin-top: 8px;" onclick="closePlantDetailModal()">Schließen</button>
     </div>
   </div>
 
@@ -831,7 +835,6 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Standard-Pflanzen-Set
     const DEFAULT_PLANTS = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF" },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
@@ -845,10 +848,9 @@
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
-    // KRISENFESTES LADEN VON plantsData (Erzwingt Standard, falls leer)
     let loadedPlants = null;
     try {
-      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v3'));
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v4'));
     } catch(e) {}
 
     let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
@@ -876,6 +878,11 @@
           if (data && data.boxes) {
             boxesData = data.boxes;
             localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+          }
+
+          if (data && data.plants && Array.isArray(data.plants) && data.plants.length > 0) {
+            plantsData = data.plants;
+            localStorage.setItem('creamyp_plants_v4', JSON.stringify(plantsData));
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -925,6 +932,12 @@
           loadKlimaHistory(3);
         }
       }
+    }
+
+    function toggleStromDropdown() {
+      const dropdown = document.getElementById('strom-dropdown');
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block';
     }
 
     function loadKlimaHistory(days, btnElement) {
@@ -991,7 +1004,10 @@
       if (!strom) return;
       document.getElementById('strom-val-stand').innerText = strom.latestStand ? strom.latestStand + " kWh" : "-- kWh";
       document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? strom.dailyAvg + " kWh" : "-- kWh";
-      document.getElementById('strom-val-cost').innerText = strom.estMonthlyCost ? strom.estMonthlyCost + " €/Monat" : "-- €/Monat";
+      
+      const yearlyKwhText = strom.estYearlyKwh ? strom.estYearlyKwh + " kWh (" + strom.estYearlyCost + " €)" : "--";
+      document.getElementById('strom-val-yearly').innerText = yearlyKwhText;
+      document.getElementById('strom-val-monthly').innerText = strom.estMonthlyCost ? strom.estMonthlyCost + " €/Monat" : "-- €/Monat";
     }
 
     function submitStrom(e) {
@@ -1031,8 +1047,9 @@
       
       const tagText = isVeg ? `VT${days}` : `BT${days}`;
       const statusText = isVeg ? `🌱 VT${days} (Woche ${week})` : `🌸 BT${days} (Woche ${week})`;
+      const exactDayText = isVeg ? `Vegetationstag ${days}` : `Blütetag ${days}`;
 
-      return { days, week, isVeg, tagText, statusText };
+      return { days, week, isVeg, tagText, statusText, exactDayText };
     }
 
     function renderDashboardSetup() {
@@ -1233,51 +1250,93 @@
       return card;
     }
 
+    // PFLANZEN-DETAIL MODAL MIT REINER TAGES-ANZEIGE
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
 
+      const info = getBoxInfo(plant.box);
+
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
-      document.getElementById('modalPlantImgUrl').value = plant.img || "";
+      document.getElementById('modalPlantDayTag').innerText = info.exactDayText; // Zeigt nur z. B. "Blütetag 28"
+      
       document.getElementById('modalPlantFileInput').value = "";
       
-      updatePlantImage(plant.img || "");
+      updatePlantImageDisplay(plant.img || "");
       renderPlantSpecificLogs();
 
       document.getElementById('plantDetailModal').classList.add('active');
     }
 
+    // AUTOMATISCHE KOMPRIMIERUNG BEIM FOTO-UPLOAD
     function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
+        const file = input.files[0];
         const reader = new FileReader();
+        
         reader.onload = function(e) {
-          const base64Url = e.target.result;
-          document.getElementById('modalPlantImgUrl').value = "";
-          updatePlantImage(base64Url);
+          const img = new Image();
+          img.onload = function() {
+            // HTML5 Canvas Komprimierung auf max. 800px Breitenauflösung
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 800;
+
+            if (width > height) {
+              if (width > maxDim) {
+                height *= maxDim / width;
+                width = maxDim;
+              }
+            } else {
+              if (height > maxDim) {
+                width *= maxDim / height;
+                height = maxDim;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            
+            if (currentDetailPlant) {
+              currentDetailPlant.img = compressedBase64;
+              updatePlantImageDisplay(compressedBase64);
+              savePlantsDataCloudAndLocal();
+            }
+          };
+          img.src = e.target.result;
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
       }
     }
 
-    function updatePlantImage(url) {
+    function updatePlantImageDisplay(url) {
       const wrapper = document.getElementById('plantImgWrapper');
       const img = document.getElementById('plantImgPreview');
       
       if (url && url.trim() !== "") {
         img.src = url;
         wrapper.style.display = 'block';
-        if (currentDetailPlant) {
-          currentDetailPlant.img = url;
-          savePlantsDataLocally();
-        }
       } else {
         wrapper.style.display = 'none';
       }
     }
 
-    function savePlantsDataLocally() {
-      localStorage.setItem('creamyp_plants_v3', JSON.stringify(plantsData));
+    // Speichert Pflanzen-Setups lokal UND sendet sie zur Cloud-Sicherung an Google Sheets
+    function savePlantsDataCloudAndLocal() {
+      localStorage.setItem('creamyp_plants_v4', JSON.stringify(plantsData));
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "savePlants", plants: plantsData })
+      })
+      .then(() => console.log("Pflanzen-Daten dauerhaft in Google Sheets gespeichert."))
+      .catch(err => console.error("Fehler beim Speichern in Cloud:", err));
     }
 
     function renderPlantSpecificLogs() {
