@@ -51,7 +51,7 @@
       min-height: 100vh;
     }
 
-    /* Header (Höher & vergrößertes Logo) */
+    /* Header */
     header {
       background: linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(255, 117, 195, 0.2));
       padding-top: max(16px, env(safe-area-inset-top)); 
@@ -106,13 +106,13 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Cards mit sauberem Abstand */
+    /* Cards */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
       padding: 16px;
-      margin-bottom: 20px; /* Sauberer Abstand nach unten */
+      margin-bottom: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
@@ -126,7 +126,6 @@
       align-items: center;
     }
 
-    /* Anklickbare Klima Kachel */
     .clickable-klima {
       cursor: pointer;
       transition: transform 0.15s;
@@ -165,7 +164,7 @@
 
     .badge-good { color: var(--plant-green); }
 
-    /* Ausklappbares Chart-Sektion mit oberer & unterer gestrichelter Linie */
+    /* Chart Dropdown */
     #chart-dropdown {
       display: none;
       margin-top: 16px;
@@ -291,6 +290,7 @@
       color: var(--plant-green);
     }
 
+    /* Dynamic Phase Colors */
     .ec-badge {
       background: linear-gradient(135deg, #27ae60, #2ecc71);
       color: #0b140e;
@@ -299,9 +299,19 @@
       border-radius: 20px;
       font-size: 14px;
       display: inline-block;
+      transition: background 0.3s;
     }
 
-    /* Dashboard Setup Cards */
+    .ec-badge.bloom-mode {
+      background: linear-gradient(135deg, #d63031, var(--primary-pink));
+      color: #fff;
+    }
+
+    .calc-table td.val.bloom-val {
+      color: var(--primary-pink);
+    }
+
+    /* Setup Cards */
     .setup-card-box {
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--card-border);
@@ -319,7 +329,6 @@
       margin-bottom: 6px;
     }
 
-    /* Zelt-Kacheln in Ebene 1 */
     .box-tile-card {
       background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9));
       border: 1px solid var(--card-border);
@@ -354,7 +363,7 @@
       color: var(--plant-green);
     }
 
-    /* Pflanzen Grid in Ebene 2 */
+    /* Pflanzen Grid */
     .plants-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -439,9 +448,26 @@
       width: 100%;
       max-width: 400px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
-    /* Bottom Navigation Bar */
+    /* Log Liste Item */
+    .log-item-row {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+    }
+    .log-item-row:last-child { border-bottom: none; }
+    .log-item-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--plant-green);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    /* Bottom Nav */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -483,7 +509,7 @@
 </head>
 <body>
 
-  <!-- App Header mit Firmen-Logo -->
+  <!-- App Header -->
   <header>
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
@@ -494,8 +520,10 @@
 
     <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
+      
+      <!-- Live Klima Kachel -->
       <div class="card clickable-klima" onclick="toggleKlimaChart()">
-        <h2>Live Klima (Inkbird) <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
+        <h2>Live Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box">
             <div class="sensor-label">TEMP</div>
@@ -512,26 +540,51 @@
           </div>
         </div>
 
-        <!-- AUSKLAPPBARES KLIMA DIAGRAMM -->
         <div id="chart-dropdown" onclick="event.stopPropagation()">
           <div class="chart-btn-group">
             <button type="button" class="btn-timefilter active" onclick="loadKlimaHistory(3, this)">3 Tage</button>
             <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(7, this)">7 Tage</button>
             <button type="button" class="btn-timefilter" onclick="loadKlimaHistory(14, this)">14 Tage</button>
           </div>
-          
           <div class="chart-wrapper">
             <canvas id="klimaChartCanvas"></canvas>
           </div>
         </div>
       </div>
 
+      <!-- Setups Kachel -->
       <div class="card">
-        <h2>Aktuelle Setups & Status</h2>
-        <div id="dashboard-setup-container">
-          <!-- Dynamische Generierung durch JS -->
-        </div>
+        <h2>Setups</h2>
+        <div id="dashboard-setup-container"></div>
       </div>
+
+      <!-- Stromverbrauch Kachel -->
+      <div class="card">
+        <h2>⚡ Stromverbrauch & Analytics</h2>
+        <div class="sensor-grid" style="margin-bottom: 14px;">
+          <div class="sensor-box">
+            <div class="sensor-label">STAND</div>
+            <div class="sensor-val" id="strom-val-stand" style="font-size: 15px;">-- kWh</div>
+          </div>
+          <div class="sensor-box">
+            <div class="sensor-label">Ø TAG</div>
+            <div class="sensor-val" id="strom-val-daily" style="font-size: 15px; color: var(--plant-green);">-- kWh</div>
+          </div>
+          <div class="sensor-box">
+            <div class="sensor-label">PROGNOSE</div>
+            <div class="sensor-val" id="strom-val-cost" style="font-size: 15px; color: var(--primary-pink);">-- €/Monat</div>
+          </div>
+        </div>
+
+        <form id="stromForm" onsubmit="submitStrom(event)">
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label>Neuer Zählerstand (kWh)</label>
+            <input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 1450.5" required>
+          </div>
+          <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
+        </form>
+      </div>
+
     </div>
 
     <!-- TAB 2: GROWPLAN -->
@@ -542,8 +595,8 @@
           <li><strong style="color: var(--plant-green);">Vegetationsphase:</strong> EC 1.0 | RLF ~65%</li>
           <li><strong style="color: var(--bloom-pink);">Frühe Blüte (BW 1-3):</strong> EC 1.4 - 1.9 | RLF ~55%</li>
           <li><strong style="color: var(--bloom-pink);">Hauptblüte (BW 4-6):</strong> EC 1.9 | RLF ~50%</li>
-          <li><strong>Extrawochen (Silver Haze):</strong> Peak (BW 6+) & Reduzierung (BW 7+) verlängern!</li>
-          <li><strong>Spätblüte (BW 7-8):</strong> EC 1.7 - 1.4 | RLF ~45%</li>
+          <li><strong>Extrawochen (Silver Haze):</strong> Peak (BW 6 & 7) & Reduzierung 1 (BW 8 & 9) verlängern!</li>
+          <li><strong>Spätblüte (BW 8 / 10):</strong> EC 1.7 - 1.4 | RLF ~45%</li>
           <li><strong>Vor Ernte (Spülen):</strong> Nur BN-Zym & VitaSol</li>
         </ul>
       </div>
@@ -567,7 +620,7 @@
           <input type="number" id="calc-water" value="10" step="0.5" oninput="autoCalculateFertilizer()">
         </div>
 
-        <div style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
+        <div id="calc-status-box" style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
           <span>Status im Zelt:</span>
           <strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
         </div>
@@ -594,18 +647,18 @@
         <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--card-border);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-size: 13px; color: var(--text-muted);">Mischung für <strong id="calc-liters-label" style="color: #fff;">10</strong> Liter:</span>
-            <div><span class="sensor-label">ZIEL-EC</span> <span class="ec-badge" id="res-ec">1.0</span></div>
+            <div><span class="sensor-label">EC</span> <span class="ec-badge" id="res-ec">1.0</span></div>
           </div>
 
           <table class="calc-table">
-            <tr><td>Coco A</td><td class="val" id="res-cocoa">0 ml</td></tr>
-            <tr><td>Coco B</td><td class="val" id="res-cocob">0 ml</td></tr>
-            <tr><td>Roots (Wurzeln)</td><td class="val" id="res-roots">0 ml</td></tr>
-            <tr><td>X-Cel</td><td class="val" id="res-xcel">0 ml</td></tr>
-            <tr><td>The Missing Link</td><td class="val" id="res-tml">0 ml</td></tr>
-            <tr><td>BN-Zym</td><td class="val" id="res-bnzym">0 ml</td></tr>
-            <tr><td>VitaSol</td><td class="val" id="res-vitasol">0 ml</td></tr>
-            <tr><td>Silution</td><td class="val" id="res-silution">0 ml</td></tr>
+            <tr id="row-cocoa"><td>Coco A</td><td class="val" id="res-cocoa">0 ml</td></tr>
+            <tr id="row-cocob"><td>Coco B</td><td class="val" id="res-cocob">0 ml</td></tr>
+            <tr id="row-roots"><td>Roots (Wurzeln)</td><td class="val" id="res-roots">0 ml</td></tr>
+            <tr id="row-xcel"><td>X-Cel</td><td class="val" id="res-xcel">0 ml</td></tr>
+            <tr id="row-tml"><td>The Missing Link</td><td class="val" id="res-tml">0 ml</td></tr>
+            <tr id="row-bnzym"><td>BN-Zym</td><td class="val" id="res-bnzym">0 ml</td></tr>
+            <tr id="row-vitasol"><td>VitaSol</td><td class="val" id="res-vitasol">0 ml</td></tr>
+            <tr id="row-silution"><td>Silution</td><td class="val" id="res-silution">0 ml</td></tr>
           </table>
         </div>
       </div>
@@ -648,6 +701,12 @@
           <button type="submit" class="btn">In Google Sheet speichern</button>
         </form>
       </div>
+
+      <!-- Bisherige Logs -->
+      <div class="card">
+        <h2>Bisherige Log-Einträge</h2>
+        <div id="recent-logs-list">Lädt...</div>
+      </div>
     </div>
 
     <!-- TAB 5: ZELTE -->
@@ -675,7 +734,7 @@
 
   </div>
 
-  <!-- Modal Dialog für Zelt-Phase -->
+  <!-- Modal Dialog für Zelt-Phase & Pflanzen-Details -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
@@ -695,6 +754,30 @@
 
       <button type="button" class="btn" onclick="saveBoxModal()">Für das Zelt speichern</button>
       <button type="button" class="btn btn-secondary" onclick="closeBoxModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal für Pflanzendetails / Bild / Chronologischer Log -->
+  <div class="modal-overlay" id="plantDetailModal">
+    <div class="modal-card">
+      <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 4px;">Pflanze</h3>
+      <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;"></p>
+      
+      <!-- Bild-Vorschau -->
+      <div id="plantImgWrapper" style="margin-bottom: 12px; text-align: center; display: none;">
+        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="max-width: 100%; max-height: 180px; border-radius: 10px; border: 1px solid var(--card-border);">
+      </div>
+
+      <div class="form-group">
+        <label>Bild-URL / Google Drive Link:</label>
+        <input type="url" id="modalPlantImgUrl" placeholder="https://..." onchange="updatePlantImage(this.value)">
+      </div>
+
+      <h4 style="font-size: 13px; color: #fff; margin-top: 14px; margin-bottom: 8px;">Chronologisches Logbuch:</h4>
+      <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px;"></div>
+
+      <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 12px; padding: 8px; margin-top: 8px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
+      <button type="button" class="btn btn-secondary" style="margin-top: 12px;" onclick="closePlantDetailModal()">Schließen</button>
     </div>
   </div>
 
@@ -742,30 +825,31 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Standard-Fallback für Zelt-Daten
     let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
       "Mars Hydro": { phaseType: "blüte", startDate: todayStr },
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
-    let plantsData = [
-      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen" },
-      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen" },
-      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen" },
-      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen" },
-      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen" }
+    let plantsData = JSON.parse(localStorage.getItem('creamyp_plants_v1')) || [
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "" },
+      { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
+      { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", img: "" },
+      { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", img: "" },
+      { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
     let activeEditingBox = null;
     let currentSelectedBox = null;
+    let currentDetailPlant = null;
     let klimaChartInstance = null;
     let klimaHistoryCache = [];
+    let globalLogsCache = [];
+    let plantLogLimit = 5;
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchInitialData();
     });
 
-    // Holt Klima + Cloud-Setups beim App-Start
     function fetchInitialData() {
       if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
       
@@ -786,9 +870,13 @@
             calculateVPD(parseFloat(latest.temp), parseFloat(latest.humidity));
           }
 
-          if (data && data.history) {
-            klimaHistoryCache = data.history;
+          if (data && data.history) klimaHistoryCache = data.history;
+          if (data && data.logs) {
+            globalLogsCache = data.logs;
+            renderRecentLogsList(data.logs);
           }
+
+          if (data && data.strom) renderStromData(data.strom);
 
           renderDashboardSetup();
           autoCalculateFertilizer();
@@ -810,7 +898,6 @@
       document.getElementById('val-vpd').innerText = vpd;
     }
 
-    // Toggle für Diagramm-Ausklappen
     function toggleKlimaChart() {
       const dropdown = document.getElementById('chart-dropdown');
       const isVisible = dropdown.style.display === 'block';
@@ -825,7 +912,6 @@
       }
     }
 
-    // Lade Historie über API für bestimmte Tage
     function loadKlimaHistory(days, btnElement) {
       if (btnElement) {
         document.querySelectorAll('.btn-timefilter').forEach(b => b.classList.remove('active'));
@@ -842,7 +928,6 @@
         });
     }
 
-    // Rendere Chart.js Diagramm (Kompakt & Aufgeräumt)
     function renderKlimaChart(historyData) {
       const ctx = document.getElementById('klimaChartCanvas').getContext('2d');
       
@@ -851,100 +936,54 @@
       const hums = historyData.map(d => d.humidity);
       const vpds = historyData.map(d => d.vpd);
 
-      if (klimaChartInstance) {
-        klimaChartInstance.destroy();
-      }
+      if (klimaChartInstance) klimaChartInstance.destroy();
 
       klimaChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
           labels: labels,
           datasets: [
-            { 
-              label: 'Temp (°C)', 
-              data: temps, 
-              borderColor: '#ff9f43', 
-              backgroundColor: 'rgba(255,159,67,0.1)', 
-              borderWidth: 2,
-              pointRadius: 0, 
-              pointHoverRadius: 4,
-              tension: 0.3, 
-              yAxisID: 'y' 
-            },
-            { 
-              label: 'Feuchte (%)', 
-              data: hums, 
-              borderColor: '#54a0ff', 
-              backgroundColor: 'rgba(84,160,255,0.1)', 
-              borderWidth: 2,
-              pointRadius: 0,
-              pointHoverRadius: 4,
-              tension: 0.3, 
-              yAxisID: 'y' 
-            },
-            { 
-              label: 'VPD (kPa)', 
-              data: vpds, 
-              borderColor: '#2ecc71', 
-              backgroundColor: 'rgba(46,204,113,0.1)', 
-              borderWidth: 2,
-              pointRadius: 0,
-              pointHoverRadius: 4,
-              tension: 0.3, 
-              yAxisID: 'y1' 
-            }
+            { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y' },
+            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y' },
+            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y1' }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          interaction: {
-            mode: 'index',
-            intersect: false,
-          },
+          interaction: { mode: 'index', intersect: false },
           scales: {
-            x: { 
-              ticks: { 
-                color: '#8e9e94', 
-                font: { size: 9 },
-                maxTicksLimit: 5,
-                maxRotation: 0
-              }, 
-              grid: { color: 'rgba(255,255,255,0.05)' } 
-            },
-            y: { 
-              type: 'linear', 
-              position: 'left', 
-              ticks: { 
-                color: '#8e9e94',
-                font: { size: 9 },
-                maxTicksLimit: 5
-              }, 
-              grid: { color: 'rgba(255,255,255,0.05)' } 
-            },
-            y1: { 
-              type: 'linear', 
-              position: 'right', 
-              ticks: { 
-                color: '#2ecc71',
-                font: { size: 9 },
-                maxTicksLimit: 5
-              }, 
-              grid: { drawOnChartArea: false } 
-            }
+            x: { ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71', font: { size: 9 }, maxTicksLimit: 5 }, grid: { drawOnChartArea: false } }
           },
-          plugins: {
-            legend: { 
-              labels: { 
-                color: '#f3f7f4', 
-                font: { size: 10 },
-                boxWidth: 10,
-                padding: 8
-              } 
-            }
-          }
+          plugins: { legend: { labels: { color: '#f3f7f4', font: { size: 10 }, boxWidth: 10, padding: 8 } } }
         }
       });
+    }
+
+    function renderStromData(strom) {
+      if (!strom) return;
+      document.getElementById('strom-val-stand').innerText = strom.latestStand ? strom.latestStand + " kWh" : "-- kWh";
+      document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? strom.dailyAvg + " kWh" : "-- kWh";
+      document.getElementById('strom-val-cost').innerText = strom.estMonthlyCost ? strom.estMonthlyCost + " €/Monat" : "-- €/Monat";
+    }
+
+    function submitStrom(e) {
+      e.preventDefault();
+      const val = parseFloat(document.getElementById('strom-input-stand').value);
+      if (isNaN(val)) return;
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveStrom", zaehlerstand: val })
+      })
+      .then(() => {
+        alert("Zählerstand gespeichert!");
+        document.getElementById('stromForm').reset();
+        fetchInitialData();
+      })
+      .catch(err => alert("Fehler: " + err));
     }
 
     function switchTab(tabName, element) {
@@ -953,9 +992,7 @@
       document.getElementById('tab-' + tabName).classList.add('active');
       element.classList.add('active');
 
-      if(tabName === 'plants') {
-        showBoxOverview();
-      }
+      if(tabName === 'plants') showBoxOverview();
     }
 
     function getBoxInfo(boxName) {
@@ -1003,6 +1040,7 @@
       });
     }
 
+    // AUTOMATISCHER DÜNGERECHNER MIT SILVER HAZE LOGIK & PHASEN-FARBEN
     function autoCalculateFertilizer(isOverride = false) {
       const selectedBox = document.getElementById('calc-box').value;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
@@ -1012,48 +1050,100 @@
 
       let targetPhaseKey = "veg";
       let statusLabel = "";
+      let isVegPhase = true;
 
       if (isOverride && overrideKey !== "auto") {
         targetPhaseKey = overrideKey;
         statusLabel = "Manuell gewählt";
+        isVegPhase = (overrideKey === "veg");
       } else {
         const info = getBoxInfo(selectedBox);
         statusLabel = info.statusText;
+        isVegPhase = info.isVeg;
 
         if (info.isVeg) {
           targetPhaseKey = "veg";
         } else {
           const w = info.week;
-          if (w === 1) targetPhaseKey = "bw1";
-          else if (w === 2) targetPhaseKey = "bw2";
-          else if (w === 3) targetPhaseKey = "bw3";
-          else if (w === 4) targetPhaseKey = "bw4";
-          else if (w === 5) targetPhaseKey = "bw5";
-          else if (w === 6) targetPhaseKey = "bw6";
-          else if (w === 7 && selectedBox === "Grow Box") targetPhaseKey = "bw6_ext";
-          else if (w === 7) targetPhaseKey = "bw7";
-          else if (w === 8 && selectedBox === "Grow Box") targetPhaseKey = "bw7_ext";
-          else if (w === 8) targetPhaseKey = "bw8";
-          else if (w >= 9) targetPhaseKey = "flush";
-          else targetPhaseKey = "bw8";
+          // Silver Haze Spezial-Schema
+          if (selectedBox === "Grow Box") {
+            if (w === 1) targetPhaseKey = "bw1";
+            else if (w === 2) targetPhaseKey = "bw2";
+            else if (w === 3) targetPhaseKey = "bw3";
+            else if (w === 4) targetPhaseKey = "bw4";
+            else if (w === 5) targetPhaseKey = "bw5";
+            else if (w === 6) targetPhaseKey = "bw6";     // Peak
+            else if (w === 7) targetPhaseKey = "bw6_ext"; // Peak Extra
+            else if (w === 8) targetPhaseKey = "bw7";     // Reduzierung 1
+            else if (w === 9) targetPhaseKey = "bw7_ext"; // Reduzierung 1 Extra
+            else if (w === 10) targetPhaseKey = "bw8";    // Reduzierung 2
+            else if (w >= 11) targetPhaseKey = "flush";   // Spülen
+            else targetPhaseKey = "bw8";
+          } else {
+            // Standard-Schema
+            if (w === 1) targetPhaseKey = "bw1";
+            else if (w === 2) targetPhaseKey = "bw2";
+            else if (w === 3) targetPhaseKey = "bw3";
+            else if (w === 4) targetPhaseKey = "bw4";
+            else if (w === 5) targetPhaseKey = "bw5";
+            else if (w === 6) targetPhaseKey = "bw6";
+            else if (w === 7) targetPhaseKey = "bw7";
+            else if (w === 8) targetPhaseKey = "bw8";
+            else if (w >= 9) targetPhaseKey = "flush";
+            else targetPhaseKey = "bw8";
+          }
         }
       }
 
       document.getElementById('calc-detected-status').innerText = statusLabel;
 
+      // Farbliches Design an Phase anpassen (Grün für Veg | Pink/Magenta für Blüte)
+      const ecBadge = document.getElementById('res-ec');
+      const statusBox = document.getElementById('calc-status-box');
+      
+      if (isVegPhase) {
+        ecBadge.classList.remove('bloom-mode');
+        statusBox.style.color = "var(--plant-green)";
+        statusBox.style.borderColor = "rgba(46, 204, 113, 0.2)";
+      } else {
+        ecBadge.classList.add('bloom-mode');
+        statusBox.style.color = "var(--primary-pink)";
+        statusBox.style.borderColor = "rgba(255, 117, 195, 0.2)";
+      }
+
       const data = SCHEME_10L[targetPhaseKey] || SCHEME_10L.veg;
-      document.getElementById('res-ec').innerText = data.ec;
+      ecBadge.innerText = data.ec;
 
-      const calcVal = (base10) => ((base10 / 10) * liters).toFixed(1) + " ml";
+      // Einzelne Dünger berechnen & 0ml Elemente ausblenden
+      const components = [
+        { id: 'cocoa', val: data.cocoa },
+        { id: 'cocob', val: data.cocob },
+        { id: 'roots', val: data.roots },
+        { id: 'xcel', val: data.xcel },
+        { id: 'tml', val: data.tml },
+        { id: 'bnzym', val: data.bnzym },
+        { id: 'vitasol', val: data.vitasol },
+        { id: 'silution', val: data.silution }
+      ];
 
-      document.getElementById('res-cocoa').innerText = calcVal(data.cocoa);
-      document.getElementById('res-cocob').innerText = calcVal(data.cocob);
-      document.getElementById('res-roots').innerText = calcVal(data.roots);
-      document.getElementById('res-xcel').innerText = calcVal(data.xcel);
-      document.getElementById('res-tml').innerText = calcVal(data.tml);
-      document.getElementById('res-bnzym').innerText = calcVal(data.bnzym);
-      document.getElementById('res-vitasol').innerText = calcVal(data.vitasol);
-      document.getElementById('res-silution').innerText = calcVal(data.silution);
+      components.forEach(c => {
+        const row = document.getElementById('row-' + c.id);
+        const valElem = document.getElementById('res-' + c.id);
+        const calculatedMl = (c.val / 10) * liters;
+
+        if (isVegPhase) {
+          valElem.classList.remove('bloom-val');
+        } else {
+          valElem.classList.add('bloom-val');
+        }
+
+        if (calculatedMl <= 0) {
+          row.style.display = 'none'; // Ausblenden bei 0 ml
+        } else {
+          row.style.display = 'table-row';
+          valElem.innerText = calculatedMl.toFixed(1) + " ml";
+        }
+      });
     }
 
     function renderBoxTiles() {
@@ -1110,7 +1200,7 @@
       const card = document.createElement('div');
       
       card.className = `plant-card ${info.isVeg ? 'veg-card' : 'bloom-card'}`;
-      card.onclick = () => openBoxModal(p.box);
+      card.onclick = () => openPlantDetailModal(p);
       
       const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
 
@@ -1121,6 +1211,92 @@
         <span class="plant-tag ${tagClass}">${info.tagText}</span>
       `;
       return card;
+    }
+
+    // Modal für Pflanzen-Detail mit Bild & Log
+    function openPlantDetailModal(plant) {
+      currentDetailPlant = plant;
+      plantLogLimit = 5;
+
+      document.getElementById('modalPlantName').innerText = plant.name;
+      document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
+      document.getElementById('modalPlantImgUrl').value = plant.img || "";
+      
+      updatePlantImage(plant.img || "");
+      renderPlantSpecificLogs();
+
+      document.getElementById('plantDetailModal').classList.add('active');
+    }
+
+    function updatePlantImage(url) {
+      const wrapper = document.getElementById('plantImgWrapper');
+      const img = document.getElementById('plantImgPreview');
+      
+      if (url && url.trim() !== "") {
+        img.src = url;
+        wrapper.style.display = 'block';
+        if (currentDetailPlant) {
+          currentDetailPlant.img = url;
+          savePlantsDataLocally();
+        }
+      } else {
+        wrapper.style.display = 'none';
+      }
+    }
+
+    function savePlantsDataLocally() {
+      localStorage.setItem('creamyp_plants_v1', JSON.stringify(plantsData));
+    }
+
+    function renderPlantSpecificLogs() {
+      const container = document.getElementById('plantLogList');
+      if (!currentDetailPlant) return;
+
+      const pName = currentDetailPlant.name;
+      const bName = currentDetailPlant.box;
+
+      // Filtert Logs nach Pflanzenname oder Zeltname
+      const matchingLogs = globalLogsCache.filter(l => l.plant === pName || l.plant === bName);
+
+      if (matchingLogs.length === 0) {
+        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 8px;">Keine spezifischen Log-Einträge gefunden.</div>`;
+        document.getElementById('btnExpandLogs').style.display = 'none';
+        return;
+      }
+
+      const visibleLogs = matchingLogs.slice(0, plantLogLimit);
+      let html = "";
+
+      visibleLogs.forEach(l => {
+        html += `
+          <div class="log-item-row">
+            <div class="log-item-header">
+              <span>📅 ${l.date}</span>
+              <span>💧 ${l.water ? l.water + 'L' : '0L'}</span>
+            </div>
+            <div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
+            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      if (matchingLogs.length > plantLogLimit) {
+        document.getElementById('btnExpandLogs').style.display = 'block';
+      } else {
+        document.getElementById('btnExpandLogs').style.display = 'none';
+      }
+    }
+
+    function expandPlantLogs() {
+      plantLogLimit += 10;
+      renderPlantSpecificLogs();
+    }
+
+    function closePlantDetailModal() {
+      document.getElementById('plantDetailModal').classList.remove('active');
+      currentDetailPlant = null;
     }
 
     function openBoxModal(boxName) {
@@ -1153,18 +1329,38 @@
         method: "POST",
         body: JSON.stringify({ action: "saveBoxes", boxes: boxesData })
       })
-      .then(() => console.log("Setups dauerhaft in Google Sheets gespeichert."))
+      .then(() => console.log("Setups in Google Sheets gespeichert."))
       .catch(err => console.error("Fehler beim Cloud-Speichern:", err));
 
       renderDashboardSetup();
       autoCalculateFertilizer();
       renderBoxTiles();
 
-      if (currentSelectedBox) {
-        openBoxDetail(currentSelectedBox);
+      if (currentSelectedBox) openBoxDetail(currentSelectedBox);
+      closeBoxModal();
+    }
+
+    function renderRecentLogsList(logs) {
+      const container = document.getElementById('recent-logs-list');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">Noch keine Einträge vorhanden.</p>`;
+        return;
       }
 
-      closeBoxModal();
+      let html = "";
+      logs.slice(0, 10).forEach(l => {
+        html += `
+          <div class="log-item-row">
+            <div class="log-item-header">
+              <span>⛺ ${l.plant}</span>
+              <span style="color: var(--text-muted);">${l.date}</span>
+            </div>
+            <div><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>
+            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">${l.note}</div>` : ''}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
     }
 
     function submitLog(e) {
@@ -1183,6 +1379,7 @@
       .then(() => {
         alert("Eintrag erfolgreich in Google Sheet gespeichert!");
         document.getElementById('logForm').reset();
+        fetchInitialData();
       })
       .catch(err => alert("Fehler beim Speichern: " + err));
     }
