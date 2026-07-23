@@ -556,25 +556,24 @@
         <div id="dashboard-setup-container"></div>
       </div>
 
-      <!-- Stromverbrauch Kachel (Ausklappbar & Clean) -->
+      <!-- Stromverbrauch Kachel -->
       <div class="card clickable-card" onclick="toggleStromDropdown()">
         <h2>Stromverbrauch <span style="font-size: 12px; color: var(--text-muted);">▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box">
             <div class="sensor-label">STAND</div>
-            <div class="sensor-val" id="strom-val-stand" style="font-size: 14px;">-- kWh</div>
+            <div class="sensor-val" id="strom-val-stand" style="font-size: 13px;">-- kWh</div>
           </div>
           <div class="sensor-box">
             <div class="sensor-label">Ø TAG</div>
-            <div class="sensor-val" id="strom-val-daily" style="font-size: 14px; color: var(--plant-green);">-- kWh</div>
+            <div class="sensor-val" id="strom-val-daily" style="font-size: 13px; color: var(--plant-green);">-- kWh</div>
           </div>
           <div class="sensor-box">
             <div class="sensor-label">JAHRESPROGNOSE</div>
-            <div class="sensor-val" id="strom-val-yearly" style="font-size: 13px; color: var(--primary-pink);">-- kWh</div>
+            <div class="sensor-val" id="strom-val-yearly" style="font-size: 12px; color: var(--primary-pink);">-- kWh</div>
           </div>
         </div>
 
-        <!-- Ausklappbarer Bereich -->
         <div id="strom-dropdown" onclick="event.stopPropagation()">
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
             <span class="sensor-label">MONATSPROGNOSE</span>
@@ -584,7 +583,7 @@
           <form id="stromForm" onsubmit="submitStrom(event)">
             <div class="form-group" style="margin-bottom: 8px;">
               <label>Neuer Zählerstand (kWh):</label>
-              <input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 1450.5" required>
+              <input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 29750" required>
             </div>
             <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
           </form>
@@ -762,13 +761,13 @@
     </div>
   </div>
 
-  <!-- MODAL FÜR PFLANZEN-DETAILS (NEUER STRUKTURIERTER AUFBAU) -->
+  <!-- MODAL FÜR PFLANZEN-DETAILS -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       
       <!-- 1. GROSSES FOTO OBEN -->
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
-        <img id="plantImgPreview" src="" alt="Pflanzenbild" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+        <img id="plantImgPreview" src="" alt="Pflanzenbild" onerror="handlePlantImageError()" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
 
       <!-- 2. PFLANZEN INFOS & EXAKTER TAG -->
@@ -781,7 +780,7 @@
       <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
       <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 8px; margin-bottom: 16px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
 
-      <!-- 4. UPLOAD BUTTON UNTEN (OHNE SMILEY, CLEAN) -->
+      <!-- 4. UPLOAD BUTTON UNTEN -->
       <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 6px;">
         <label>Foto hinzufügen:</label>
         <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
@@ -835,8 +834,11 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
+    // Standard-Set mit absolut zuverlässiger Drive-Thumbnail URL
+    const SWISS_WATCH_IMG = "https://drive.google.com/thumbnail?id=13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF&sz=w1000";
+
     const DEFAULT_PLANTS = [
-      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: "https://lh3.googleusercontent.com/d/13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF" },
+      { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: SWISS_WATCH_IMG },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
       { id: 3, name: "Super Boof", box: "Mars Hydro", strain: "Tropicana Cookies x BCP", time: "8-9 Wochen", img: "" },
       { id: 4, name: "Blue Zlime", box: "Mars Hydro", strain: "Blueberry x Zkittlez", time: "8-9 Wochen", img: "" },
@@ -848,12 +850,20 @@
       "Grow Box": { phaseType: "blüte", startDate: todayStr }
     };
 
+    // Speicher-Schlüssel v6 zur klaren Bereinigung von altem Browser-Cache
     let loadedPlants = null;
     try {
-      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v4'));
+      loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v6'));
     } catch(e) {}
 
     let plantsData = (Array.isArray(loadedPlants) && loadedPlants.length > 0) ? loadedPlants : DEFAULT_PLANTS;
+
+    // Garantiert, dass Swiss Watch auf allen Plattformen ihr Standardbild hat, falls leer
+    plantsData.forEach(p => {
+      if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
+        p.img = SWISS_WATCH_IMG;
+      }
+    });
 
     let activeEditingBox = null;
     let currentSelectedBox = null;
@@ -862,6 +872,15 @@
     let klimaHistoryCache = [];
     let globalLogsCache = [];
     let plantLogLimit = 5;
+
+    // Hilfsfunktion: Deutsche Tausender-Punkt Formatierung (z. B. 29.750)
+    function formatNumberDE(val, decimals = 1) {
+      if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
+      return Number(val).toLocaleString('de-DE', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: decimals
+      });
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchInitialData();
@@ -882,7 +901,12 @@
 
           if (data && data.plants && Array.isArray(data.plants) && data.plants.length > 0) {
             plantsData = data.plants;
-            localStorage.setItem('creamyp_plants_v4', JSON.stringify(plantsData));
+            plantsData.forEach(p => {
+              if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
+                p.img = SWISS_WATCH_IMG;
+              }
+            });
+            localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -1002,12 +1026,13 @@
 
     function renderStromData(strom) {
       if (!strom) return;
-      document.getElementById('strom-val-stand').innerText = strom.latestStand ? strom.latestStand + " kWh" : "-- kWh";
-      document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? strom.dailyAvg + " kWh" : "-- kWh";
+
+      document.getElementById('strom-val-stand').innerText = strom.latestStand ? formatNumberDE(strom.latestStand, 1) + " kWh" : "-- kWh";
+      document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? formatNumberDE(strom.dailyAvg, 2) + " kWh" : "-- kWh";
       
-      const yearlyKwhText = strom.estYearlyKwh ? strom.estYearlyKwh + " kWh (" + strom.estYearlyCost + " €)" : "--";
+      const yearlyKwhText = strom.estYearlyKwh ? formatNumberDE(strom.estYearlyKwh, 0) + " kWh (" + formatNumberDE(strom.estYearlyCost, 2) + " €)" : "--";
       document.getElementById('strom-val-yearly').innerText = yearlyKwhText;
-      document.getElementById('strom-val-monthly').innerText = strom.estMonthlyCost ? strom.estMonthlyCost + " €/Monat" : "-- €/Monat";
+      document.getElementById('strom-val-monthly').innerText = strom.estMonthlyCost ? formatNumberDE(strom.estMonthlyCost, 2) + " €/Monat" : "-- €/Monat";
     }
 
     function submitStrom(e) {
@@ -1250,7 +1275,6 @@
       return card;
     }
 
-    // PFLANZEN-DETAIL MODAL MIT REINER TAGES-ANZEIGE
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
@@ -1259,7 +1283,7 @@
 
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
-      document.getElementById('modalPlantDayTag').innerText = info.exactDayText; // Zeigt nur z. B. "Blütetag 28"
+      document.getElementById('modalPlantDayTag').innerText = info.exactDayText;
       
       document.getElementById('modalPlantFileInput').value = "";
       
@@ -1269,7 +1293,11 @@
       document.getElementById('plantDetailModal').classList.add('active');
     }
 
-    // AUTOMATISCHE KOMPRIMIERUNG BEIM FOTO-UPLOAD
+    function handlePlantImageError() {
+      console.warn("Bild konnte nicht geladen werden.");
+      document.getElementById('plantImgWrapper').style.display = 'none';
+    }
+
     function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
@@ -1278,7 +1306,6 @@
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
-            // HTML5 Canvas Komprimierung auf max. 800px Breitenauflösung
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
@@ -1327,9 +1354,8 @@
       }
     }
 
-    // Speichert Pflanzen-Setups lokal UND sendet sie zur Cloud-Sicherung an Google Sheets
     function savePlantsDataCloudAndLocal() {
-      localStorage.setItem('creamyp_plants_v4', JSON.stringify(plantsData));
+      localStorage.setItem('creamyp_plants_v6', JSON.stringify(plantsData));
 
       fetch(API_URL, {
         method: "POST",
