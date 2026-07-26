@@ -794,7 +794,10 @@
         <div id="box-detail-view" style="display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
-            <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">⚙️ Phase anpassen</button>
+            <div>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 6px;" onclick="openAddPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">⚙️ Zelt-Phase</button>
+            </div>
           </div>
 
           <h2 id="selected-box-title" style="color: var(--plant-green); margin-bottom: 4px;">⛺ Zelt Name</h2>
@@ -863,6 +866,34 @@
       </div>
 
     </div>
+  <!-- Modal Dialog für Neue Pflanze / Stecklinge -->
+  <div class="modal-overlay" id="addPlantModal">
+    <div class="modal-card">
+      <h3 style="color: var(--plant-green); margin-bottom: 12px;">+ Neu ins Zelt</h3>
+      
+      <div class="form-group">
+        <label>Art des Neuzugangs:</label>
+        <select id="newPlantType" onchange="toggleStecklingMode()">
+          <option value="einzel">🌱 Einzelpflanze</option>
+          <option value="stecklinge">📦 Stecklingsbox (Mehrere)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label id="newPlantNameLabel">Name der Pflanze:</label>
+        <input type="text" id="newPlantName" placeholder="z.B. Lemon Haze" required>
+      </div>
+
+      <div class="form-group">
+        <label id="newPlantStrainLabel">Sorte / Genetik:</label>
+        <input type="text" id="newPlantStrain" placeholder="z.B. Sativa, Breeder..." required>
+        <div id="stecklingHint" style="display:none; font-size:10px; color:var(--text-muted); margin-top:4px;">Tipp: Du kannst hier mehrere Sorten reinschreiben (z.B. "2x Haze, 3x Kush").</div>
+      </div>
+
+      <button type="button" class="btn" onclick="saveNewPlant()">Ins Zelt stellen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeAddPlantModal()">Abbrechen</button>
+    </div>
+  </div>
   <!-- Modal Dialog für Zelt-Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
@@ -899,7 +930,18 @@
       <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 2px;">Pflanze</h3>
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
-
+     <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase (Tage) anpassen</button>
+      
+      <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
+         <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
+         <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
+           <option value="box">-- Automatisch vom Zelt übernehmen --</option>
+           <option value="veg">🌱 Vegetationsphase</option>
+           <option value="blüte">🌸 Blütephase</option>
+         </select>
+         <input type="date" id="customPhaseDate" style="padding:6px; font-size:12px; margin-bottom:8px;">
+         <button type="button" class="btn" style="padding:8px; font-size:12px;" onclick="saveCustomPlantPhase()">Speichern</button>
+      </div>
       <!-- 3. CHRONOLOGISCHES LOGBUCH -->
       <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Chronologisches Logbuch:</h4>
       <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
@@ -974,29 +1016,35 @@
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
-    // SELBSTHEILENDE ZUSAMMENFÜHRUNG: Garantiert, dass nie Pflanzen verloren gehen
+    // ERLAUBT DYNAMISCHE PFLANZEN & BEHÄLT ALTE
     function ensureAllPlantsExist(incomingPlants) {
       if (!Array.isArray(incomingPlants) || incomingPlants.length === 0) {
         return DEFAULT_PLANTS;
       }
-
-      let result = [];
       
-      DEFAULT_PLANTS.forEach(defPlant => {
-        const found = incomingPlants.find(p => p.name === defPlant.name || p.id === defPlant.id);
-        if (found) {
-          // Falls Schweizer Uhr kein Bild hat, bekommt sie das Standardbild
-          if (found.name === "Swiss Watch" && (!found.img || found.img.trim() === "")) {
-            found.img = SWISS_WATCH_IMG;
-          }
-          result.push(found);
-        } else {
-          // Stellt fehlende Pflanze sofort aus DEFAULT her
-          result.push(defPlant);
+      incomingPlants.forEach(p => {
+        if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) {
+          p.img = SWISS_WATCH_IMG;
         }
       });
+      return incomingPlants;
+    }
 
-      return result;
+    // Füllt das Dropdown im Logbuch automatisch mit allen existierenden Pflanzen
+    function populateLogDropdown() {
+      const select = document.getElementById('log-plant');
+      if (!select) return;
+      select.innerHTML = "";
+      
+      // 1. Alle Zelte hinzufügen
+      Object.keys(boxesData).forEach(box => {
+        select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`;
+      });
+      // 2. Alle aktuellen Pflanzen hinzufügen
+      plantsData.forEach(p => {
+        const icon = p.isSteckling ? "📦" : "🌱";
+        select.innerHTML += `<option value="${p.name}">${icon} ${p.name} (${p.box})</option>`;
+      });
     }
 
     let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
@@ -1079,6 +1127,7 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
           renderDashboardSetup();
           autoCalculateFertilizer();
           renderBoxTiles();
+          populateLogDropdown();
           
           hideSplashScreen(); // <-- NEU: Hier wird ausgeblendet
         })
@@ -1449,7 +1498,7 @@ function renderDashboardSetup() {
     }
 
     function createPlantCard(p) {
-      const info = getBoxInfo(p.box);
+      const info = getPlantInfo(p);
       const card = document.createElement('div');
       
       card.className = `plant-card ${info.isVeg ? 'veg-card' : 'bloom-card'}`;
@@ -1477,7 +1526,7 @@ function renderDashboardSetup() {
       currentDetailPlant = plant;
       plantLogLimit = 5;
 
-      const info = getBoxInfo(plant.box);
+      const info = getPlantInfo(p);
 
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
@@ -1924,6 +1973,104 @@ function handlePlantFileUpload(input) {
           fetchInitialData();
         }, 1500);
       });
+    }
+    // ==========================================
+    // NEUE PFLANZEN & STECKLINGE
+    // ==========================================
+    function openAddPlantModal() {
+      document.getElementById('newPlantName').value = "";
+      document.getElementById('newPlantStrain').value = "";
+      document.getElementById('addPlantModal').classList.add('active');
+    }
+    function closeAddPlantModal() { document.getElementById('addPlantModal').classList.remove('active'); }
+    
+    function toggleStecklingMode() {
+      const type = document.getElementById('newPlantType').value;
+      if (type === "stecklinge") {
+        document.getElementById('newPlantNameLabel').innerText = "Name der Box (z.B. Batch #1):";
+        document.getElementById('newPlantStrainLabel').innerText = "Enthaltene Sorten:";
+        document.getElementById('stecklingHint').style.display = 'block';
+      } else {
+        document.getElementById('newPlantNameLabel').innerText = "Name der Pflanze:";
+        document.getElementById('newPlantStrainLabel').innerText = "Sorte / Genetik:";
+        document.getElementById('stecklingHint').style.display = 'none';
+      }
+    }
+
+    function saveNewPlant() {
+      const name = document.getElementById('newPlantName').value;
+      const strain = document.getElementById('newPlantStrain').value;
+      const type = document.getElementById('newPlantType').value;
+      if(!name) return alert("Bitte einen Namen eingeben!");
+
+      const p = {
+        id: Date.now(),
+        name: name,
+        box: currentSelectedBox,
+        strain: strain,
+        time: type === "stecklinge" ? "Stecklinge" : "Neu",
+        img: "",
+        isSteckling: (type === "stecklinge"),
+        hasCustomPhase: false,
+        phaseType: "veg",
+        startDate: todayStr
+      };
+      
+      plantsData.push(p);
+      savePlantsDataCloudAndLocal();
+      closeAddPlantModal();
+      openBoxDetail(currentSelectedBox);
+      populateLogDropdown(); // Logbuch updaten
+    }
+
+    // ==========================================
+    // INDIVIDUELLE PHASE (ÜBERSCHREIBT ZELT)
+    // ==========================================
+    function getPlantInfo(plant) {
+      if (plant.hasCustomPhase) {
+        const start = new Date(plant.startDate || todayStr);
+        const now = new Date();
+        const diffTime = Math.max(0, now - start);
+        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        const week = Math.floor((days - 1) / 7) + 1;
+        const isVeg = plant.phaseType === 'veg';
+        
+        const tagText = isVeg ? `VT${days}` : `BT${days}`;
+        const statusText = isVeg ? `🌱 VT${days} (Woche ${week})` : `🌸 BT${days} (Woche ${week})`;
+        return { tagText: tagText, statusText: statusText, exactDayText: (isVeg ? `Vegetationstag ${days}` : `Blütetag ${days}`), isVeg: isVeg };
+      } else {
+        return getBoxInfo(plant.box); // Normales Zelt-Verhalten
+      }
+    }
+
+    function toggleCustomPhaseUI() {
+      const ui = document.getElementById('customPhaseUI');
+      ui.style.display = ui.style.display === 'none' ? 'block' : 'none';
+      if(currentDetailPlant) {
+        document.getElementById('customPhasePlantName').innerText = currentDetailPlant.name;
+        if(currentDetailPlant.hasCustomPhase) {
+          document.getElementById('customPhaseType').value = currentDetailPlant.phaseType;
+          document.getElementById('customPhaseDate').value = currentDetailPlant.startDate;
+        } else {
+          document.getElementById('customPhaseType').value = "box";
+          document.getElementById('customPhaseDate').value = boxesData[currentDetailPlant.box] ? boxesData[currentDetailPlant.box].startDate : todayStr;
+        }
+      }
+    }
+
+    function saveCustomPlantPhase() {
+      const type = document.getElementById('customPhaseType').value;
+      if (type === "box") {
+        currentDetailPlant.hasCustomPhase = false;
+      } else {
+        currentDetailPlant.hasCustomPhase = true;
+        currentDetailPlant.phaseType = type;
+        currentDetailPlant.startDate = document.getElementById('customPhaseDate').value;
+      }
+      savePlantsDataCloudAndLocal();
+      document.getElementById('customPhaseUI').style.display = 'none';
+      openPlantDetailModal(currentDetailPlant); // Modal aktualisieren
+      openBoxDetail(currentSelectedBox); // Kacheln im Hintergrund aktualisieren
     }
   </script>
 </body>
