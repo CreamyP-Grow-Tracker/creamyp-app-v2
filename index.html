@@ -33,9 +33,11 @@
       opacity: 0;
       visibility: hidden;
     }
-    .splash-content {
+.splash-content {
       text-align: center;
-.pulse-anim {
+    }
+    
+    .pulse-anim {
       animation: pulse 1.5s infinite;
       height: 150px; /* Erzwingt jetzt die genaue Höhe */
       width: auto;
@@ -1052,13 +1054,13 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
       dropdown.style.display = isVisible ? 'none' : 'block';
     }
 
-    function loadKlimaHistory(days, btnElement) {
+function loadKlimaHistory(days, btnElement) {
       if (btnElement) {
         document.querySelectorAll('.btn-timefilter').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
       }
 
-      _URL + "?days=" + days)
+      fetch(API_URL + "?days=" + days)
         .then(res => res.json())
         .then(data => {
           if (data && data.history) {
