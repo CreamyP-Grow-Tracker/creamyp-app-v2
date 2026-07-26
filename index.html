@@ -45,17 +45,52 @@
       100% { transform: scale(1); }
     }
     
-    .typewriter-text {
-      font-family: 'Dancing Script', cursive;
-      font-size: 38px; font-weight: 700; color: #fff;
-      overflow: hidden; white-space: nowrap; display: inline-block;
-      max-width: 0; padding-left: 8px; padding-right: 15px;
-      animation: handwriting 2.5s ease-in-out 0.5s forwards;
+    /* Splash Screen Text Animations (Zweizeilig & ohne Abschneiden) */
+    .splash-text-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
     }
-    @keyframes handwriting {
-      0% { max-width: 0; opacity: 0; }
-      5% { opacity: 1; }
-      100% { max-width: 400px; opacity: 1; }
+
+    .splash-line1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 26px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+    }
+
+    .splash-line2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 44px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 1.9s forwards;
+    }
+
+    @keyframes revealText {
+      0% {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+      }
+      1% {
+        opacity: 1;
+        clip-path: inset(0 100% 0 0);
+      }
+      100% {
+        opacity: 1;
+        clip-path: inset(-15px -30px -15px -30px);
+      }
     }
 
     :root {
@@ -228,8 +263,10 @@
     <div class="splash-content">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
       <div style="color: #fff; font-weight: 700; margin-top: 24px; font-size: 18px; letter-spacing: 1px;">Let's Grow</div>
-      <div style="margin-top: 30px; display: inline-block;">
-        <div class="typewriter-text">presented by CreamyP&nbsp;</div>
+      
+      <div class="splash-text-container">
+        <div class="splash-line1">presented by</div>
+        <div class="splash-line2">CreamyP</div>
       </div>
     </div>
   </div>
@@ -782,7 +819,7 @@
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) splash.classList.add('hidden');
-      }, 3000); 
+      }, 4200); 
     }
 
     function uploadImageToCloud(file) {
@@ -947,19 +984,16 @@
       return calculatePhaseDetails('blüte', todayStr);
     }
 
-    // WIEDERHERGESTELLT & ERWEITERT: Rechner-Dropdown (Zelte & Einzelpflanzen)
     function updateCalcBoxDropdown() {
       const select = document.getElementById('calc-box');
       if(!select) return;
       const currentVal = select.value;
       select.innerHTML = "";
 
-      // 1. Zelte
       Object.keys(boxesData).forEach(b => {
         select.innerHTML += `<option value="box:${b}">⛺ Zelt: ${b}</option>`;
       });
 
-      // 2. Einzelne Pflanzen
       plantsData.forEach(p => {
         select.innerHTML += `<option value="plant:${p.id}">🌱 Pflanze: ${p.name} (${p.box})</option>`;
       });
@@ -967,7 +1001,6 @@
       if(currentVal) select.value = currentVal;
     }
 
-    // WIEDERHERGESTELLT: Hardware-Details im Dashboard per Klick
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
@@ -1007,9 +1040,6 @@
       });
     }
 
-    /* =========================================================================
-       DÜNGERECHNER-LOGIK (VERANKERTE SILVER HAZE EXTRA-WOCHEN REGEL)
-       ========================================================================= */
     function autoCalculateFertilizer(isOverride = false) {
       const selectVal = document.getElementById('calc-box').value;
       if(!selectVal) return;
@@ -1059,17 +1089,6 @@
           targetPhaseKey = "veg";
         } else {
           const w = info.week;
-          
-          /*
-             SILVER HAZE / EXTRA-WOCHEN REGEL:
-             BW 1-5: bw1..bw5
-             BW 6:   bw6     (Peak 1)
-             BW 7:   bw6_ext (Peak 2 - Wiederholung BW6 Düngeplan)
-             BW 8:   bw7     (Reduzierung 1)
-             BW 9:   bw7_ext (Reduzierung 2 - Wiederholung BW7 Düngeplan)
-             BW 10:  bw8     (Spätblüte)
-             BW 11+: flush   (Spülen)
-          */
           if (isSilverHazeOrLongBloomer) {
             if (w === 1) targetPhaseKey = "bw1";
             else if (w === 2) targetPhaseKey = "bw2";
@@ -1077,13 +1096,12 @@
             else if (w === 4) targetPhaseKey = "bw4";
             else if (w === 5) targetPhaseKey = "bw5";
             else if (w === 6) targetPhaseKey = "bw6";
-            else if (w === 7) targetPhaseKey = "bw6_ext"; // BW7 -> BW6 Schema
-            else if (w === 8) targetPhaseKey = "bw7";     // BW8 -> BW7 Schema
-            else if (w === 9) targetPhaseKey = "bw7_ext"; // BW9 -> BW7 Schema
-            else if (w === 10) targetPhaseKey = "bw8";    // BW10 -> BW8 Schema
-            else targetPhaseKey = "flush";                // Ab BW11 Spülen
+            else if (w === 7) targetPhaseKey = "bw6_ext";
+            else if (w === 8) targetPhaseKey = "bw7";
+            else if (w === 9) targetPhaseKey = "bw7_ext";
+            else if (w === 10) targetPhaseKey = "bw8";
+            else targetPhaseKey = "flush";
           } else {
-            // Standard 8-9 Wochen Schema
             if (w === 1) targetPhaseKey = "bw1";
             else if (w === 2) targetPhaseKey = "bw2";
             else if (w === 3) targetPhaseKey = "bw3";
