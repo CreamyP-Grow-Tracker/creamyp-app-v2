@@ -37,11 +37,13 @@
       text-align: center;
 .pulse-anim {
       animation: pulse 1.5s infinite;
-      max-height: 200px; /* Logo ist jetzt 2,5-mal so groß */
+      height: 150px; /* Erzwingt jetzt die genaue Höhe */
+      width: auto;
       background-color: #fff;
-      padding: 24px 60px; /* Rahmen proportional etwas vergrößert */
-      border-radius: 60px;
+      padding: 20px 40px;
+      border-radius: 50px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      display: inline-block;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -557,7 +559,7 @@
 <!-- SPLASH SCREEN -->
   <div id="splash-screen">
     <div class="splash-content">
-      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo pulse-anim">
+<img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
       <div style="color: #fff; font-weight: 600; margin-top: 20px; font-size: 14px; letter-spacing: 1px;">Lade Daten...</div>
     </div>
   </div>
@@ -963,7 +965,8 @@ function fetchInitialData() {
           return;
       }
       
-      fetch(API_URL)
+const noCacheUrl = API_URL + "?t=" + new Date().getTime();
+      fetch(noCacheUrl)
         .then(res => res.json())
         .then(data => {
           const latest = (data && data.latest) ? data.latest : data;
@@ -1055,7 +1058,7 @@ function fetchInitialData() {
         btnElement.classList.add('active');
       }
 
-      fetch(API_URL + "?days=" + days)
+      _URL + "?days=" + days)
         .then(res => res.json())
         .then(data => {
           if (data && data.history) {
