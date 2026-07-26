@@ -21,7 +21,6 @@
     #splash-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      /* Das gleiche Lila wie im Header, aber undurchsichtig */
       background: linear-gradient(135deg, #9b51e0, #ff75c3);
       z-index: 9999;
       display: flex;
@@ -33,13 +32,13 @@
       opacity: 0;
       visibility: hidden;
     }
-.splash-content {
+    .splash-content {
       text-align: center;
     }
     
     .pulse-anim {
       animation: pulse 1.5s infinite;
-      height: 150px; /* Erzwingt jetzt die genaue Höhe */
+      height: 150px;
       width: auto;
       background-color: #fff;
       padding: 20px 40px;
@@ -516,7 +515,7 @@
       margin-bottom: 4px;
     }
 
-/* Archiv & Ranking Styles */
+    /* Archiv & Ranking Styles */
     .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
     .ranking-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
     .ranking-value { font-size: 16px; color: #fff; font-weight: 700; }
@@ -540,7 +539,7 @@
       align-items: center;
       padding: 10px 8px max(10px, env(safe-area-inset-bottom)) 8px;
       z-index: 1000;
-      overflow-x: auto; /* Erlaubt wischen, falls das Display sehr klein ist */
+      overflow-x: auto;
     }
 
     .nav-item {
@@ -568,10 +567,10 @@
 </head>
 <body>
   
-<!-- SPLASH SCREEN -->
+  <!-- SPLASH SCREEN -->
   <div id="splash-screen">
     <div class="splash-content">
-<img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
+      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
       <div style="color: #fff; font-weight: 600; margin-top: 20px; font-size: 14px; letter-spacing: 1px;">Lade Daten...</div>
     </div>
   </div>
@@ -745,15 +744,7 @@
         <form id="logForm" onsubmit="submitLog(event)">
           <div class="form-group">
             <label>Zelt / Pflanze wählen</label>
-            <select id="log-plant">
-              <option value="Mars Hydro">Mars Hydro (Alle)</option>
-              <option value="Grow Box">Grow Box (Silver Haze)</option>
-              <option value="Swiss Watch">Swiss Watch (Mars Hydro)</option>
-              <option value="Jelly Donutz">Jelly Donutz (Mars Hydro)</option>
-              <option value="Super Boof">Super Boof (Mars Hydro)</option>
-              <option value="Blue Zlime">Blue Zlime (Mars Hydro)</option>
-              <option value="Silver Haze">Silver Haze (Grow Box)</option>
-            </select>
+            <select id="log-plant"></select>
           </div>
           <div class="form-group">
             <label>Gießmenge (Liter)</label>
@@ -808,8 +799,7 @@
       </div>
     </div>
 
-  </div>
-<!-- TAB 6: ARCHIV & ZUKUNFT -->
+    <!-- TAB 6: ARCHIV & ZUKUNFT -->
     <div id="tab-archiv" class="tab-content">
       
       <!-- Ranking Bereich -->
@@ -866,6 +856,9 @@
       </div>
 
     </div>
+
+  </div> <!-- End container -->
+
   <!-- Modal Dialog für Neue Pflanze / Stecklinge -->
   <div class="modal-overlay" id="addPlantModal">
     <div class="modal-card">
@@ -894,6 +887,7 @@
       <button type="button" class="btn btn-secondary" onclick="closeAddPlantModal()">Abbrechen</button>
     </div>
   </div>
+
   <!-- Modal Dialog für Zelt-Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
@@ -907,6 +901,7 @@
           <option value="blüte">🌸 Blütephase</option>
           <option value="drying">🍂 Trocknungsphase</option>
         </select>
+      </div>
 
       <div class="form-group">
         <label>Startdatum dieser Phase:</label>
@@ -931,7 +926,8 @@
       <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 2px;">Pflanze</h3>
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
-     <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase (Tage) anpassen</button>
+      
+      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase (Tage) anpassen</button>
       
       <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
@@ -945,6 +941,7 @@
          <input type="date" id="customPhaseDate" style="padding:6px; font-size:12px; margin-bottom:8px;">
          <button type="button" class="btn" style="padding:8px; font-size:12px;" onclick="saveCustomPlantPhase()">Speichern</button>
       </div>
+
       <!-- 3. CHRONOLOGISCHES LOGBUCH -->
       <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Chronologisches Logbuch:</h4>
       <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
@@ -982,7 +979,7 @@
       <span class="icon">⛺</span>
       <span>Zelte</span>
     </div>
-  <div class="nav-item" onclick="switchTab('archiv', this)">
+    <div class="nav-item" onclick="switchTab('archiv', this)">
       <span class="icon">📚</span>
       <span>Archiv</span>
     </div>
@@ -990,6 +987,7 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
+    const IMGBB_KEY = "31a78936d0bb63cd605aceab03243c5d";
 
     const SCHEME_10L = {
       veg:     { cocoa: 9,  cocob: 9,  roots: 8, xcel: 5,  tml: 6, bnzym: 7, vitasol: 0,  silution: 2, ec: "1.0" },
@@ -1007,10 +1005,8 @@
     };
 
     const todayStr = new Date().toISOString().split('T')[0];
-
     const SWISS_WATCH_IMG = "https://drive.google.com/uc?export=view&id=13Z4ifF0XWLeu3A9YIiBbvxNAbbxPEgUF";
 
-    // KERN-LISTE ALLER 5 PFLANZEN
     const DEFAULT_PLANTS = [
       { id: 1, name: "Swiss Watch", box: "Mars Hydro", strain: "Gary Payton x Secret Weapon", time: "8-9 Wochen", img: SWISS_WATCH_IMG },
       { id: 2, name: "Jelly Donutz", box: "Mars Hydro", strain: "Humboldt Seeds (Süß/Sauer)", time: "8-9 Wochen", img: "" },
@@ -1019,7 +1015,6 @@
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
-    // ERLAUBT DYNAMISCHE PFLANZEN & BEHÄLT ALTE
     function ensureAllPlantsExist(incomingPlants) {
       if (!Array.isArray(incomingPlants) || incomingPlants.length === 0) {
         return DEFAULT_PLANTS;
@@ -1033,17 +1028,14 @@
       return incomingPlants;
     }
 
-    // Füllt das Dropdown im Logbuch automatisch mit allen existierenden Pflanzen
     function populateLogDropdown() {
       const select = document.getElementById('log-plant');
       if (!select) return;
       select.innerHTML = "";
       
-      // 1. Alle Zelte hinzufügen
       Object.keys(boxesData).forEach(box => {
         select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`;
       });
-      // 2. Alle aktuellen Pflanzen hinzufügen
       plantsData.forEach(p => {
         const icon = p.isSteckling ? "📦" : "🌱";
         select.innerHTML += `<option value="${p.name}">${icon} ${p.name} (${p.box})</option>`;
@@ -1068,6 +1060,8 @@
     let klimaChartInstance = null;
     let klimaHistoryCache = [];
     let globalLogsCache = [];
+    let archiveCache = [];
+    let futureCache = [];
     let plantLogLimit = 5;
 
     function formatNumberDE(val, decimals = 1) {
@@ -1082,13 +1076,13 @@
       fetchInitialData();
     });
 
-function fetchInitialData() {
+    function fetchInitialData() {
       if(!API_URL || API_URL.includes("DEIN_NEUER")) {
           hideSplashScreen();
           return;
       }
       
-const noCacheUrl = API_URL + "?t=" + new Date().getTime();
+      const noCacheUrl = API_URL + "?t=" + new Date().getTime();
       fetch(noCacheUrl)
         .then(res => res.json())
         .then(data => {
@@ -1122,8 +1116,6 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
           }
 
           if (data && data.strom) renderStromData(data.strom);
-          
-          // NEU: Archiv und Zukunft aus der Cloud laden
           if (data && data.archive) { archiveCache = data.archive; renderArchiveData(); }
           if (data && data.future) { futureCache = data.future; renderFutureData(); }
 
@@ -1132,19 +1124,17 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
           renderBoxTiles();
           populateLogDropdown();
           
-          hideSplashScreen(); // <-- NEU: Hier wird ausgeblendet
+          hideSplashScreen();
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           renderDashboardSetup();
           autoCalculateFertilizer();
           renderBoxTiles();
-          
-          hideSplashScreen(); // <-- NEU: Auch bei Fehler ausblenden
+          hideSplashScreen();
         });
     }
 
-    // <-- NEU: Diese Hilfsfunktion direkt darunter einfügen
     function hideSplashScreen() {
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
@@ -1180,7 +1170,7 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
       dropdown.style.display = isVisible ? 'none' : 'block';
     }
 
-function loadKlimaHistory(days, btnElement) {
+    function loadKlimaHistory(days, btnElement) {
       if (btnElement) {
         document.querySelectorAll('.btn-timefilter').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
@@ -1271,10 +1261,12 @@ function loadKlimaHistory(days, btnElement) {
     function switchTab(tabName, element) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-      document.getElementById('tab-' + tabName).classList.add('active');
-      element.classList.add('active');
+      
+      const targetTab = document.getElementById('tab-' + tabName);
+      if (targetTab) targetTab.classList.add('active');
+      if (element) element.classList.add('active');
 
-      if(tabName === 'plants') showBoxOverview();
+      if (tabName === 'plants') showBoxOverview();
     }
 
     function getBoxInfo(boxName) {
@@ -1282,7 +1274,6 @@ function loadKlimaHistory(days, btnElement) {
       return calculatePhaseDetails(box.phaseType, box.startDate);
     }
 
-    // Zentrale Berechnungsfunktion für Phasen (Zelt oder Pflanze)
     function calculatePhaseDetails(phaseType, startDateStr) {
       const start = new Date(startDateStr || todayStr);
       const now = new Date();
@@ -1314,6 +1305,15 @@ function loadKlimaHistory(days, btnElement) {
       }
 
       return { days, week, isVeg, tagText, statusText, exactDayText, phase };
+    }
+
+    function getPlantInfo(plant) {
+      if (plant && plant.hasCustomPhase) {
+        return calculatePhaseDetails(plant.phaseType, plant.startDate);
+      } else if (plant) {
+        return getBoxInfo(plant.box);
+      }
+      return calculatePhaseDetails('blüte', todayStr);
     }
 
     function renderDashboardSetup() {
@@ -1549,25 +1549,7 @@ function loadKlimaHistory(days, btnElement) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
 
-      // HIER WAR DER FEHLER: KORRIGIERT AUF 'plant'
       const info = getPlantInfo(plant);
-
-      document.getElementById('modalPlantName').innerText = plant.name;
-      document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
-      document.getElementById('modalPlantDayTag').innerText = info.exactDayText;
-      
-      document.getElementById('modalPlantFileInput').value = "";
-      
-      updatePlantImageDisplay(plant.img || "");
-      renderPlantSpecificLogs();
-
-      document.getElementById('plantDetailModal').classList.add('active');
-    }
-    function openPlantDetailModal(plant) {
-      currentDetailPlant = plant;
-      plantLogLimit = 5;
-
-      const info = getPlantInfo(p);
 
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
@@ -1586,7 +1568,7 @@ function loadKlimaHistory(days, btnElement) {
       document.getElementById('plantImgWrapper').style.display = 'none';
     }
 
-function handlePlantFileUpload(input) {
+    function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
         
@@ -1598,7 +1580,6 @@ function handlePlantFileUpload(input) {
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
-            // Bild komprimieren für schnellere Ladezeiten
             const canvas = document.createElement('canvas');
             let width = img.width; let height = img.height;
             const maxDim = 800; 
@@ -1610,18 +1591,10 @@ function handlePlantFileUpload(input) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            // Base64 Code bereinigen für ImgBB
             const base64String = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
-            
             const formData = new FormData();
             formData.append("image", base64String);
             
-            // ==========================================
-            // HIER DEINEN KOPIERTEN IMGBB KEY EINTRAGEN:
-            const IMGBB_KEY = "31a78936d0bb63cd605aceab03243c5d"; 
-            // ==========================================
-            
-            // Lade Bild anonym zu ImgBB hoch
             fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
               method: "POST",
               body: formData
@@ -1629,13 +1602,12 @@ function handlePlantFileUpload(input) {
             .then(res => res.json())
             .then(data => {
               if(data.success) {
-                const imageUrl = data.data.url; // Der fertige, winzige JPG-Link
+                const imageUrl = data.data.url;
                 currentDetailPlant.img = imageUrl;
                 updatePlantImageDisplay(imageUrl);
                 
                 document.getElementById('modalPlantName').innerText = "⏳ Speichere in Google Sheet...";
                 
-                // Jetzt speichern wir nur den kurzen Link im Google Sheet
                 fetch(API_URL, {
                   method: "POST",
                   body: JSON.stringify({ action: "savePlants", plants: plantsData })
@@ -1823,17 +1795,10 @@ function handlePlantFileUpload(input) {
       })
       .catch(err => alert("Fehler beim Speichern: " + err));
     }
+
     // ==========================================
     // ARCHIV, RANKING & ZUKUNFT LOGIK
     // ==========================================
-    const IMGBB_API_KEY = "DEIN_KEY_HIER_EINFÜGEN"; // <--- HIER DEINEN KEY REIN!
-    let archiveCache = [];
-    let futureCache = [];
-
-    // Diese Funktion klinken wir in deine bestehende fetchInitialData() ein.
-    // Suche in fetchInitialData nach: if (data && data.strom) renderStromData(data.strom);
-    // Das machen wir gleich in Schritt 5.
-
     function renderArchiveData() {
       renderRanking();
       
@@ -1874,13 +1839,8 @@ function handlePlantFileUpload(input) {
         return;
       }
 
-      // 1. Ertrags-König
       const bestYield = [...archiveCache].sort((a, b) => b.ertrag - a.ertrag)[0];
-      
-      // 2. Geschmacks-Sieger (Aroma + Geschmack)
       const bestTaste = [...archiveCache].sort((a, b) => (b.aroma + b.geschmack) - (a.aroma + a.geschmack))[0];
-      
-      // 3. Gesamt-Sieger
       const bestOverall = [...archiveCache].sort((a, b) => {
         const scoreA = Number(a.aussehen) + Number(a.aroma) + Number(a.geschmack) + Number(a.wirkung);
         const scoreB = Number(b.aussehen) + Number(b.aroma) + Number(b.geschmack) + Number(b.wirkung);
@@ -1960,13 +1920,11 @@ function handlePlantFileUpload(input) {
         bild: ""
       };
 
-      // Wenn kein Bild gewählt wurde, sofort speichern
       if (!fileInput.files || !fileInput.files[0]) {
         sendArchiveToSheet(payload, btn);
         return;
       }
 
-      // Wenn ein Bild da ist, erst zu ImgBB
       const reader = new FileReader();
       reader.onload = function(evt) {
         const img = new Image();
@@ -1982,7 +1940,7 @@ function handlePlantFileUpload(input) {
           const formData = new FormData();
           formData.append("image", base64String);
 
-          fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData })
+          fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: formData })
           .then(res => res.json())
           .then(data => {
             if(data.success) {
@@ -2015,6 +1973,7 @@ function handlePlantFileUpload(input) {
         }, 1500);
       });
     }
+
     // ==========================================
     // NEUE PFLANZEN & STECKLINGE
     // ==========================================
@@ -2061,20 +2020,12 @@ function handlePlantFileUpload(input) {
       savePlantsDataCloudAndLocal();
       closeAddPlantModal();
       openBoxDetail(currentSelectedBox);
-      populateLogDropdown(); // Logbuch updaten
+      populateLogDropdown();
     }
 
     // ==========================================
-    // INDIVIDUELLE PHASE (ÜBERSCHREIBT ZELT)
+    // INDIVIDUELLE PHASE
     // ==========================================
-    function getPlantInfo(plant) {
-      if (plant.hasCustomPhase) {
-        return calculatePhaseDetails(plant.phaseType, plant.startDate);
-      } else {
-        return getBoxInfo(plant.box);
-      }
-    }
-
     function toggleCustomPhaseUI() {
       const ui = document.getElementById('customPhaseUI');
       ui.style.display = ui.style.display === 'none' ? 'block' : 'none';
@@ -2101,8 +2052,8 @@ function handlePlantFileUpload(input) {
       }
       savePlantsDataCloudAndLocal();
       document.getElementById('customPhaseUI').style.display = 'none';
-      openPlantDetailModal(currentDetailPlant); // Modal aktualisieren
-      openBoxDetail(currentSelectedBox); // Kacheln im Hintergrund aktualisieren
+      openPlantDetailModal(currentDetailPlant);
+      openBoxDetail(currentSelectedBox);
     }
   </script>
 </body>
