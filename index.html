@@ -28,7 +28,7 @@
       justify-content: center;
       transition: opacity 0.6s ease, visibility 0.6s;
     }
-    #splash-screen.hidden { opacity: 0; visibility: hidden; }
+    #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .splash-content { text-align: center; }
     .pulse-anim {
       animation: pulse 1.5s infinite;
@@ -63,7 +63,7 @@
       white-space: nowrap;
       opacity: 0;
       clip-path: inset(0 100% 0 0);
-      animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+      animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
     }
 
     .splash-line2 {
@@ -75,7 +75,7 @@
       opacity: 0;
       clip-path: inset(0 100% 0 0);
       text-shadow: 0 4px 18px rgba(0,0,0,0.5);
-      animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 1.9s forwards;
+      animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.4s forwards;
     }
 
     @keyframes revealText {
@@ -111,42 +111,42 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    <!-- Header mit echten Vektor-Blättern links & rechts -->
-  <header>
-    <!-- Vektor Links (nach links gedreht) -->
-    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad1)"/>
-      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2ecc71" />
-          <stop offset="100%" stop-color="#27ae60" />
-        </linearGradient>
-      </defs>
-    </svg>
+    /* Header mit nach links gedrehten Vektoren links & rechts */
+    header {
+      background: linear-gradient(135deg, rgba(155, 81, 224, 0.4), rgba(255, 117, 195, 0.25));
+      padding-top: max(12px, env(safe-area-inset-top)); 
+      padding-bottom: 16px; padding-left: 12px; padding-right: 12px;
+      text-align: center; border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      overflow: hidden;
+    }
 
-    <!-- Logo Badge in der Mitte -->
-    <div class="logo-wrapper">
-      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
-    </div>
+    /* Vektor-Container (nach links gedreht: -90deg) */
+    .header-vector {
+      width: 48px; height: 48px;
+      transform: rotate(-90deg);
+      opacity: 0.85;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+      flex-shrink: 0;
+      pointer-events: none;
+    }
 
-    <!-- Vektor Rechts (nach links gedreht) -->
-    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 38px;">
-      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad2)"/>
-      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
-      <defs>
-        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2ecc71" />
-          <stop offset="100%" stop-color="#27ae60" />
-        </linearGradient>
-      </defs>
-    </svg>
+    .logo-wrapper {
+      background-color: #fff; padding: 6px 18px; border-radius: 32px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
+      justify-content: center; margin: 0 auto; position: relative; z-index: 2;
+    }
+    .app-logo { max-height: 44px; width: auto; display: block; }
 
-    <!-- Einstellungen Zahnrad -->
-    <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
-      ⚙️
-    </button>
-  </header>
+    /* Einstellungs-Button (Zahnrad-Icon ohne Text) */
+    .btn-lock-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
+      color: #fff; width: 34px; height: 36px; border-radius: 50%;
+      font-size: 15px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
 
     /* Main Container & Tabs */
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
@@ -283,120 +283,18 @@
 </head>
 <body>
   
-  // --- FACE ID & BIOMETRISCHE SPERRE (MIT ECHTER iOS PLATFORM-BINDUNG) ---
-let isBiometricLockEnabled = localStorage.getItem('creamyp_lock_enabled') === 'true';
-
-async function toggleBiometricLockSetting() {
-  if (!isBiometricLockEnabled) {
-    if (!window.PublicKeyCredential) {
-      alert("Biometrie wird auf diesem Gerät/Browser leider nicht unterstützt.");
-      return;
-    }
-
-    try {
-      // Erstelle lokale Challenge
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
-      const userId = new Uint8Array(16);
-      window.crypto.getRandomValues(userId);
-
-      // Zwingt iOS dazu, AUSSCHLIESSLICH die lokale Face ID des iPhones zu nutzen ("platform")
-      const credential = await navigator.credentials.create({
-        publicKey: {
-          challenge: challenge,
-          rp: { name: "CreamyP V2" },
-          user: {
-            id: userId,
-            name: "creamyp_user",
-            displayName: "CreamyP User"
-          },
-          pubKeyCredParams: [
-            { alg: -7, type: "public-key" },
-            { alg: -257, type: "public-key" }
-          ],
-          authenticatorSelection: {
-            authenticatorAttachment: "platform", // Extrem wichtig: Erschlägt das externe Kamera/Schlüssel-Menü!
-            userVerification: "required"
-          },
-          timeout: 60000
-        }
-      });
-
-      if (credential) {
-        // Speichere den erzeugten lokalen Schlüssel
-        const credIdBase64 = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
-        localStorage.setItem('creamyp_cred_id', credIdBase64);
-        isBiometricLockEnabled = true;
-        localStorage.setItem('creamyp_lock_enabled', 'true');
-        alert("Face ID erfolgreich für CreamyP aktiviert!");
-      }
-    } catch (e) {
-      console.error("Face ID Setup abgebrochen:", e);
-      alert("Face ID Einrichtung wurde abgebrochen.");
-    }
-  } else {
-    isBiometricLockEnabled = false;
-    localStorage.setItem('creamyp_lock_enabled', 'false');
-    localStorage.removeItem('creamyp_cred_id');
-    alert("Face ID Sperre deaktiviert!");
-  }
-}
-
-function checkLockOnStart() {
-  if (isBiometricLockEnabled) {
-    document.getElementById('biometric-lock-overlay').classList.add('active');
-    authenticateUserBiometric();
-  }
-}
-
-async function authenticateUserBiometric() {
-  const credIdBase64 = localStorage.getItem('creamyp_cred_id');
-  
-  if (!credIdBase64) {
-    // Falls noch kein Face ID Key auf dem Handy existiert -> PIN Zeigen
-    document.getElementById('pinFallbackArea').style.display = 'block';
-    return;
-  }
-
-  try {
-    const challenge = new Uint8Array(32);
-    window.crypto.getRandomValues(challenge);
-    const rawId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
-
-    // Ruft jetzt DIREKT Face ID auf dem iPhone auf
-    const credential = await navigator.credentials.get({
-      publicKey: {
-        challenge: challenge,
-        allowCredentials: [{
-          id: rawId,
-          type: 'public-key'
-        }],
-        userVerification: "required",
-        timeout: 60000
-      }
-    });
-
-    if (credential) {
-      document.getElementById('biometric-lock-overlay').classList.remove('active');
-      return;
-    }
-  } catch (e) {
-    console.warn("Face ID abgebrochen:", e);
-  }
-  
-  // Bei Fehlschlag oder Abbrechen den PIN-Fallback anbieten
-  document.getElementById('pinFallbackArea').style.display = 'block';
-}
-
-function unlockWithPIN() {
-  const input = document.getElementById('pinInput').value;
-  if (input === "1236") {
-    document.getElementById('biometric-lock-overlay').classList.remove('active');
-    document.getElementById('pinInput').value = "";
-  } else {
-    alert("Falscher PIN! Versuche 1236.");
-  }
-}
+  <!-- BIOMETRIC LOCK OVERLAY (Face ID / Passcode PIN: 1236) -->
+  <div id="biometric-lock-overlay">
+    <div style="font-size: 60px; margin-bottom: 16px;">🔐</div>
+    <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">CreamyP V2 Geschützt</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; max-width: 280px;">Sperre aufheben mit Face ID, Touch ID oder Geräte-Passcode.</p>
+    <button type="button" class="btn" style="max-width: 240px;" onclick="authenticateUserBiometric()">Entsperren mit Face ID</button>
+    
+    <div id="pinFallbackArea" style="display: none; margin-top: 20px; width: 100%; max-width: 240px;">
+      <input type="password" id="pinInput" placeholder="PIN eingeben (1236)" style="text-align: center; font-size: 18px; letter-spacing: 4px; margin-bottom: 8px;">
+      <button type="button" class="btn btn-secondary" onclick="unlockWithPIN()">Mit PIN entsperren</button>
+    </div>
+  </div>
 
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
@@ -411,14 +309,38 @@ function unlockWithPIN() {
     </div>
   </div>
   
-  <!-- Header mit gedrehten Vektoren links & rechts -->
+  <!-- Header mit echten Vektor-Blättern links & rechts -->
   <header>
-    <div class="header-vector-left"></div>
+    <!-- Vektor Links (nach links gedreht) -->
+    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad1)"/>
+      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2ecc71" />
+          <stop offset="100%" stop-color="#27ae60" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- Logo Badge in der Mitte -->
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
-    <div class="header-vector-right"></div>
 
+    <!-- Vektor Rechts (nach links gedreht) -->
+    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 38px;">
+      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad2)"/>
+      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2ecc71" />
+          <stop offset="100%" stop-color="#27ae60" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- Einstellungen Zahnrad Button -->
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
       ⚙️
     </button>
@@ -695,7 +617,7 @@ function unlockWithPIN() {
     </div>
   </div>
 
-  <!-- Modal 3: Archive Detail & Edit Modal (INCL. ERNTEDATUM ANPASSEN) -->
+  <!-- Modal 3: Archive Detail & Edit Modal -->
   <div class="modal-overlay" id="archiveDetailModal">
     <div class="modal-card">
       <div id="arcDetailView">
@@ -852,6 +774,16 @@ function unlockWithPIN() {
   </nav>
 
   <script>
+    // --- APP SCHUTZ & NOTFALL-AUSBLENDUNG FÜR LADEELEMENT ---
+    function hideSplashScreen() {
+      const splash = document.getElementById('splash-screen');
+      if (splash && !splash.classList.contains('hidden')) {
+        splash.classList.add('hidden');
+      }
+    }
+    // GARANTIERT: Blendet den Ladescreen nach spätestens 2.8s bedingungslos aus!
+    setTimeout(hideSplashScreen, 2800);
+
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
 
     const SCHEME_10L = {
@@ -918,18 +850,49 @@ function unlockWithPIN() {
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
-    // --- FACE ID & BIOMETRISCHE SPERRE ---
+    // --- FACE ID & BIOMETRISCHE SPERRE (MIT ECHTER iOS PLATFORM-BINDUNG) ---
     let isBiometricLockEnabled = localStorage.getItem('creamyp_lock_enabled') === 'true';
 
-    function toggleBiometricLockSetting() {
+    async function toggleBiometricLockSetting() {
       if (!isBiometricLockEnabled) {
-        isBiometricLockEnabled = true;
-        localStorage.setItem('creamyp_lock_enabled', 'true');
-        alert("Face ID / PIN-Sperre wurde aktiviert! (PIN: 1236)");
+        if (!window.PublicKeyCredential) {
+          alert("Biometrie wird auf diesem Gerät/Browser leider nicht unterstützt.");
+          return;
+        }
+
+        try {
+          const challenge = new Uint8Array(32);
+          window.crypto.getRandomValues(challenge);
+          const userId = new Uint8Array(16);
+          window.crypto.getRandomValues(userId);
+
+          const credential = await navigator.credentials.create({
+            publicKey: {
+              challenge: challenge,
+              rp: { name: "CreamyP V2" },
+              user: { id: userId, name: "creamyp_user", displayName: "CreamyP User" },
+              pubKeyCredParams: [ { alg: -7, type: "public-key" }, { alg: -257, type: "public-key" } ],
+              authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+              timeout: 60000
+            }
+          });
+
+          if (credential) {
+            const credIdBase64 = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+            localStorage.setItem('creamyp_cred_id', credIdBase64);
+            isBiometricLockEnabled = true;
+            localStorage.setItem('creamyp_lock_enabled', 'true');
+            alert("Face ID erfolgreich für CreamyP aktiviert!");
+          }
+        } catch (e) {
+          console.error("Face ID Setup abgebrochen:", e);
+          alert("Face ID Einrichtung wurde abgebrochen.");
+        }
       } else {
         isBiometricLockEnabled = false;
         localStorage.setItem('creamyp_lock_enabled', 'false');
-        alert("Sperre deaktiviert!");
+        localStorage.removeItem('creamyp_cred_id');
+        alert("Face ID Sperre deaktiviert!");
       }
     }
 
@@ -941,25 +904,37 @@ function unlockWithPIN() {
     }
 
     async function authenticateUserBiometric() {
-      if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-        try {
-          const dummyChallenge = new Uint8Array(32);
-          window.crypto.getRandomValues(dummyChallenge);
-          const credential = await navigator.credentials.get({
-            publicKey: { challenge: dummyChallenge, timeout: 60000, userVerification: "required" }
-          });
-          if (credential) {
-            document.getElementById('biometric-lock-overlay').classList.remove('active');
-            return;
+      const credIdBase64 = localStorage.getItem('creamyp_cred_id');
+      if (!credIdBase64) {
+        document.getElementById('pinFallbackArea').style.display = 'block';
+        return;
+      }
+
+      try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+        const rawId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+
+        const credential = await navigator.credentials.get({
+          publicKey: {
+            challenge: challenge,
+            allowCredentials: [{ id: rawId, type: 'public-key' }],
+            userVerification: "required",
+            timeout: 60000
           }
-        } catch (e) {
-          console.warn("Biometrie Fallback auf PIN:", e);
+        });
+
+        if (credential) {
+          document.getElementById('biometric-lock-overlay').classList.remove('active');
+          return;
         }
+      } catch (e) {
+        console.warn("Face ID abgebrochen:", e);
       }
       document.getElementById('pinFallbackArea').style.display = 'block';
     }
 
-    // PIN IST NUN 1236
+    // PIN: 1236
     function unlockWithPIN() {
       const input = document.getElementById('pinInput').value;
       if (input === "1236") {
@@ -971,8 +946,11 @@ function unlockWithPIN() {
     }
 
     window.addEventListener('DOMContentLoaded', () => { 
-      document.getElementById('strom-input-date').value = todayStr;
-      document.getElementById('arc-datum').value = todayStr;
+      const stromDate = document.getElementById('strom-input-date');
+      if(stromDate) stromDate.value = todayStr;
+      const arcDate = document.getElementById('arc-datum');
+      if(arcDate) arcDate.value = todayStr;
+      
       checkLockOnStart();
       fetchInitialData(); 
     });
@@ -1022,13 +1000,6 @@ function unlockWithPIN() {
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
           hideSplashScreen();
         });
-    }
-
-    function hideSplashScreen() {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.classList.add('hidden');
-      }, 4200); 
     }
 
     function uploadImageToCloud(file) {
@@ -1622,7 +1593,7 @@ function unlockWithPIN() {
       return "";
     }
 
-    // --- LOGBUCH LOGIK (KAMERA EMOJI REMOVED) ---
+    // --- LOGBUCH LOGIK (OHNE KAMERA EMOJI) ---
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
@@ -1735,7 +1706,7 @@ function unlockWithPIN() {
       });
     }
 
-    // --- ARCHIV & RANKING (MIT ERNTEDATUM-ANPASSUNG) ---
+    // --- ARCHIV & RANKING ---
     function renderArchiveData() {
       renderRanking();
       const container = document.getElementById('archive-list-container');
