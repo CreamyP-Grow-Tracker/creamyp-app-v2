@@ -1817,9 +1817,13 @@
     function saveBoxModal() {
       if (!activeEditingBox) return;
 
+      // NEU: Wir sichern das bestehende Bild, bevor wir die Daten überschreiben!
+      const existingImg = (boxesData[activeEditingBox] && boxesData[activeEditingBox].img) ? boxesData[activeEditingBox].img : "";
+
       boxesData[activeEditingBox] = {
         phaseType: document.getElementById('modalBoxPhaseType').value,
-        startDate: document.getElementById('modalBoxStartDate').value
+        startDate: document.getElementById('modalBoxStartDate').value,
+        img: existingImg // <-- Hier sagen wir der App: "Behalte das Bild!"
       };
 
       localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
