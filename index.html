@@ -17,6 +17,39 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+    /* Splash Screen */
+    #splash-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      /* Das gleiche Lila wie im Header, aber undurchsichtig */
+      background: linear-gradient(135deg, #9b51e0, #ff75c3);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .splash-content {
+      text-align: center;
+    }
+    .pulse-anim {
+      animation: pulse 1.5s infinite;
+      max-height: 80px; /* Logo etwas größer auf dem Ladescreen */
+      background-color: #fff;
+      padding: 12px 32px;
+      border-radius: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
     :root {
       --bg-color: #101412;
       --card-bg: #181f1b;
@@ -521,7 +554,15 @@
   </style>
 </head>
 <body>
-
+  
+<!-- SPLASH SCREEN -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo pulse-anim">
+      <div style="color: #fff; font-weight: 600; margin-top: 20px; font-size: 14px; letter-spacing: 1px;">Lade Daten...</div>
+    </div>
+  </div>
+  
   <!-- App Header -->
   <header>
     <div class="logo-wrapper">
@@ -917,8 +958,11 @@
       fetchInitialData();
     });
 
-    function fetchInitialData() {
-      if(!API_URL || API_URL.includes("DEIN_NEUER")) return;
+function fetchInitialData() {
+      if(!API_URL || API_URL.includes("DEIN_NEUER")) {
+          hideSplashScreen();
+          return;
+      }
       
       fetch(API_URL)
         .then(res => res.json())
@@ -934,7 +978,6 @@
             plantsData = ensureAllPlantsExist(data.plants);
             localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
             
-            // Falls Daten aus der Cloud unvollständig waren, reparieren wir sie direkt in der Cloud
             if (Array.isArray(data.plants) && data.plants.length < 5) {
               savePlantsDataCloudAndLocal();
             }
@@ -958,13 +1001,25 @@
           renderDashboardSetup();
           autoCalculateFertilizer();
           renderBoxTiles();
+          
+          hideSplashScreen(); // <-- NEU: Hier wird ausgeblendet
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           renderDashboardSetup();
           autoCalculateFertilizer();
           renderBoxTiles();
+          
+          hideSplashScreen(); // <-- NEU: Auch bei Fehler ausblenden
         });
+    }
+
+    // <-- NEU: Diese Hilfsfunktion direkt darunter einfügen
+    function hideSplashScreen() {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) splash.classList.add('hidden');
+      }, 500); 
     }
 
     function calculateVPD(temp, rh) {
@@ -1108,11 +1163,29 @@
       return { days, week, isVeg, tagText, statusText, exactDayText };
     }
 
-    function renderDashboardSetup() {
+function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
       const boxes = ["Mars Hydro", "Grow Box"];
+
+      // NEU: Hier kannst du deine Hardware eintragen
+      const hardwareConfig = {
+        "Mars Hydro": [
+          "💡 LED: Mars Hydro FC-E3000",
+          "💨 Abluft: PrimaKlima 125 EC-TC",
+          "🌬️ Umluft: 2x GHP Profan",
+          "💧 Bewässerung: Manuell",
+          "🌡️ Sensoren: Tuya & Inkbird"
+        ],
+        "Grow Box": [
+          "💡 LED: Sanlight EVO 4-80",
+          "💨 Abluft: AC Infinity Cloudline T4",
+          "🌬️ Umluft: 1x Secret Jardin",
+          "💧 Bewässerung: Autopot",
+          "💧 Luftentfeuchter: Trotec TTK 33 E"
+        ]
+      };
 
       boxes.forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
@@ -1120,19 +1193,28 @@
 
         const info = getBoxInfo(boxName);
         const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
+        
+        const strainNames = boxPlants.map(p => p.name).join(', ');
+        
+        // NEU: Wandelt die Liste in HTML-Listenpunkte um
+        const hardwareList = hardwareConfig[boxName].map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
 
         const card = document.createElement('div');
         card.className = 'setup-card-box';
         
-        const strainNames = boxPlants.map(p => p.name).join(', ');
-
         card.innerHTML = `
           <h3>
             <span>⛺ ${boxName}</span>
             <span class="plant-tag ${tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">💡 Setup: LED Beleuchtung | Schema: BioNova Coco</p>
+          
+          <details style="margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
+            <summary style="font-size: 11px; color: var(--plant-green); cursor: pointer; font-weight: 600; outline: none;">Hardware & Setup Details anzeigen ▾</summary>
+            <ul style="font-size: 11px; color: var(--text-muted); padding-left: 14px; margin-top: 8px; list-style-type: square;">
+              ${hardwareList}
+            </ul>
+          </details>
         `;
         container.appendChild(card);
       });
@@ -1336,29 +1418,28 @@
       document.getElementById('plantImgWrapper').style.display = 'none';
     }
 
-    function handlePlantFileUpload(input) {
+function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const reader = new FileReader();
         
+        const btnUpload = document.getElementById('modalPlantFileInput');
+        btnUpload.disabled = true;
+        const oldLabel = document.getElementById('modalPlantName').innerText;
+        document.getElementById('modalPlantName').innerText = "⏳ Lade Bild hoch (Bitte warten)...";
+
+        const reader = new FileReader();
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            const maxDim = 800;
+            const maxDim = 800; 
 
             if (width > height) {
-              if (width > maxDim) {
-                height *= maxDim / width;
-                width = maxDim;
-              }
+              if (width > maxDim) { height *= maxDim / width; width = maxDim; }
             } else {
-              if (height > maxDim) {
-                width *= maxDim / height;
-                height = maxDim;
-              }
+              if (height > maxDim) { width *= maxDim / height; height = maxDim; }
             }
 
             canvas.width = width;
@@ -1366,12 +1447,29 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
             
             if (currentDetailPlant) {
               currentDetailPlant.img = compressedBase64;
-              updatePlantImageDisplay(compressedBase64);
-              savePlantsDataCloudAndLocal();
+              
+              fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "savePlants", plants: plantsData })
+              })
+              .then(res => res.json())
+              .then(resData => {
+                document.getElementById('modalPlantName').innerText = "✅ Erfolgreich gespeichert!";
+                setTimeout(() => {
+                  fetchInitialData(); 
+                  closePlantDetailModal(); 
+                  btnUpload.disabled = false;
+                }, 1000);
+              })
+              .catch(err => {
+                console.error("Fehler beim Cloud-Speichern:", err);
+                document.getElementById('modalPlantName').innerText = "❌ Fehler beim Upload";
+                btnUpload.disabled = false;
+              });
             }
           };
           img.src = e.target.result;
