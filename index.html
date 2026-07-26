@@ -888,9 +888,15 @@
     </div>
   </div>
 
-  <!-- Modal Dialog für Zelt-Phase -->
+  <!-- Modal Dialog für Zelt-Phase & Foto -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
+      
+      <!-- BILD VORSCHAU -->
+      <div id="boxImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
+        <img id="boxImgPreview" src="" alt="Zeltbild" onerror="this.parentElement.style.display='none'" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+      </div>
+
       <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
       
       <div class="form-group">
@@ -906,6 +912,12 @@
       <div class="form-group">
         <label>Startdatum dieser Phase:</label>
         <input type="date" id="modalBoxStartDate">
+      </div>
+
+      <!-- BILD UPLOAD -->
+      <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 12px;">
+        <label>Zelt-Foto hinzufügen:</label>
+        <input type="file" id="modalBoxFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handleBoxFileUpload(this)">
       </div>
 
       <button type="button" class="btn" onclick="saveBoxModal()">Für das Zelt speichern</button>
@@ -1349,12 +1361,16 @@
         const strainNames = boxPlants.map(p => p.name).join(', ');
         const hardwareList = hardwareConfig[boxName].map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
 
+        // NEU: Prüfen, ob das Zelt ein Bild hat
+        const boxData = boxesData[boxName] || {};
+        const boxImg = boxData.img ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; vertical-align: middle; border: 1px solid var(--card-border);">` : ``;
+
         const card = document.createElement('div');
         card.className = 'setup-card-box';
         
         card.innerHTML = `
           <h3>
-            <span>⛺ ${boxName}</span>
+            <span style="display:flex; align-items:center;">${boxImg}⛺ ${boxName}</span>
             <span class="plant-tag ${tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
@@ -1482,14 +1498,20 @@
         const plantCount = boxPlants.length;
         const info = getBoxInfo(boxName);
 
+        const boxData = boxesData[boxName] || {};
+        const boxImg = boxData.img ? `<img src="${boxData.img}" style="width: 34px; height: 34px; border-radius: 8px; object-fit: cover; margin-right: 10px; border: 1px solid var(--card-border);">` : ``;
+
         const tile = document.createElement('div');
         tile.className = 'box-tile-card';
         tile.onclick = () => openBoxDetail(boxName);
 
         tile.innerHTML = `
-          <div class="box-tile-info">
-            <h3>⛺ ${boxName}</h3>
-            <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color: ${info.isVeg ? 'var(--plant-green)' : 'var(--bloom-pink)'}">${info.tagText}</strong></p>
+          <div style="display:flex; align-items:center;">
+            ${boxImg}
+            <div class="box-tile-info">
+              <h3>⛺ ${boxName}</h3>
+              <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color: ${info.isVeg ? 'var(--plant-green)' : 'var(--bloom-pink)'}">${info.tagText}</strong></p>
+            </div>
           </div>
           <div class="box-tile-arrow">➔</div>
         `;
@@ -1724,11 +1746,23 @@
 
     function openBoxModal(boxName) {
       activeEditingBox = boxName;
-      const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr };
+      const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr, img: "" };
 
       document.getElementById('modalBoxTitle').innerText = "⛺ " + boxName + " anpassen";
       document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
       document.getElementById('modalBoxStartDate').value = box.startDate || todayStr;
+      
+      document.getElementById('modalBoxFileInput').value = "";
+      const imgWrapper = document.getElementById('boxImgWrapper');
+      const imgPreview = document.getElementById('boxImgPreview');
+      
+      // Prüfen, ob ein Bild existiert, um es im Modal anzuzeigen
+      if (box.img && box.img.trim() !== "") {
+        imgPreview.src = box.img;
+        imgWrapper.style.display = 'block';
+      } else {
+        imgWrapper.style.display = 'none';
+      }
 
       document.getElementById('boxModal').classList.add('active');
     }
@@ -1738,6 +1772,48 @@
       activeEditingBox = null;
     }
 
+    function handleBoxFileUpload(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const btnUpload = document.getElementById('modalBoxFileInput');
+        btnUpload.disabled = true;
+        document.getElementById('modalBoxTitle').innerText = "⏳ Lade Bild hoch...";
+
+        uploadImageToCloud(file)
+          .then(imageUrl => {
+            if(!boxesData[activeEditingBox]) boxesData[activeEditingBox] = {};
+            boxesData[activeEditingBox].img = imageUrl;
+            
+            const imgPreview = document.getElementById('boxImgPreview');
+            imgPreview.src = imageUrl;
+            document.getElementById('boxImgWrapper').style.display = 'block';
+            
+            document.getElementById('modalBoxTitle').innerText = "⏳ Speichere in Cloud...";
+            
+            return fetch(API_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "saveBoxes", boxes: boxesData })
+            });
+          })
+          .then(() => {
+            document.getElementById('modalBoxTitle').innerText = "✅ Bild gespeichert!";
+            localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+            
+            setTimeout(() => {
+              document.getElementById('modalBoxTitle').innerText = "⛺ " + activeEditingBox + " anpassen";
+              btnUpload.disabled = false;
+              renderDashboardSetup(); // Aktualisiert Dashboard
+              renderBoxTiles();       // Aktualisiert Zelt-Übersicht
+            }, 1200);
+          })
+          .catch(err => {
+            console.error(err);
+            document.getElementById('modalBoxTitle').innerText = "❌ Fehler beim Upload";
+            btnUpload.disabled = false;
+          });
+      }
+    }
+    
     function saveBoxModal() {
       if (!activeEditingBox) return;
 
