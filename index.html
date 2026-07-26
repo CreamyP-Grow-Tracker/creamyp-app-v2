@@ -516,21 +516,31 @@
       margin-bottom: 4px;
     }
 
+/* Archiv & Ranking Styles */
+    .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
+    .ranking-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+    .ranking-value { font-size: 16px; color: #fff; font-weight: 700; }
+    
+    .archive-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; }
+    .archive-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0; }
+    .archive-info h3 { font-size: 15px; color: var(--plant-green); margin-bottom: 4px; }
+    .archive-stats { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+    .archive-tag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
+    .archive-review { font-size: 12px; color: #fff; font-style: italic; border-top: 1px dashed var(--card-border); padding-top: 6px; margin-top: 6px; }
+
     /* Bottom Nav */
     .bottom-nav {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       background: #121815;
       backdrop-filter: blur(15px);
       border-top: 1px solid var(--card-border);
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
-      padding-top: 10px;
-      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      padding: 10px 8px max(10px, env(safe-area-inset-bottom)) 8px;
       z-index: 1000;
+      overflow-x: auto; /* Erlaubt wischen, falls das Display sehr klein ist */
     }
 
     .nav-item {
@@ -540,9 +550,9 @@
       justify-content: center;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 11px;
+      font-size: 10px;
       cursor: pointer;
-      width: 20%;
+      min-width: 16%;
     }
 
     .nav-item .icon {
@@ -796,7 +806,63 @@
     </div>
 
   </div>
+<!-- TAB 6: ARCHIV & ZUKUNFT -->
+    <div id="tab-archiv" class="tab-content">
+      
+      <!-- Ranking Bereich -->
+      <div class="card">
+        <h2>🏆 Hall of Fame (Ranking)</h2>
+        <div id="ranking-container">Lädt Rankings...</div>
+      </div>
 
+      <!-- Vergangene Grows eintragen -->
+      <div class="card">
+        <h2>Ernte & Review eintragen</h2>
+        <details>
+          <summary style="font-size: 13px; color: var(--plant-green); cursor: pointer; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
+          <form id="archiveForm" onsubmit="submitArchive(event)" style="margin-top: 12px;">
+            <div class="form-group"><label>Sorte (Strain)</label><input type="text" id="arc-sorte" required></div>
+            <div class="sensor-grid" style="margin-bottom:14px;">
+              <div class="form-group" style="margin:0;"><label>Ertrag (g)</label><input type="number" id="arc-ertrag" step="0.1" required></div>
+              <div class="form-group" style="margin:0;"><label>THC (%)</label><input type="number" id="arc-thc" step="0.1"></div>
+            </div>
+            <div class="sensor-grid" style="margin-bottom:14px; grid-template-columns: repeat(4, 1fr);">
+              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aussehen</label><input type="number" id="arc-aussehen" min="1" max="10" placeholder="1-10"></div>
+              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aroma</label><input type="number" id="arc-aroma" min="1" max="10" placeholder="1-10"></div>
+              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Taste</label><input type="number" id="arc-geschmack" min="1" max="10" placeholder="1-10"></div>
+              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Wirkung</label><input type="number" id="arc-wirkung" min="1" max="10" placeholder="1-10"></div>
+            </div>
+            <div class="form-group"><label>Smoke-Review & Erfahrung</label><textarea id="arc-review" rows="2" placeholder="z.B. beerig, gut zu grinden..."></textarea></div>
+            <div class="form-group"><label>Ernte-Foto (wird über ImgBB gespeichert)</label><input type="file" id="arc-bild" accept="image/*"></div>
+            <button type="submit" class="btn" id="btn-submit-archive">Ins Archiv speichern</button>
+          </form>
+        </details>
+      </div>
+
+      <!-- Chronik Liste -->
+      <div class="card">
+        <h2>🕰️ Archivierte Projekte</h2>
+        <div id="archive-list-container">Lädt Chronik...</div>
+      </div>
+
+      <!-- Zukunfts-Wunschliste -->
+      <div class="card">
+        <h2>🚀 Zukunft & Ideen</h2>
+        <form id="futureForm" onsubmit="submitFuture(event)" style="margin-bottom: 16px; border-bottom: 1px dashed var(--card-border); padding-bottom: 16px;">
+          <div class="form-group">
+            <select id="fut-kat">
+              <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
+              <option value="✂️ Technik">✂️ Training / Technik (z.B. Stecklinge)</option>
+              <option value="🛒 Equipment">🛒 Neues Equipment</option>
+            </select>
+          </div>
+          <div class="form-group"><input type="text" id="fut-titel" placeholder="Titel (z.B. Mutterzelt starten)" required></div>
+          <button type="submit" class="btn btn-secondary">Idee speichern</button>
+        </form>
+        <div id="future-list-container">Lädt Ideen...</div>
+      </div>
+
+    </div>
   <!-- Modal Dialog für Zelt-Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
@@ -870,6 +936,10 @@
     <div class="nav-item" onclick="switchTab('plants', this)">
       <span class="icon">⛺</span>
       <span>Zelte</span>
+    </div>
+  <div class="nav-item" onclick="switchTab('archiv', this)">
+      <span class="icon">📚</span>
+      <span>Archiv</span>
     </div>
   </nav>
 
@@ -1001,6 +1071,10 @@ const noCacheUrl = API_URL + "?t=" + new Date().getTime();
           }
 
           if (data && data.strom) renderStromData(data.strom);
+          
+          // NEU: Archiv und Zukunft aus der Cloud laden
+          if (data && data.archive) { archiveCache = data.archive; renderArchiveData(); }
+          if (data && data.future) { futureCache = data.future; renderFutureData(); }
 
           renderDashboardSetup();
           autoCalculateFertilizer();
@@ -1658,6 +1732,198 @@ function handlePlantFileUpload(input) {
         fetchInitialData();
       })
       .catch(err => alert("Fehler beim Speichern: " + err));
+    }
+    // ==========================================
+    // ARCHIV, RANKING & ZUKUNFT LOGIK
+    // ==========================================
+    const IMGBB_API_KEY = "DEIN_KEY_HIER_EINFÜGEN"; // <--- HIER DEINEN KEY REIN!
+    let archiveCache = [];
+    let futureCache = [];
+
+    // Diese Funktion klinken wir in deine bestehende fetchInitialData() ein.
+    // Suche in fetchInitialData nach: if (data && data.strom) renderStromData(data.strom);
+    // Das machen wir gleich in Schritt 5.
+
+    function renderArchiveData() {
+      renderRanking();
+      
+      const container = document.getElementById('archive-list-container');
+      if (archiveCache.length === 0) {
+        container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Noch keine Projekte im Archiv.</p>";
+        return;
+      }
+      
+      let html = "";
+      archiveCache.forEach(item => {
+        const gesamtScore = ((Number(item.aussehen) + Number(item.aroma) + Number(item.geschmack) + Number(item.wirkung)) / 4).toFixed(1);
+        const imgHtml = item.bild ? `<img src="${item.bild}" class="archive-img">` : `<div class="archive-img" style="background:#232d27; display:flex; align-items:center; justify-content:center; font-size:24px;">🌿</div>`;
+        
+        html += `
+          <div class="archive-card">
+            ${imgHtml}
+            <div class="archive-info" style="flex-grow:1;">
+              <h3>${item.sorte}</h3>
+              <div class="archive-stats">
+                <span class="archive-tag">⚖️ ${item.ertrag}g</span>
+                <span class="archive-tag">🧪 ${item.thc || '?'}% THC</span>
+                <span class="archive-tag">⭐ ${gesamtScore}/10</span>
+              </div>
+              ${item.review ? `<div class="archive-review">"${item.review}"</div>` : ''}
+              <div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">Geerntet am ${item.datum}</div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderRanking() {
+      const container = document.getElementById('ranking-container');
+      if (archiveCache.length === 0) {
+        container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Benötigt mindestens einen Archiv-Eintrag.</p>";
+        return;
+      }
+
+      // 1. Ertrags-König
+      const bestYield = [...archiveCache].sort((a, b) => b.ertrag - a.ertrag)[0];
+      
+      // 2. Geschmacks-Sieger (Aroma + Geschmack)
+      const bestTaste = [...archiveCache].sort((a, b) => (b.aroma + b.geschmack) - (a.aroma + a.geschmack))[0];
+      
+      // 3. Gesamt-Sieger
+      const bestOverall = [...archiveCache].sort((a, b) => {
+        const scoreA = Number(a.aussehen) + Number(a.aroma) + Number(a.geschmack) + Number(a.wirkung);
+        const scoreB = Number(b.aussehen) + Number(b.aroma) + Number(b.geschmack) + Number(b.wirkung);
+        return scoreB - scoreA;
+      })[0];
+
+      container.innerHTML = `
+        <div class="ranking-box">
+          <div class="ranking-title">🏆 All-Time Favorite</div>
+          <div class="ranking-value">${bestOverall.sorte}</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div class="ranking-box" style="flex: 1;">
+            <div class="ranking-title">⚖️ Ertrags-König</div>
+            <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag}g</span></div>
+          </div>
+          <div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);">
+            <div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div>
+            <div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFutureData() {
+      const container = document.getElementById('future-list-container');
+      if (futureCache.length === 0) {
+        container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Keine Ideen vorhanden.</p>";
+        return;
+      }
+      let html = "";
+      futureCache.forEach(item => {
+        html += `
+          <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:10px; color:var(--plant-green); margin-bottom:2px;">${item.kategorie}</div>
+            <div style="font-size:14px; font-weight:600; color:#fff;">${item.titel}</div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function submitFuture(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveFuture",
+        entry: {
+          kategorie: document.getElementById('fut-kat').value,
+          titel: document.getElementById('fut-titel').value
+        }
+      };
+      
+      fetch(API_URL, { method: "POST", body: JSON.stringify(payload) })
+      .then(() => {
+        document.getElementById('futureForm').reset();
+        fetchInitialData();
+      });
+    }
+
+    function submitArchive(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-archive');
+      btn.innerText = "Lade hoch...";
+      btn.disabled = true;
+
+      const fileInput = document.getElementById('arc-bild');
+      
+      const payload = {
+        sorte: document.getElementById('arc-sorte').value,
+        ertrag: document.getElementById('arc-ertrag').value,
+        thc: document.getElementById('arc-thc').value,
+        aussehen: document.getElementById('arc-aussehen').value,
+        aroma: document.getElementById('arc-aroma').value,
+        geschmack: document.getElementById('arc-geschmack').value,
+        wirkung: document.getElementById('arc-wirkung').value,
+        review: document.getElementById('arc-review').value,
+        bild: ""
+      };
+
+      // Wenn kein Bild gewählt wurde, sofort speichern
+      if (!fileInput.files || !fileInput.files[0]) {
+        sendArchiveToSheet(payload, btn);
+        return;
+      }
+
+      // Wenn ein Bild da ist, erst zu ImgBB
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width; let height = img.height;
+          if (width > height) { if (width > 800) { height *= 800 / width; width = 800; } } 
+          else { if (height > 800) { width *= 800 / height; height = 800; } }
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          
+          const base64String = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+          const formData = new FormData();
+          formData.append("image", base64String);
+
+          fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              payload.bild = data.data.url;
+              sendArchiveToSheet(payload, btn);
+            } else {
+              alert("Bild-Upload fehlgeschlagen.");
+              btn.innerText = "Ins Archiv speichern";
+              btn.disabled = false;
+            }
+          });
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    }
+
+    function sendArchiveToSheet(payload, btn) {
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveArchive", entry: payload })
+      })
+      .then(() => {
+        document.getElementById('archiveForm').reset();
+        btn.innerText = "Erfolgreich!";
+        setTimeout(() => {
+          btn.innerText = "Ins Archiv speichern";
+          btn.disabled = false;
+          fetchInitialData();
+        }, 1500);
+      });
     }
   </script>
 </body>
