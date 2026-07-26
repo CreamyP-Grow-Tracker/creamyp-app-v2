@@ -111,54 +111,42 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* Header mit nach links gedrehten Vektoren links & rechts */
-    header {
-      background: linear-gradient(135deg, rgba(155, 81, 224, 0.35), rgba(255, 117, 195, 0.25));
-      padding-top: max(12px, env(safe-area-inset-top)); 
-      padding-bottom: 16px; padding-left: 16px; padding-right: 16px;
-      text-align: center; border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      overflow: hidden;
-    }
+    <!-- Header mit echten Vektor-Blättern links & rechts -->
+  <header>
+    <!-- Vektor Links (nach links gedreht) -->
+    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad1)"/>
+      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2ecc71" />
+          <stop offset="100%" stop-color="#27ae60" />
+        </linearGradient>
+      </defs>
+    </svg>
 
-    /* Vektordatei-Grafiken (nach links gedreht: rotate(-90deg)) */
-    .header-vector-left, .header-vector-right {
-      position: absolute;
-      width: 60px; height: 60px;
-      background-image: url('https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5');
-      background-size: contain; background-repeat: no-repeat; background-position: center;
-      filter: hue-rotate(90deg) saturate(1.8) drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-      opacity: 0.85;
-      z-index: 1;
-      pointer-events: none;
-    }
+    <!-- Logo Badge in der Mitte -->
+    <div class="logo-wrapper">
+      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
+    </div>
 
-    .header-vector-left {
-      left: 8px; top: 50%;
-      transform: translateY(-50%) rotate(-90deg);
-    }
+    <!-- Vektor Rechts (nach links gedreht) -->
+    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 38px;">
+      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad2)"/>
+      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2ecc71" />
+          <stop offset="100%" stop-color="#27ae60" />
+        </linearGradient>
+      </defs>
+    </svg>
 
-    .header-vector-right {
-      right: 58px; top: 50%;
-      transform: translateY(-50%) rotate(-90deg);
-    }
-
-    .logo-wrapper {
-      background-color: #fff; padding: 6px 20px; border-radius: 32px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
-      justify-content: center; margin: 0 auto; position: relative; z-index: 2;
-    }
-    .app-logo { max-height: 46px; width: auto; display: block; }
-
-    /* Einstellungs-Button (Zahnrad-Icon ohne Text) */
-    .btn-lock-toggle {
-      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
-      color: #fff; width: 36px; height: 36px; border-radius: 50%;
-      font-size: 16px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    }
+    <!-- Einstellungen Zahnrad -->
+    <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
+      ⚙️
+    </button>
+  </header>
 
     /* Main Container & Tabs */
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
