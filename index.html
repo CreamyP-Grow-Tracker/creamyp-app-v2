@@ -112,7 +112,7 @@
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
     /* =========================================================================
-       HEADER MIT SAUBERER 3-EBENEN-SCHICHTUNG (z-index & absolute positioning)
+       HEADER MIT VOLLFLÄCHIGEM VEKTOR-MUSTER
        ========================================================================= */
     header {
       position: sticky; top: 0; z-index: 100;
@@ -125,25 +125,18 @@
       overflow: hidden;
     }
 
-    /* EBENE 2: Blätter-Overlay (schwebt absolut über dem Balken, stört kein Layout) */
-    .header-leaf {
+    /* EBENE 2: Vollflächiges Blätter-Overlay (Wiederholt sich nahtlos über den gesamten Balken) */
+    .header-leaf-overlay {
       position: absolute;
-      width: 75px; height: 75px;
-      object-fit: cover;
-      mix-blend-mode: screen; /* Macht schwarzen Hintergrund der JPG komplett transparent! */
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      background-repeat: repeat;
+      background-position: center;
+      background-size: 75px auto; /* Hier kannst du die Größe der einzelnen Kacheln anpassen */
+      mix-blend-mode: screen; /* Macht schwarzen Hintergrund transparent */
       opacity: 0.85;
       z-index: 2;
       pointer-events: none;
-    }
-
-    .header-leaf.left {
-      left: 8px; top: 50%;
-      transform: translateY(-50%) rotate(-90deg); /* Nach links gedreht */
-    }
-
-    .header-leaf.right {
-      right: 55px; top: 50%;
-      transform: translateY(-50%) rotate(-90deg); /* Nach links gedreht */
     }
 
     /* EBENE 3: Logo-Badge & Zahnrad im Vordergrund */
@@ -323,19 +316,17 @@
     </div>
   </div>
   
-  <!-- HEADER MIT 3-EBENEN-AUFBAU -->
+  <!-- HEADER MIT VOLLFLÄCHIGER 3-EBENEN-SCHICHTUNG -->
   <header>
-    <!-- Ebene 2: Blätter links & rechts (über der lila Ebene, aber hinter dem Logo/Zahnrad) -->
-    <img id="leafImgLeft" class="header-leaf left" src="" alt="Vektor Blätter" style="display:none;">
+    <!-- Ebene 2: Vollflächiges Blätter-Overlay für den gesamten Balken -->
+    <div id="headerLeafOverlay" class="header-leaf-overlay" style="display:none;"></div>
     
     <!-- Ebene 3: Logo in der Mitte -->
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
 
-    <img id="leafImgRight" class="header-leaf right" src="" alt="Vektor Blätter" style="display:none;">
-
-    <!-- Ebene 3: Zahnrad rechts (bombenfest fixiert) -->
+    <!-- Ebene 3: Zahnrad rechts -->
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
       ⚙️
     </button>
@@ -769,15 +760,16 @@
   </nav>
 
   <script>
-    // --- WICHTIG: ERSETZE DIESE URL MIT DEINEM GOOGLE DRIVE LINK DER BLÄTTER-DATEI ---
+    // URL DER BLÄTTER-DATEI
     const HEADER_LEAF_URL = "https://lh3.googleusercontent.com/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH"; 
 
     function loadHeaderLeafImages() {
       if (HEADER_LEAF_URL) {
-        const left = document.getElementById('leafImgLeft');
-        const right = document.getElementById('leafImgRight');
-        if (left) { left.src = HEADER_LEAF_URL; left.style.display = 'block'; }
-        if (right) { right.src = HEADER_LEAF_URL; right.style.display = 'block'; }
+        const overlay = document.getElementById('headerLeafOverlay');
+        if (overlay) { 
+          overlay.style.backgroundImage = `url("${HEADER_LEAF_URL}")`; 
+          overlay.style.display = 'block'; 
+        }
       }
     }
 
@@ -1254,9 +1246,7 @@
       });
     }
 
-    /* =========================================================================
-       DÜNGERECHNER-LOGIK (VERANKERTE SILVER HAZE EXTRA-WOCHEN REGEL)
-       ========================================================================= */
+    /* DÜNGERECHNER-LOGIK */
     function autoCalculateFertilizer(isOverride = false) {
       const selectVal = document.getElementById('calc-box').value;
       if(!selectVal) return;
