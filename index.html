@@ -902,10 +902,11 @@
       <div class="form-group">
         <label>Aktuelle Phase des Zelts:</label>
         <select id="modalBoxPhaseType">
+          <option value="rooting">🪴 Bewurzelungsphase</option>
           <option value="veg">🌱 Vegetationsphase</option>
           <option value="blüte">🌸 Blütephase</option>
+          <option value="drying">🍂 Trocknungsphase</option>
         </select>
-      </div>
 
       <div class="form-group">
         <label>Startdatum dieser Phase:</label>
@@ -936,8 +937,10 @@
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
            <option value="box">-- Automatisch vom Zelt übernehmen --</option>
+           <option value="rooting">🪴 Bewurzelungsphase</option>
            <option value="veg">🌱 Vegetationsphase</option>
            <option value="blüte">🌸 Blütephase</option>
+           <option value="drying">🍂 Trocknungsphase</option>
          </select>
          <input type="date" id="customPhaseDate" style="padding:6px; font-size:12px; margin-bottom:8px;">
          <button type="button" class="btn" style="padding:8px; font-size:12px;" onclick="saveCustomPlantPhase()">Speichern</button>
@@ -1276,27 +1279,49 @@ function loadKlimaHistory(days, btnElement) {
 
     function getBoxInfo(boxName) {
       const box = boxesData[boxName] || { phaseType: 'blüte', startDate: todayStr };
-      const start = new Date(box.startDate || todayStr);
+      return calculatePhaseDetails(box.phaseType, box.startDate);
+    }
+
+    // Zentrale Berechnungsfunktion für Phasen (Zelt oder Pflanze)
+    function calculatePhaseDetails(phaseType, startDateStr) {
+      const start = new Date(startDateStr || todayStr);
       const now = new Date();
       const diffTime = Math.max(0, now - start);
       const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
       const week = Math.floor((days - 1) / 7) + 1;
-      const isVeg = box.phaseType === 'veg';
-      
-      const tagText = isVeg ? `VT${days}` : `BT${days}`;
-      const statusText = isVeg ? `🌱 VT${days} (Woche ${week})` : `🌸 BT${days} (Woche ${week})`;
-      const exactDayText = isVeg ? `Vegetationstag ${days}` : `Blütetag ${days}`;
+      const phase = phaseType || 'blüte';
 
-      return { days, week, isVeg, tagText, statusText, exactDayText };
+      let tagText = `BT${days}`;
+      let statusText = `🌸 BT${days} (Woche ${week})`;
+      let exactDayText = `Blütetag ${days}`;
+      let isVeg = false;
+
+      if (phase === 'veg') {
+        tagText = `VT${days}`;
+        statusText = `🌱 VT${days} (Woche ${week})`;
+        exactDayText = `Vegetationstag ${days}`;
+        isVeg = true;
+      } else if (phase === 'rooting') {
+        tagText = `RT${days}`;
+        statusText = `🪴 Bewurzelung Tag ${days}`;
+        exactDayText = `Bewurzelungstag ${days}`;
+        isVeg = true;
+      } else if (phase === 'drying') {
+        tagText = `TT${days}`;
+        statusText = `🍂 Trocknung Tag ${days}`;
+        exactDayText = `Trocknungstag ${days}`;
+        isVeg = false;
+      }
+
+      return { days, week, isVeg, tagText, statusText, exactDayText, phase };
     }
 
-function renderDashboardSetup() {
+    function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
       const boxes = ["Mars Hydro", "Grow Box"];
 
-      // NEU: Hier kannst du deine Hardware eintragen
       const hardwareConfig = {
         "Mars Hydro": [
           "💡 LED: Mars Hydro FC-E3000",
@@ -1322,8 +1347,6 @@ function renderDashboardSetup() {
         const tagClass = info.isVeg ? 'tag-veg' : 'tag-bloom';
         
         const strainNames = boxPlants.map(p => p.name).join(', ');
-        
-        // NEU: Wandelt die Liste in HTML-Listenpunkte um
         const hardwareList = hardwareConfig[boxName].map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
 
         const card = document.createElement('div');
@@ -1522,6 +1545,24 @@ function renderDashboardSetup() {
       return card;
     }
 
+    function openPlantDetailModal(plant) {
+      currentDetailPlant = plant;
+      plantLogLimit = 5;
+
+      // HIER WAR DER FEHLER: KORRIGIERT AUF 'plant'
+      const info = getPlantInfo(plant);
+
+      document.getElementById('modalPlantName').innerText = plant.name;
+      document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
+      document.getElementById('modalPlantDayTag').innerText = info.exactDayText;
+      
+      document.getElementById('modalPlantFileInput').value = "";
+      
+      updatePlantImageDisplay(plant.img || "");
+      renderPlantSpecificLogs();
+
+      document.getElementById('plantDetailModal').classList.add('active');
+    }
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant;
       plantLogLimit = 5;
@@ -2028,18 +2069,9 @@ function handlePlantFileUpload(input) {
     // ==========================================
     function getPlantInfo(plant) {
       if (plant.hasCustomPhase) {
-        const start = new Date(plant.startDate || todayStr);
-        const now = new Date();
-        const diffTime = Math.max(0, now - start);
-        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        const week = Math.floor((days - 1) / 7) + 1;
-        const isVeg = plant.phaseType === 'veg';
-        
-        const tagText = isVeg ? `VT${days}` : `BT${days}`;
-        const statusText = isVeg ? `🌱 VT${days} (Woche ${week})` : `🌸 BT${days} (Woche ${week})`;
-        return { tagText: tagText, statusText: statusText, exactDayText: (isVeg ? `Vegetationstag ${days}` : `Blütetag ${days}`), isVeg: isVeg };
+        return calculatePhaseDetails(plant.phaseType, plant.startDate);
       } else {
-        return getBoxInfo(plant.box); // Normales Zelt-Verhalten
+        return getBoxInfo(plant.box);
       }
     }
 
