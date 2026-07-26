@@ -295,18 +295,120 @@
 </head>
 <body>
   
-  <!-- BIOMETRIC LOCK OVERLAY (Face ID / Passcode PIN: 1236) -->
-  <div id="biometric-lock-overlay">
-    <div style="font-size: 60px; margin-bottom: 16px;">🔐</div>
-    <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">CreamyP V2 Geschützt</h2>
-    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; max-width: 280px;">Sperre aufheben mit Face ID, Touch ID oder Geräte-Passcode.</p>
-    <button type="button" class="btn" style="max-width: 240px;" onclick="authenticateUserBiometric()">Entsperren mit Face ID</button>
-    
-    <div id="pinFallbackArea" style="display: none; margin-top: 20px; width: 100%; max-width: 240px;">
-      <input type="password" id="pinInput" placeholder="PIN eingeben (1236)" style="text-align: center; font-size: 18px; letter-spacing: 4px; margin-bottom: 8px;">
-      <button type="button" class="btn btn-secondary" onclick="unlockWithPIN()">Mit PIN entsperren</button>
-    </div>
-  </div>
+  // --- FACE ID & BIOMETRISCHE SPERRE (MIT ECHTER iOS PLATFORM-BINDUNG) ---
+let isBiometricLockEnabled = localStorage.getItem('creamyp_lock_enabled') === 'true';
+
+async function toggleBiometricLockSetting() {
+  if (!isBiometricLockEnabled) {
+    if (!window.PublicKeyCredential) {
+      alert("Biometrie wird auf diesem Gerät/Browser leider nicht unterstützt.");
+      return;
+    }
+
+    try {
+      // Erstelle lokale Challenge
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+      const userId = new Uint8Array(16);
+      window.crypto.getRandomValues(userId);
+
+      // Zwingt iOS dazu, AUSSCHLIESSLICH die lokale Face ID des iPhones zu nutzen ("platform")
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge: challenge,
+          rp: { name: "CreamyP V2" },
+          user: {
+            id: userId,
+            name: "creamyp_user",
+            displayName: "CreamyP User"
+          },
+          pubKeyCredParams: [
+            { alg: -7, type: "public-key" },
+            { alg: -257, type: "public-key" }
+          ],
+          authenticatorSelection: {
+            authenticatorAttachment: "platform", // Extrem wichtig: Erschlägt das externe Kamera/Schlüssel-Menü!
+            userVerification: "required"
+          },
+          timeout: 60000
+        }
+      });
+
+      if (credential) {
+        // Speichere den erzeugten lokalen Schlüssel
+        const credIdBase64 = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+        localStorage.setItem('creamyp_cred_id', credIdBase64);
+        isBiometricLockEnabled = true;
+        localStorage.setItem('creamyp_lock_enabled', 'true');
+        alert("Face ID erfolgreich für CreamyP aktiviert!");
+      }
+    } catch (e) {
+      console.error("Face ID Setup abgebrochen:", e);
+      alert("Face ID Einrichtung wurde abgebrochen.");
+    }
+  } else {
+    isBiometricLockEnabled = false;
+    localStorage.setItem('creamyp_lock_enabled', 'false');
+    localStorage.removeItem('creamyp_cred_id');
+    alert("Face ID Sperre deaktiviert!");
+  }
+}
+
+function checkLockOnStart() {
+  if (isBiometricLockEnabled) {
+    document.getElementById('biometric-lock-overlay').classList.add('active');
+    authenticateUserBiometric();
+  }
+}
+
+async function authenticateUserBiometric() {
+  const credIdBase64 = localStorage.getItem('creamyp_cred_id');
+  
+  if (!credIdBase64) {
+    // Falls noch kein Face ID Key auf dem Handy existiert -> PIN Zeigen
+    document.getElementById('pinFallbackArea').style.display = 'block';
+    return;
+  }
+
+  try {
+    const challenge = new Uint8Array(32);
+    window.crypto.getRandomValues(challenge);
+    const rawId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+
+    // Ruft jetzt DIREKT Face ID auf dem iPhone auf
+    const credential = await navigator.credentials.get({
+      publicKey: {
+        challenge: challenge,
+        allowCredentials: [{
+          id: rawId,
+          type: 'public-key'
+        }],
+        userVerification: "required",
+        timeout: 60000
+      }
+    });
+
+    if (credential) {
+      document.getElementById('biometric-lock-overlay').classList.remove('active');
+      return;
+    }
+  } catch (e) {
+    console.warn("Face ID abgebrochen:", e);
+  }
+  
+  // Bei Fehlschlag oder Abbrechen den PIN-Fallback anbieten
+  document.getElementById('pinFallbackArea').style.display = 'block';
+}
+
+function unlockWithPIN() {
+  const input = document.getElementById('pinInput').value;
+  if (input === "1236") {
+    document.getElementById('biometric-lock-overlay').classList.remove('active');
+    document.getElementById('pinInput').value = "";
+  } else {
+    alert("Falscher PIN! Versuche 1236.");
+  }
+}
 
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
