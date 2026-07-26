@@ -111,41 +111,55 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* Header mit nach links gedrehten Vektoren links & rechts */
+    /* =========================================================================
+       HEADER MIT SAUBERER 3-EBENEN-SCHICHTUNG (z-index & absolute positioning)
+       ========================================================================= */
     header {
-      background: linear-gradient(135deg, rgba(155, 81, 224, 0.4), rgba(255, 117, 195, 0.25));
+      position: sticky; top: 0; z-index: 100;
+      background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3)); /* EBENE 1: Lila Balken Hintergrund */
       padding-top: max(12px, env(safe-area-inset-top)); 
-      padding-bottom: 16px; padding-left: 12px; padding-right: 12px;
+      padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
       text-align: center; border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
 
-    /* Vektor-Container (nach links gedreht: -90deg) */
-    .header-vector {
-      width: 48px; height: 48px;
-      transform: rotate(-90deg);
+    /* EBENE 2: Blätter-Overlay (schwebt absolut über dem Balken, stört kein Layout) */
+    .header-leaf {
+      position: absolute;
+      width: 75px; height: 75px;
+      object-fit: cover;
+      mix-blend-mode: screen; /* Macht schwarzen Hintergrund der JPG komplett transparent! */
       opacity: 0.85;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
-      flex-shrink: 0;
+      z-index: 2;
       pointer-events: none;
     }
 
+    .header-leaf.left {
+      left: 8px; top: 50%;
+      transform: translateY(-50%) rotate(-90deg); /* Nach links gedreht */
+    }
+
+    .header-leaf.right {
+      right: 55px; top: 50%;
+      transform: translateY(-50%) rotate(-90deg); /* Nach links gedreht */
+    }
+
+    /* EBENE 3: Logo-Badge & Zahnrad im Vordergrund */
     .logo-wrapper {
       background-color: #fff; padding: 6px 18px; border-radius: 32px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
-      justify-content: center; margin: 0 auto; position: relative; z-index: 2;
+      justify-content: center; position: relative; z-index: 10;
     }
     .app-logo { max-height: 44px; width: auto; display: block; }
 
-    /* Einstellungs-Button (Zahnrad-Icon ohne Text) */
     .btn-lock-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
-      color: #fff; width: 34px; height: 36px; border-radius: 50%;
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
       font-size: 15px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     /* Main Container & Tabs */
@@ -283,7 +297,7 @@
 </head>
 <body>
   
-  <!-- BIOMETRIC LOCK OVERLAY (Face ID / Passcode PIN: 1236) -->
+  <!-- BIOMETRIC LOCK OVERLAY (PIN: 1236) -->
   <div id="biometric-lock-overlay">
     <div style="font-size: 60px; margin-bottom: 16px;">🔐</div>
     <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">CreamyP V2 Geschützt</h2>
@@ -309,38 +323,19 @@
     </div>
   </div>
   
-  <!-- Header mit echten Vektor-Blättern links & rechts -->
+  <!-- HEADER MIT 3-EBENEN-AUFBAU -->
   <header>
-    <!-- Vektor Links (nach links gedreht) -->
-    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad1)"/>
-      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2ecc71" />
-          <stop offset="100%" stop-color="#27ae60" />
-        </linearGradient>
-      </defs>
-    </svg>
-
-    <!-- Logo Badge in der Mitte -->
+    <!-- Ebene 2: Blätter links & rechts (über der lila Ebene, aber hinter dem Logo/Zahnrad) -->
+    <img id="leafImgLeft" class="header-leaf left" src="" alt="Vektor Blätter" style="display:none;">
+    
+    <!-- Ebene 3: Logo in der Mitte -->
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
 
-    <!-- Vektor Rechts (nach links gedreht) -->
-    <svg class="header-vector" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 38px;">
-      <path d="M50 95 C50 70 30 60 10 65 C30 50 25 30 5 25 C25 25 35 10 50 5 C65 10 75 25 95 25 C75 30 70 50 90 65 C70 60 50 70 50 95 Z" fill="url(#grad2)"/>
-      <path d="M50 95 L50 15 M50 65 L20 45 M50 65 L80 45 M50 45 L25 25 M50 45 L75 25" stroke="#101412" stroke-width="2" stroke-linecap="round"/>
-      <defs>
-        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2ecc71" />
-          <stop offset="100%" stop-color="#27ae60" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <img id="leafImgRight" class="header-leaf right" src="" alt="Vektor Blätter" style="display:none;">
 
-    <!-- Einstellungen Zahnrad Button -->
+    <!-- Ebene 3: Zahnrad rechts (bombenfest fixiert) -->
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
       ⚙️
     </button>
@@ -774,14 +769,24 @@
   </nav>
 
   <script>
-    // --- APP SCHUTZ & NOTFALL-AUSBLENDUNG FÜR LADEELEMENT ---
+    // --- WICHTIG: ERSETZE DIESE URL MIT DEINEM GOOGLE DRIVE LINK DER BLÄTTER-DATEI ---
+    const HEADER_LEAF_URL = "https://drive.google.com/file/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH/view"; 
+
+    function loadHeaderLeafImages() {
+      if (HEADER_LEAF_URL) {
+        const left = document.getElementById('leafImgLeft');
+        const right = document.getElementById('leafImgRight');
+        if (left) { left.src = HEADER_LEAF_URL; left.style.display = 'block'; }
+        if (right) { right.src = HEADER_LEAF_URL; right.style.display = 'block'; }
+      }
+    }
+
     function hideSplashScreen() {
       const splash = document.getElementById('splash-screen');
       if (splash && !splash.classList.contains('hidden')) {
         splash.classList.add('hidden');
       }
     }
-    // GARANTIERT: Blendet den Ladescreen nach spätestens 2.8s bedingungslos aus!
     setTimeout(hideSplashScreen, 2800);
 
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
@@ -850,7 +855,7 @@
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
-    // --- FACE ID & BIOMETRISCHE SPERRE (MIT ECHTER iOS PLATFORM-BINDUNG) ---
+    // --- FACE ID & BIOMETRISCHE SPERRE ---
     let isBiometricLockEnabled = localStorage.getItem('creamyp_lock_enabled') === 'true';
 
     async function toggleBiometricLockSetting() {
@@ -934,7 +939,6 @@
       document.getElementById('pinFallbackArea').style.display = 'block';
     }
 
-    // PIN: 1236
     function unlockWithPIN() {
       const input = document.getElementById('pinInput').value;
       if (input === "1236") {
@@ -951,6 +955,7 @@
       const arcDate = document.getElementById('arc-datum');
       if(arcDate) arcDate.value = todayStr;
       
+      loadHeaderLeafImages();
       checkLockOnStart();
       fetchInitialData(); 
     });
@@ -1593,7 +1598,7 @@
       return "";
     }
 
-    // --- LOGBUCH LOGIK (OHNE KAMERA EMOJI) ---
+    // --- LOGBUCH LOGIK ---
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
