@@ -311,17 +311,18 @@
     <div id="tab-calc" class="tab-content">
       <div class="card">
         <h2>Smarter Düngerechner</h2>
-        <div class="form-group"><label>1. Growbox / Zelt wählen:</label>
+        <div class="form-group">
+          <label>1. Growbox oder einzelne Pflanze wählen:</label>
           <select id="calc-box" onchange="autoCalculateFertilizer()"></select>
         </div>
         <div class="form-group"><label>2. Wassermenge (in Litern):</label><input type="number" id="calc-water" value="10" step="0.5" oninput="autoCalculateFertilizer()"></div>
         <div id="calc-status-box" style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
-          <span>Status im Zelt:</span><strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
+          <span>Status / Phase:</span><strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
         </div>
         <details style="margin-bottom: 14px; font-size: 12px; color: var(--text-muted);">
           <summary style="cursor: pointer; margin-bottom: 6px;">Manuelle Phase erzwingen (Optional)</summary>
           <select id="calc-phase-override" onchange="autoCalculateFertilizer(true)" style="margin-top: 6px;">
-            <option value="auto">-- Automatisch vom Zelt übernehmen --</option>
+            <option value="auto">-- Automatisch übernehmen --</option>
             <option value="veg">🌱 Vegetationsphase (EC 1.0)</option>
             <option value="bw1">🌸 Blütewoche 1 (EC 1.4)</option>
             <option value="bw2">🌸 Blütewoche 2 (EC 1.7)</option>
@@ -357,14 +358,12 @@
 
     <!-- TAB 4: LOGBUCH -->
     <div id="tab-log" class="tab-content">
-      <!-- 1. EINTRÄGE ZUERST (MAX 5) -->
       <div class="card">
         <h2>Bisherige Logbuch-Einträge</h2>
         <div id="recent-logs-list">Lädt...</div>
         <button type="button" id="btn-expand-logs" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandGlobalLogs()">Mehr Einträge anzeigen</button>
       </div>
 
-      <!-- 2. FORMULAR DARUNTER -->
       <div class="card">
         <h2>Neuen Log-Eintrag hinzufügen</h2>
         <form id="logForm" onsubmit="submitLog(event)">
@@ -406,7 +405,6 @@
             </div>
           </div>
 
-          <!-- KORRIGIERT: Zeltname steht exakt direkt linksbündig neben dem Bild -->
           <div id="selected-box-title" style="margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
             Zelt Name
           </div>
@@ -419,17 +417,14 @@
 
     <!-- TAB 6: ARCHIV & ZUKUNFT -->
     <div id="tab-archiv" class="tab-content">
-      <!-- 1. HALL OF FAME -->
       <div class="card"><h2>🏆 Hall of Fame (Ranking)</h2><div id="ranking-container">Lädt Rankings...</div></div>
       
-      <!-- 2. ARCHIVIERTE PROJEKTE (MAX 5) -->
       <div class="card">
         <h2>🕰️ Archivierte Projekte</h2>
         <div id="archive-list-container">Lädt Chronik...</div>
         <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Archiv-Einträge anzeigen</button>
       </div>
 
-      <!-- 3. NEUES PROJEKT EINTRAGEN -->
       <div class="card">
         <h2>Ernte & Review eintragen</h2>
         <details>
@@ -455,7 +450,6 @@
         </details>
       </div>
 
-      <!-- 4. ZUKUNFT & IDEEN (LISTE ZUERST MAX 5, FORMULAR DARUNTER) -->
       <div class="card">
         <h2>🚀 Zukunft & Ideen</h2>
         <div id="future-list-container" style="margin-bottom:14px;">Lädt Ideen...</div>
@@ -480,7 +474,7 @@
 
   <!-- MODALS SYSTEM -->
 
-  <!-- Modal 1: Growbox Management (Neu / Löschen) -->
+  <!-- Modal 1: Growbox Management -->
   <div class="modal-overlay" id="boxManagementModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Growboxen verwalten</h3>
@@ -494,7 +488,7 @@
     </div>
   </div>
 
-  <!-- Modal 2: Log-Eintrag Bearbeiten / Löschen -->
+  <!-- Modal 2: Log-Eintrag Bearbeiten -->
   <div class="modal-overlay" id="editLogModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Log-Eintrag bearbeiten</h3>
@@ -555,7 +549,7 @@
     </div>
   </div>
 
-  <!-- Modal 4: Zukunft / Idee Bearbeiten -->
+  <!-- Modal 4: Zukunft Bearbeiten -->
   <div class="modal-overlay" id="editFutureModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Idee bearbeiten</h3>
@@ -718,7 +712,6 @@
     let archiveCache = [];
     let futureCache = [];
 
-    // Limits für 5-Einträge Begrenzung
     let globalLogLimit = 5;
     let archiveLimit = 5;
     let futureLimit = 5;
@@ -954,18 +947,35 @@
       return calculatePhaseDetails('blüte', todayStr);
     }
 
+    // WIEDERHERGESTELLT & ERWEITERT: Rechner-Dropdown (Zelte & Einzelpflanzen)
     function updateCalcBoxDropdown() {
       const select = document.getElementById('calc-box');
       if(!select) return;
+      const currentVal = select.value;
       select.innerHTML = "";
+
+      // 1. Zelte
       Object.keys(boxesData).forEach(b => {
-        select.innerHTML += `<option value="${b}">${b}</option>`;
+        select.innerHTML += `<option value="box:${b}">⛺ Zelt: ${b}</option>`;
       });
+
+      // 2. Einzelne Pflanzen
+      plantsData.forEach(p => {
+        select.innerHTML += `<option value="plant:${p.id}">🌱 Pflanze: ${p.name} (${p.box})</option>`;
+      });
+
+      if(currentVal) select.value = currentVal;
     }
 
+    // WIEDERHERGESTELLT: Hardware-Details im Dashboard per Klick
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
+
+      const hardwareConfig = {
+        "Mars Hydro": ["💡 LED: Mars Hydro FC-E3000", "💨 Abluft: PrimaKlima 125 EC-TC", "🌬️ Umluft: 2x GHP Profan", "💧 Bewässerung: Manuell", "🌡️ Sensoren: Tuya & Inkbird"],
+        "Grow Box": ["💡 LED: Sanlight EVO 4-80", "💨 Abluft: AC Infinity Cloudline T4", "🌬️ Umluft: 1x Secret Jardin", "💧 Bewässerung: Autopot", "💧 Luftentfeuchter: Trotec TTK 33 E"]
+      };
 
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
@@ -977,6 +987,9 @@
           ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
           : ``;
 
+        const listItems = (hardwareConfig[boxName] || ["Keine Hardware-Details hinterlegt."])
+          .map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
+
         const card = document.createElement('div');
         card.className = 'setup-card-box';
         card.innerHTML = `
@@ -985,34 +998,106 @@
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
+          <details style="margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
+            <summary style="font-size: 11px; color: var(--plant-green); cursor: pointer; font-weight: 600; outline: none;">Hardware & Setup Details anzeigen ▾</summary>
+            <ul style="font-size: 11px; color: var(--text-muted); padding-left: 14px; margin-top: 8px; list-style-type: square;">${listItems}</ul>
+          </details>
         `;
         container.appendChild(card);
       });
     }
 
+    /* =========================================================================
+       DÜNGERECHNER-LOGIK (VERANKERTE SILVER HAZE EXTRA-WOCHEN REGEL)
+       ========================================================================= */
     function autoCalculateFertilizer(isOverride = false) {
-      const selectedBox = document.getElementById('calc-box').value;
-      if(!selectedBox) return;
+      const selectVal = document.getElementById('calc-box').value;
+      if(!selectVal) return;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
       const overrideKey = document.getElementById('calc-phase-override').value;
       document.getElementById('calc-liters-label').innerText = liters;
 
-      let targetPhaseKey = "veg"; let statusLabel = ""; let isVegPhase = true;
+      let targetPhaseKey = "veg"; 
+      let statusLabel = ""; 
+      let isVegPhase = true;
+      let isSilverHazeOrLongBloomer = false;
 
       if (isOverride && overrideKey !== "auto") {
-        targetPhaseKey = overrideKey; statusLabel = "Manuell gewählt"; isVegPhase = (overrideKey === "veg");
+        targetPhaseKey = overrideKey; 
+        statusLabel = "Manuell gewählt"; 
+        isVegPhase = (overrideKey === "veg");
       } else {
-        const info = getBoxInfo(selectedBox);
-        statusLabel = info.statusText; isVegPhase = info.isVeg;
+        let info = null;
+
+        if (selectVal.startsWith("box:")) {
+          const boxName = selectVal.replace("box:", "");
+          info = getBoxInfo(boxName);
+          if (boxName === "Grow Box") isSilverHazeOrLongBloomer = true;
+          else {
+            const boxPlants = plantsData.filter(p => p.box === boxName);
+            if (boxPlants.some(p => p.name.toLowerCase().includes("silver haze") || p.strain.toLowerCase().includes("silver haze"))) {
+              isSilverHazeOrLongBloomer = true;
+            }
+          }
+        } else if (selectVal.startsWith("plant:")) {
+          const plantId = parseInt(selectVal.replace("plant:", ""));
+          const plant = plantsData.find(p => p.id === plantId);
+          if (plant) {
+            info = getPlantInfo(plant);
+            if (plant.name.toLowerCase().includes("silver haze") || plant.strain.toLowerCase().includes("silver haze") || plant.time.includes("10-11")) {
+              isSilverHazeOrLongBloomer = true;
+            }
+          }
+        }
+
+        if (!info) info = calculatePhaseDetails('blüte', todayStr);
+
+        statusLabel = info.statusText; 
+        isVegPhase = info.isVeg;
+
         if (info.isVeg) {
           targetPhaseKey = "veg";
         } else {
           const w = info.week;
-          if (w === 1) targetPhaseKey = "bw1"; else if (w === 2) targetPhaseKey = "bw2"; else if (w === 3) targetPhaseKey = "bw3"; else if (w === 4) targetPhaseKey = "bw4"; else if (w === 5) targetPhaseKey = "bw5"; else if (w === 6) targetPhaseKey = "bw6"; else if (w === 7) targetPhaseKey = "bw7"; else if (w === 8) targetPhaseKey = "bw8"; else targetPhaseKey = "flush";
+          
+          /*
+             SILVER HAZE / EXTRA-WOCHEN REGEL:
+             BW 1-5: bw1..bw5
+             BW 6:   bw6     (Peak 1)
+             BW 7:   bw6_ext (Peak 2 - Wiederholung BW6 Düngeplan)
+             BW 8:   bw7     (Reduzierung 1)
+             BW 9:   bw7_ext (Reduzierung 2 - Wiederholung BW7 Düngeplan)
+             BW 10:  bw8     (Spätblüte)
+             BW 11+: flush   (Spülen)
+          */
+          if (isSilverHazeOrLongBloomer) {
+            if (w === 1) targetPhaseKey = "bw1";
+            else if (w === 2) targetPhaseKey = "bw2";
+            else if (w === 3) targetPhaseKey = "bw3";
+            else if (w === 4) targetPhaseKey = "bw4";
+            else if (w === 5) targetPhaseKey = "bw5";
+            else if (w === 6) targetPhaseKey = "bw6";
+            else if (w === 7) targetPhaseKey = "bw6_ext"; // BW7 -> BW6 Schema
+            else if (w === 8) targetPhaseKey = "bw7";     // BW8 -> BW7 Schema
+            else if (w === 9) targetPhaseKey = "bw7_ext"; // BW9 -> BW7 Schema
+            else if (w === 10) targetPhaseKey = "bw8";    // BW10 -> BW8 Schema
+            else targetPhaseKey = "flush";                // Ab BW11 Spülen
+          } else {
+            // Standard 8-9 Wochen Schema
+            if (w === 1) targetPhaseKey = "bw1";
+            else if (w === 2) targetPhaseKey = "bw2";
+            else if (w === 3) targetPhaseKey = "bw3";
+            else if (w === 4) targetPhaseKey = "bw4";
+            else if (w === 5) targetPhaseKey = "bw5";
+            else if (w === 6) targetPhaseKey = "bw6";
+            else if (w === 7) targetPhaseKey = "bw7";
+            else if (w === 8) targetPhaseKey = "bw8";
+            else targetPhaseKey = "flush";
+          }
         }
       }
 
-      document.getElementById('calc-detected-status').innerText = statusLabel;
+      document.getElementById('calc-detected-status').innerText = statusLabel + (isSilverHazeOrLongBloomer ? " (Silver Haze Spezial-Schema)" : "");
       const ecBadge = document.getElementById('res-ec');
       const statusBox = document.getElementById('calc-status-box');
       
@@ -1030,7 +1115,7 @@
       });
     }
 
-    // --- ZELT MANAGEMENT (Neu / Löschen) ---
+    // --- ZELT MANAGEMENT ---
     function openBoxManagementModal() {
       const container = document.getElementById('existingBoxesList');
       container.innerHTML = "";
@@ -1064,7 +1149,6 @@
     function deleteBox(name) {
       if (!confirm(`Möchtest du das Zelt "${name}" wirklich löschen?`)) return;
       delete boxesData[name];
-      // Pflanzen in dieser Box auch löschen oder versetzen
       plantsData = plantsData.filter(p => p.box !== name);
       saveBoxesDataCloudAndLocal();
       savePlantsDataCloudAndLocal();
@@ -1127,7 +1211,6 @@
         ? `<img src="${boxData.img}" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border);">` 
         : ``;
         
-      // KORRIGIERTE ANZEIGE: Zeltname steht exakt direkt links neben dem Bild
       document.getElementById('selected-box-title').innerHTML = boxImgHtml + `<span>${boxName}</span>`;
 
       const grid = document.getElementById('selected-box-plants-grid');
@@ -1411,7 +1494,6 @@
 
     function expandArchiveList() { archiveLimit += 10; renderArchiveData(); }
 
-    // KORRIGIERT: ERTRAGSKÖNIG STRAHLENDES BLAU
     function renderRanking() {
       const container = document.getElementById('ranking-container');
       if (archiveCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Benötigt mindestens einen Archiv-Eintrag.</p>"; return; }
@@ -1427,7 +1509,6 @@
       container.innerHTML = `
         <div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
         <div style="display: flex; gap: 10px;">
-          <!-- Ertrags-König in hellem, strahlendem Blau -->
           <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
             <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
             <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag}g</span></div>
@@ -1459,7 +1540,6 @@
       document.getElementById('arcDetailChallenges').innerText = activeArchiveItem.herausforderungen || "Keine besonderen Probleme";
       document.getElementById('arcDetailReviewText').innerText = activeArchiveItem.review || "Kein Testbericht hinterlegt.";
 
-      // Galerie rendern
       const gallery = document.getElementById('arcDetailGallery');
       gallery.innerHTML = "";
       if (Array.isArray(activeArchiveItem.mehrBilder) && activeArchiveItem.mehrBilder.length > 0) {
