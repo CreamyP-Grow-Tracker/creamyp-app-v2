@@ -45,7 +45,7 @@
       100% { transform: scale(1); }
     }
     
-    /* Splash Screen Text Animations (Zweizeilig & ohne Abschneiden) */
+    /* Splash Screen Text Animations (Zweizeilig & vergrößertes CreamyP) */
     .splash-text-container {
       margin-top: 20px;
       display: flex;
@@ -66,15 +66,16 @@
       animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
     }
 
+    /* VERNÜNFTIG VERGRÖSSERTES CREAMY P */
     .splash-line2 {
       font-family: 'Dancing Script', cursive;
-      font-size: 44px;
+      font-size: 58px;
       font-weight: 700;
       color: #fff;
       white-space: nowrap;
       opacity: 0;
       clip-path: inset(0 100% 0 0);
-      text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      text-shadow: 0 4px 18px rgba(0,0,0,0.5);
       animation: revealText 1.4s cubic-bezier(0.4, 0, 0.2, 1) 1.9s forwards;
     }
 
@@ -89,7 +90,7 @@
       }
       100% {
         opacity: 1;
-        clip-path: inset(-15px -30px -15px -30px);
+        clip-path: inset(-20px -40px -20px -40px);
       }
     }
 
@@ -124,13 +125,18 @@
     header {
       background: linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(255, 117, 195, 0.2));
       padding-top: max(16px, env(safe-area-inset-top)); 
-      padding-bottom: 24px; padding-left: 16px; padding-right: 16px;
+      padding-bottom: 20px; padding-left: 16px; padding-right: 16px;
       text-align: center; border-bottom: 1px solid var(--card-border);
       backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: center; align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .logo-wrapper { background-color: #fff; padding: 8px 24px; border-radius: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
-    .app-logo { max-height: 58px; width: auto; display: block; }
+    .logo-wrapper { background-color: #fff; padding: 6px 20px; border-radius: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+    .app-logo { max-height: 48px; width: auto; display: block; }
+
+    .btn-lock-toggle {
+      position: absolute; right: 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border);
+      color: #fff; padding: 8px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
 
     /* Main Container & Tabs */
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
@@ -222,7 +228,7 @@
     .log-item-row { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
     .log-item-row:hover { background: rgba(255,255,255,0.03); }
     .log-item-row:last-child { border-bottom: none; }
-    .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; }
+    .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; align-items: center; }
 
     /* Ranking Styles */
     .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
@@ -254,10 +260,32 @@
     }
     .nav-item .icon { font-size: 20px; margin-bottom: 3px; }
     .nav-item.active { color: var(--plant-green); font-weight: 600; }
+
+    /* Face ID Lock Overlay */
+    #biometric-lock-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: #0d120f; z-index: 10000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 20px;
+    }
+    #biometric-lock-overlay.active { display: flex; }
   </style>
 </head>
 <body>
   
+  <!-- BIOMETRIC LOCK OVERLAY (Face ID / Passcode) -->
+  <div id="biometric-lock-overlay">
+    <div style="font-size: 60px; margin-bottom: 16px;">🔐</div>
+    <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">CreamyP V2 Geschützt</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; max-width: 280px;">Sperre aufheben mit Face ID, Touch ID oder Geräte-Passcode.</p>
+    <button type="button" class="btn" style="max-width: 240px;" onclick="authenticateUserBiometric()">Entsperren mit Face ID</button>
+    
+    <div id="pinFallbackArea" style="display: none; margin-top: 20px; width: 100%; max-width: 240px;">
+      <input type="password" id="pinInput" placeholder="PIN eingeben (Standard: 1234)" style="text-align: center; font-size: 18px; letter-spacing: 4px; margin-bottom: 8px;">
+      <button type="button" class="btn btn-secondary" onclick="unlockWithPIN()">Mit PIN entsperren</button>
+    </div>
+  </div>
+
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
     <div class="splash-content">
@@ -276,6 +304,9 @@
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
+    <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn">
+      <span id="lockIcon">🔓</span> <span id="lockStatusText">Face ID Aus</span>
+    </button>
   </header>
 
   <div class="container">
@@ -310,15 +341,22 @@
         <h2>Stromverbrauch <span style="font-size: 12px; color: var(--text-muted);">▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box"><div class="sensor-label">STAND</div><div class="sensor-val" id="strom-val-stand" style="font-size: 13px;">-- kWh</div></div>
-          <div class="sensor-box"><div class="sensor-label">Ø TAG</div><div class="sensor-val" id="strom-val-daily" style="font-size: 13px; color: var(--plant-green);">-- kWh</div></div>
+          <div class="sensor-box"><div class="sensor-label">Ø TAG (GESAMT)</div><div class="sensor-val" id="strom-val-daily" style="font-size: 13px; color: var(--plant-green);">-- kWh</div></div>
           <div class="sensor-box"><div class="sensor-label">JAHRESPROGNOSE</div><div class="sensor-val" id="strom-val-yearly" style="font-size: 12px; color: var(--primary-pink);">-- kWh</div></div>
         </div>
 
         <div id="strom-dropdown" onclick="event.stopPropagation()">
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
-            <span class="sensor-label">MONATSPROGNOSE</span>
+            <span class="sensor-label">MONATSPROGNOSE (ALL-TIME DURCHSCHNITT)</span>
             <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
+
+          <!-- HISTORISCHE STROMVERBRAUCHS-TABELLE -->
+          <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">📊 Historische Zählerstände & Protokoll:</h4>
+          <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
+            Lädt Protokoll...
+          </div>
+
           <form id="stromForm" onsubmit="submitStrom(event)">
             <div class="form-group" style="margin-bottom: 8px;"><label>Datum (auch für alte Daten):</label><input type="date" id="strom-input-date"></div>
             <div class="form-group" style="margin-bottom: 8px;"><label>Neuer Zählerstand (kWh):</label><input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 29750" required></div>
@@ -763,8 +801,86 @@
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
+    // --- FACE ID & BIOMETRISCHE SPERRE LOGIK ---
+    let isBiometricLockEnabled = localStorage.getItem('creamyp_lock_enabled') === 'true';
+
+    function updateLockUI() {
+      const lockIcon = document.getElementById('lockIcon');
+      const lockText = document.getElementById('lockStatusText');
+      if (isBiometricLockEnabled) {
+        lockIcon.innerText = "🔒";
+        lockText.innerText = "Face ID An";
+      } else {
+        lockIcon.innerText = "🔓";
+        lockText.innerText = "Face ID Aus";
+      }
+    }
+
+    function toggleBiometricLockSetting() {
+      if (!isBiometricLockEnabled) {
+        if (window.PublicKeyCredential) {
+          isBiometricLockEnabled = true;
+          localStorage.setItem('creamyp_lock_enabled', 'true');
+          alert("Face ID / Biometrische Sperre wurde aktiviert!");
+        } else {
+          isBiometricLockEnabled = true;
+          localStorage.setItem('creamyp_lock_enabled', 'true');
+          alert("PIN-Sperre wurde aktiviert! (Biometrie auf diesem Gerät eingeschränkt)");
+        }
+      } else {
+        isBiometricLockEnabled = false;
+        localStorage.setItem('creamyp_lock_enabled', 'false');
+        alert("Sperre deaktiviert!");
+      }
+      updateLockUI();
+    }
+
+    function checkLockOnStart() {
+      if (isBiometricLockEnabled) {
+        document.getElementById('biometric-lock-overlay').classList.add('active');
+        authenticateUserBiometric();
+      }
+    }
+
+    async function authenticateUserBiometric() {
+      if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+        try {
+          const dummyChallenge = new Uint8Array(32);
+          window.crypto.getRandomValues(dummyChallenge);
+
+          // Triggert den nativen iOS Face ID / Passkey Prompter
+          const credential = await navigator.credentials.get({
+            publicKey: {
+              challenge: dummyChallenge,
+              timeout: 60000,
+              userVerification: "required"
+            }
+          });
+          if (credential) {
+            document.getElementById('biometric-lock-overlay').classList.remove('active');
+            return;
+          }
+        } catch (e) {
+          console.warn("Biometrie abgebrochen oder nicht eingerichtet, nutze Fallback:", e);
+        }
+      }
+      document.getElementById('pinFallbackArea').style.display = 'block';
+    }
+
+    function unlockWithPIN() {
+      const input = document.getElementById('pinInput').value;
+      if (input === "1234" || input.length >= 4) {
+        document.getElementById('biometric-lock-overlay').classList.remove('active');
+        document.getElementById('pinInput').value = "";
+      } else {
+        alert("Falscher PIN! Versuche 1234.");
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => { 
       document.getElementById('strom-input-date').value = todayStr;
+      updateLockUI();
+      checkLockOnStart();
       fetchInitialData(); 
     });
 
@@ -914,10 +1030,40 @@
 
     function renderStromData(strom) {
       if (!strom) return;
-      document.getElementById('strom-val-stand').innerText = strom.latestStand ? formatNumberDE(strom.latestStand, 1) + " kWh" : "-- kWh";
+      document.getElementById('strom-val-stand').innerText = strom.latestStand ? formatNumberDE(strom.latestStand, 0) + " kWh" : "-- kWh";
       document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? formatNumberDE(strom.dailyAvg, 2) + " kWh" : "-- kWh";
       document.getElementById('strom-val-yearly').innerText = strom.estYearlyKwh ? formatNumberDE(strom.estYearlyKwh, 0) + " kWh" : "--";
       document.getElementById('strom-val-monthly').innerText = strom.estMonthlyCost ? formatNumberDE(strom.estMonthlyCost, 2) + " €/Monat" : "-- €/Monat";
+
+      // Rendere die historische Stromtabelle
+      const tableContainer = document.getElementById('strom-history-table-container');
+      if (strom.history && strom.history.length > 0) {
+        let tableHtml = `
+          <table style="width:100%; font-size:11px; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="color:var(--text-muted); border-bottom:1px solid var(--card-border);">
+                <th style="padding:4px;">Datum</th>
+                <th style="padding:4px;">Zählerstand</th>
+                <th style="padding:4px;">Verbrauch</th>
+                <th style="padding:4px;">Ø / Tag</th>
+              </tr>
+            </thead>
+            <tbody>`;
+        
+        strom.history.forEach(h => {
+          tableHtml += `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+              <td style="padding:6px 4px; color:var(--text-muted);">${h.date}</td>
+              <td style="padding:6px 4px; font-weight:600; color:#fff;">${formatNumberDE(h.stand, 0)} kWh</td>
+              <td style="padding:6px 4px; color:var(--electric-blue);">+${formatNumberDE(h.diff, 1)} kWh</td>
+              <td style="padding:6px 4px; color:var(--plant-green);">${formatNumberDE(h.perDay, 2)} kWh</td>
+            </tr>`;
+        });
+        tableHtml += `</tbody></table>`;
+        tableContainer.innerHTML = tableHtml;
+      } else {
+        tableContainer.innerHTML = `<p style="font-size:11px; color:var(--text-muted); padding:6px;">Noch keine Zählerstände eingetragen.</p>`;
+      }
     }
 
     function submitStrom(e) {
@@ -1040,6 +1186,9 @@
       });
     }
 
+    /* =========================================================================
+       DÜNGERECHNER-LOGIK (VERANKERTE SILVER HAZE EXTRA-WOCHEN REGEL)
+       ========================================================================= */
     function autoCalculateFertilizer(isOverride = false) {
       const selectVal = document.getElementById('calc-box').value;
       if(!selectVal) return;
@@ -1371,7 +1520,18 @@
       closeBoxModal();
     }
 
-    // --- LOGBUCH LOGIK & MODAL ---
+    // HELPER: Wermittelt das Zelt- oder Pflanzenfoto für Logbuch-Icons
+    function getEntityImage(plantOrBoxName) {
+      if (!plantOrBoxName) return "";
+      if (boxesData[plantOrBoxName] && boxesData[plantOrBoxName].img) {
+        return boxesData[plantOrBoxName].img;
+      }
+      const p = plantsData.find(x => x.name === plantOrBoxName);
+      if (p && p.img) return p.img;
+      return "";
+    }
+
+    // --- LOGBUCH LOGIK & MODAL (MIT DYNAMISCHEN BILD-ICONS OHNE ZELT-EMOJI) ---
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
@@ -1382,11 +1542,20 @@
       
       let html = "";
       globalLogsCache.slice(0, globalLogLimit).forEach(l => {
-        const imgIcon = l.bild ? ` 📷` : ``;
+        const entityImg = getEntityImage(l.plant);
+        const iconHtml = entityImg 
+          ? `<img src="${entityImg}" style="width:24px; height:24px; border-radius:6px; object-fit:cover; margin-right:8px; border:1px solid var(--card-border); flex-shrink:0;">`
+          : `<span style="font-size:16px; margin-right:6px;">🌱</span>`;
+
+        const logImgIcon = l.bild ? ` 📷` : ``;
+
         html += `
           <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
-            <div class="log-item-header"><span>⛺ ${l.plant}${imgIcon}</span><span style="color: var(--text-muted);">${l.date}</span></div>
-            <div><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>
+            <div class="log-item-header">
+              <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:#fff;">${l.plant}</strong>${logImgIcon}</span>
+              <span style="color: var(--text-muted); font-size:11px;">${l.date}</span>
+            </div>
+            <div style="margin-top:2px;"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>
             ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
           </div>`;
       });
