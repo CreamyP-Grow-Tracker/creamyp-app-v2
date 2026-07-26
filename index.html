@@ -12,8 +12,8 @@
 
   <title>CreamyP Grow Tracker V2</title>
 
-  <!-- Google Fonts: Fredoka, Inter & Caveat (für die Schreibschrift) -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Fredoka, Inter & Dancing Script (Echte Schreibschrift) -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -51,23 +51,23 @@
       100% { transform: scale(1); }
     }
     
-    /* Fließender Schreibschrift-Effekt ohne Balken */
+    /* Echte Schreibschrift & Anti-Abschneiden Padding */
     .typewriter-text {
-      font-family: 'Caveat', cursive, sans-serif;
-      font-size: 34px; /* Noch etwas größer für bessere Lesbarkeit */
+      font-family: 'Dancing Script', cursive;
+      font-size: 38px; 
       font-weight: 700;
       color: #fff;
       overflow: hidden;
       white-space: nowrap;
       display: inline-block;
-      max-width: 0; /* Startet unsichtbar */
-      /* weiche Animation (ease-in-out) erzeugt den Eindruck eines fließenden Stifts */
+      max-width: 0; 
+      padding-right: 15px; /* NEU: Verhindert, dass der letzte Buchstabe abgeschnitten wird */
       animation: handwriting 2.5s ease-in-out 0.5s forwards;
     }
     @keyframes handwriting {
       0% { max-width: 0; opacity: 0; }
       5% { opacity: 1; }
-      100% { max-width: 350px; opacity: 1; }
+      100% { max-width: 400px; opacity: 1; }
     }
 
     :root {
@@ -167,7 +167,21 @@
 
     /* Pflanzen Grid & Tags (4 Phasen) */
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-    .plant-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; position: relative; cursor: pointer; }
+    
+    .plant-card { 
+      background: rgba(255,255,255,0.02); 
+      border: 1px solid var(--card-border); 
+      border-radius: 12px; 
+      padding: 10px; 
+      position: relative; 
+      cursor: pointer; 
+      /* NEU: Feste Höhe & Flexbox für 100% einheitliche Kacheln */
+      height: 105px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden; 
+    }
     
     .plant-card.veg-card { border-left: 3px solid var(--plant-green); }
     .plant-card.bloom-card { border-left: 3px solid var(--primary-pink); }
@@ -205,12 +219,12 @@
     .archive-tag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
     .archive-review { font-size: 12px; color: #fff; font-style: italic; border-top: 1px dashed var(--card-border); padding-top: 6px; margin-top: 6px; }
 
-    /* Bottom Nav (Jetzt massiv und sehr dunkelgrün) */
+    /* Bottom Nav (Massiv & sehr dunkelgrün) */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      background: #05140b; /* Satte, sehr dunkle grüne Farbe */
-      border-top: 2px solid #143d22; /* Klare, grüne Abgrenzung */
+      background: #05140b; 
+      border-top: 2px solid #143d22; 
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -251,7 +265,7 @@
       <div style="color: #fff; font-weight: 700; margin-top: 24px; font-size: 18px; letter-spacing: 1px;">Let's Grow</div>
       
       <div style="margin-top: 30px; display: inline-block;">
-        <div class="typewriter-text">presented by CreamyP</div>
+        <div class="typewriter-text">presented by CreamyP&nbsp;</div>
       </div>
     </div>
   </div>
@@ -691,7 +705,7 @@
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) splash.classList.add('hidden');
-      }, 3500); // Länger anzeigen, damit die tolle neue Animation fertig spielt
+      }, 3500); 
     }
 
     // Google Drive Upload Logik
@@ -874,7 +888,7 @@
         // Zelt Emoji weggelassen, wenn Foto vorhanden. Wenn kein Foto, bleibt das Zelt-Emoji
         const boxImgHtml = boxData.img 
           ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
-          : `⛺ `;
+          : ``;
 
         const card = document.createElement('div');
         card.className = 'setup-card-box';
@@ -945,7 +959,7 @@
         
         const boxImgHtml = boxData.img 
           ? `<img src="${boxData.img}" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border);">` 
-          : `<span style="font-size: 24px; margin-right: 10px;">⛺</span>`;
+          : ``;
 
         let tagColor = 'var(--bloom-pink)';
         if(info.phase === 'veg') tagColor = 'var(--plant-green)';
@@ -978,7 +992,7 @@
       const boxData = boxesData[boxName] || {};
       const boxImgHtml = boxData.img 
         ? `<img src="${boxData.img}" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
-        : `⛺ `;
+        : ``;
         
       document.getElementById('selected-box-title').innerHTML = boxImgHtml + boxName;
 
@@ -1008,7 +1022,7 @@
 
       // NEUES LAYOUT: Sorte ist jetzt auf 2 Zeilen limitiert und super klein (9px)
       card.innerHTML = `
-        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <div style="display: flex; gap: 8px;">
           ${imgThumbHtml}
           <div style="flex: 1; min-width: 0;">
             <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h3>
