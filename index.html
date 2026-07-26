@@ -1428,8 +1428,7 @@ function handlePlantFileUpload(input) {
         
         const btnUpload = document.getElementById('modalPlantFileInput');
         btnUpload.disabled = true;
-        const oldLabel = document.getElementById('modalPlantName').innerText;
-        document.getElementById('modalPlantName').innerText = "⏳ Lade Bild hoch (Bitte warten)...";
+        document.getElementById('modalPlantName').innerText = "⏳ Speichere Bild in Cloud...";
 
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -1438,7 +1437,7 @@ function handlePlantFileUpload(input) {
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            const maxDim = 800; 
+            const maxDim = 800;
 
             if (width > height) {
               if (width > maxDim) { height *= maxDim / width; width = maxDim; }
@@ -1451,26 +1450,45 @@ function handlePlantFileUpload(input) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
             
             if (currentDetailPlant) {
-              currentDetailPlant.img = compressedBase64;
-              
               fetch(API_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "savePlants", plants: plantsData })
+                body: JSON.stringify({ 
+                  action: "uploadImage", 
+                  filename: currentDetailPlant.name,
+                  base64: compressedBase64 
+                })
               })
               .then(res => res.json())
               .then(resData => {
-                document.getElementById('modalPlantName').innerText = "✅ Erfolgreich gespeichert!";
-                setTimeout(() => {
-                  fetchInitialData(); 
-                  closePlantDetailModal(); 
-                  btnUpload.disabled = false;
-                }, 1000);
+                if(resData.status === "success" && resData.url) {
+                  currentDetailPlant.img = resData.url;
+                  updatePlantImageDisplay(resData.url);
+                  
+                  fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "savePlants", plants: plantsData })
+                  })
+                  .then(() => {
+                    document.getElementById('modalPlantName').innerText = "✅ Bild gespeichert!";
+                    localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
+                    
+                    setTimeout(() => {
+                      closePlantDetailModal();
+                      renderBoxTiles();
+                      if(currentSelectedBox) openBoxDetail(currentSelectedBox);
+                      btnUpload.disabled = false;
+                    }, 1500);
+                  });
+                  
+                } else {
+                  throw new Error("Cloud hat keine URL generiert.");
+                }
               })
               .catch(err => {
-                console.error("Fehler beim Cloud-Speichern:", err);
+                console.error("Upload-Fehler:", err);
                 document.getElementById('modalPlantName').innerText = "❌ Fehler beim Upload";
                 btnUpload.disabled = false;
               });
