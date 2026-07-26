@@ -12,7 +12,7 @@
 
   <title>CreamyP Grow Tracker V2</title>
 
-  <!-- Google Fonts: Fredoka, Inter & Dancing Script (Echte Schreibschrift) -->
+  <!-- Google Fonts: Fredoka, Inter & Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -28,17 +28,11 @@
       justify-content: center;
       transition: opacity 0.6s ease, visibility 0.6s;
     }
-    #splash-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-    .splash-content {
-      text-align: center;
-    }
+    #splash-screen.hidden { opacity: 0; visibility: hidden; }
+    .splash-content { text-align: center; }
     .pulse-anim {
       animation: pulse 1.5s infinite;
-      height: 150px;
-      width: auto;
+      height: 150px; width: auto;
       background-color: #fff;
       padding: 20px 40px;
       border-radius: 50px;
@@ -51,18 +45,11 @@
       100% { transform: scale(1); }
     }
     
-    /* Echte Schreibschrift & Anti-Abschneiden Padding */
     .typewriter-text {
       font-family: 'Dancing Script', cursive;
-      font-size: 38px; 
-      font-weight: 700;
-      color: #fff;
-      overflow: hidden;
-      white-space: nowrap;
-      display: inline-block;
-      max-width: 0; 
-      padding-left: 8px;  /* NEU: Verhindert, dass der allererste Buchstabe abgeschnitten wird */
-      padding-right: 15px; /* Verhindert, dass der letzte Buchstabe abgeschnitten wird */
+      font-size: 38px; font-weight: 700; color: #fff;
+      overflow: hidden; white-space: nowrap; display: inline-block;
+      max-width: 0; padding-left: 8px; padding-right: 15px;
       animation: handwriting 2.5s ease-in-out 0.5s forwards;
     }
     @keyframes handwriting {
@@ -75,21 +62,18 @@
       --bg-color: #101412;
       --card-bg: #181f1b;
       --card-border: #26332c;
-      
       --primary-purple: #9b51e0;
       --primary-pink: #ff75c3;
+      --electric-blue: #00d2d3;
       
-      /* Phasen-Farben */
       --plant-green: #2ecc71;
       --plant-green-dark: #27ae60;
       --plant-green-bg: rgba(46, 204, 113, 0.15);
       
       --bloom-pink: #ff75c3;
       --bloom-pink-bg: rgba(255, 117, 195, 0.15);
-
       --root-blue: #00d2d3;
       --root-blue-bg: rgba(0, 210, 211, 0.15);
-
       --dry-brown: #dca570;
       --dry-brown-bg: rgba(220, 165, 112, 0.15);
 
@@ -146,6 +130,7 @@
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
     .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: 8px; }
+    .btn-danger { background: #c0392b; color: #fff; box-shadow: none; margin-top: 8px; }
     .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
 
     /* Düngerechner Ergebnis-Tabelle */
@@ -153,7 +138,7 @@
     .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
     .calc-table tr:last-child td { border-bottom: none; }
     .calc-table td.val { text-align: right; font-weight: 700; color: var(--plant-green); }
-    .ec-badge { background: linear-gradient(135deg, #27ae60, #2ecc71); color: #0b140e; font-weight: 800; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: inline-block; transition: background 0.3s; }
+    .ec-badge { background: linear-gradient(135deg, #27ae60, #2ecc71); color: #0b140e; font-weight: 800; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: inline-block; }
     .ec-badge.bloom-mode { background: linear-gradient(135deg, #d63031, var(--primary-pink)); color: #fff; }
     .calc-table td.val.bloom-val { color: var(--primary-pink); }
 
@@ -166,7 +151,7 @@
     .box-tile-info p { font-size: 12px; color: var(--text-muted); }
     .box-tile-arrow { font-size: 20px; color: var(--plant-green); }
 
-    /* Pflanzen Grid & Tags (4 Phasen) */
+    /* Pflanzen Grid & Tags */
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
     
     .plant-card { 
@@ -176,12 +161,8 @@
       padding: 10px; 
       position: relative; 
       cursor: pointer; 
-      /* NEU: Feste Höhe & Flexbox für 100% einheitliche Kacheln */
       height: 105px; 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden; 
+      display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; 
     }
     
     .plant-card.veg-card { border-left: 3px solid var(--plant-green); }
@@ -190,7 +171,6 @@
     .plant-card.dry-card { border-left: 3px solid var(--dry-brown); }
 
     .plant-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-block; letter-spacing: 0.5px; }
-    
     .plant-tag.tag-veg { background: var(--plant-green-bg); color: var(--plant-green); border: 1px solid rgba(46, 204, 113, 0.3); }
     .plant-tag.tag-bloom { background: var(--bloom-pink-bg); color: var(--bloom-pink); border: 1px solid rgba(255, 117, 195, 0.3); }
     .plant-tag.tag-root { background: var(--root-blue-bg); color: var(--root-blue); border: 1px solid rgba(0, 210, 211, 0.3); }
@@ -199,62 +179,46 @@
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
     /* Modal Dialog */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
-    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
+    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
 
     /* Log Liste Item */
-    .log-item-row { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+    .log-item-row { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
+    .log-item-row:hover { background: rgba(255,255,255,0.03); }
     .log-item-row:last-child { border-bottom: none; }
     .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; }
 
-    /* Archiv & Ranking Styles */
+    /* Ranking Styles */
     .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
     .ranking-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
     .ranking-value { font-size: 16px; color: #fff; font-weight: 700; }
     
-    .archive-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; }
-    .archive-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0; }
+    .archive-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; cursor: pointer; transition: transform 0.15s; }
+    .archive-card:active { transform: scale(0.98); }
+    .archive-img { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0; }
     .archive-info h3 { font-size: 15px; color: var(--plant-green); margin-bottom: 4px; }
     .archive-stats { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
     .archive-tag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
     .archive-review { font-size: 12px; color: #fff; font-style: italic; border-top: 1px dashed var(--card-border); padding-top: 6px; margin-top: 6px; }
 
-    /* Bottom Nav (Massiv & sehr dunkelgrün) */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+    .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
+
+    /* Bottom Nav */
     .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #05140b; 
-      border-top: 2px solid #143d22; 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #05140b; border-top: 2px solid #143d22;
+      display: flex; justify-content: space-between; align-items: center;
       padding: 10px 8px max(10px, env(safe-area-inset-bottom)) 8px;
-      z-index: 1000;
-      overflow-x: auto;
+      z-index: 1000; overflow-x: auto;
     }
-
     .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 10px;
-      cursor: pointer;
-      min-width: 16%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; min-width: 16%;
     }
-
-    .nav-item .icon {
-      font-size: 20px;
-      margin-bottom: 3px;
-    }
-
-    .nav-item.active {
-      color: var(--plant-green);
-      font-weight: 600;
-    }
+    .nav-item .icon { font-size: 20px; margin-bottom: 3px; }
+    .nav-item.active { color: var(--plant-green); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -264,14 +228,13 @@
     <div class="splash-content">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
       <div style="color: #fff; font-weight: 700; margin-top: 24px; font-size: 18px; letter-spacing: 1px;">Let's Grow</div>
-      
       <div style="margin-top: 30px; display: inline-block;">
         <div class="typewriter-text">presented by CreamyP&nbsp;</div>
       </div>
     </div>
   </div>
   
-  <!-- App Header -->
+  <!-- Header -->
   <header>
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
@@ -320,7 +283,9 @@
             <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
           <form id="stromForm" onsubmit="submitStrom(event)">
+            <div class="form-group" style="margin-bottom: 8px;"><label>Datum (auch für alte Daten):</label><input type="date" id="strom-input-date"></div>
             <div class="form-group" style="margin-bottom: 8px;"><label>Neuer Zählerstand (kWh):</label><input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 29750" required></div>
+            <div class="form-group" style="margin-bottom: 8px;"><label>Notiz (optional):</label><input type="text" id="strom-input-note" placeholder="z.B. Stand Mai"></div>
             <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
           </form>
         </div>
@@ -347,10 +312,7 @@
       <div class="card">
         <h2>Smarter Düngerechner</h2>
         <div class="form-group"><label>1. Growbox / Zelt wählen:</label>
-          <select id="calc-box" onchange="autoCalculateFertilizer()">
-            <option value="Mars Hydro">Mars Hydro (4 Sorten)</option>
-            <option value="Grow Box">Grow Box (Silver Haze)</option>
-          </select>
+          <select id="calc-box" onchange="autoCalculateFertilizer()"></select>
         </div>
         <div class="form-group"><label>2. Wassermenge (in Litern):</label><input type="number" id="calc-water" value="10" step="0.5" oninput="autoCalculateFertilizer()"></div>
         <div id="calc-status-box" style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
@@ -395,8 +357,16 @@
 
     <!-- TAB 4: LOGBUCH -->
     <div id="tab-log" class="tab-content">
+      <!-- 1. EINTRÄGE ZUERST (MAX 5) -->
       <div class="card">
-        <h2>Eintrag hinzufügen</h2>
+        <h2>Bisherige Logbuch-Einträge</h2>
+        <div id="recent-logs-list">Lädt...</div>
+        <button type="button" id="btn-expand-logs" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandGlobalLogs()">Mehr Einträge anzeigen</button>
+      </div>
+
+      <!-- 2. FORMULAR DARUNTER -->
+      <div class="card">
+        <h2>Neuen Log-Eintrag hinzufügen</h2>
         <form id="logForm" onsubmit="submitLog(event)">
           <div class="form-group"><label>Zelt / Pflanze wählen</label><select id="log-plant"></select></div>
           <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="log-water" placeholder="z. B. 5.0" step="0.1"></div>
@@ -410,12 +380,9 @@
             </select>
           </div>
           <div class="form-group"><label>Notizen</label><textarea id="log-notes" rows="3" placeholder="Notizen..."></textarea></div>
-          <button type="submit" class="btn">In Google Sheet speichern</button>
+          <div class="form-group"><label>Foto hinzufügen (Optional)</label><input type="file" id="log-file" accept="image/*"></div>
+          <button type="submit" class="btn" id="btn-submit-log">In Google Sheet speichern</button>
         </form>
-      </div>
-      <div class="card">
-        <h2>Bisherige Log-Einträge</h2>
-        <div id="recent-logs-list">Lädt...</div>
       </div>
     </div>
 
@@ -423,8 +390,10 @@
     <div id="tab-plants" class="tab-content">
       <div class="card">
         <div id="box-overview-view">
-          <h2>Deine Growboxen</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle eine Growbox, um die Pflanzen darin zu öffnen:</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h2 onclick="openBoxManagementModal()" style="cursor: pointer;" title="Klicken zum Hinzufügen / Löschen">Deine Growboxen ⚙️</h2>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle eine Growbox (Tippe auf die Überschrift oben, um Zelte hinzuzufügen/löschen):</p>
           <div id="box-tiles-container"></div>
         </div>
 
@@ -437,7 +406,10 @@
             </div>
           </div>
 
-          <h2 id="selected-box-title" style="color: var(--text-main); margin-bottom: 4px; display:flex; align-items:center;">Zelt Name</h2>
+          <!-- KORRIGIERT: Zeltname steht exakt direkt linksbündig neben dem Bild -->
+          <div id="selected-box-title" style="margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
+            Zelt Name
+          </div>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Pflanzen in diesem Zelt:</p>
 
           <div id="selected-box-plants-grid" class="plants-grid"></div>
@@ -447,7 +419,17 @@
 
     <!-- TAB 6: ARCHIV & ZUKUNFT -->
     <div id="tab-archiv" class="tab-content">
+      <!-- 1. HALL OF FAME -->
       <div class="card"><h2>🏆 Hall of Fame (Ranking)</h2><div id="ranking-container">Lädt Rankings...</div></div>
+      
+      <!-- 2. ARCHIVIERTE PROJEKTE (MAX 5) -->
+      <div class="card">
+        <h2>🕰️ Archivierte Projekte</h2>
+        <div id="archive-list-container">Lädt Chronik...</div>
+        <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Archiv-Einträge anzeigen</button>
+      </div>
+
+      <!-- 3. NEUES PROJEKT EINTRAGEN -->
       <div class="card">
         <h2>Ernte & Review eintragen</h2>
         <details>
@@ -464,16 +446,23 @@
               <div class="form-group" style="margin:0;"><label style="font-size:10px;">Taste</label><input type="number" id="arc-geschmack" min="1" max="10" placeholder="1-10"></div>
               <div class="form-group" style="margin:0;"><label style="font-size:10px;">Wirkung</label><input type="number" id="arc-wirkung" min="1" max="10" placeholder="1-10"></div>
             </div>
-            <div class="form-group"><label>Smoke-Review & Erfahrung</label><textarea id="arc-review" rows="2" placeholder="z.B. beerig, gut zu grinden..."></textarea></div>
-            <div class="form-group"><label>Ernte-Foto (wird über Drive gespeichert)</label><input type="file" id="arc-bild" accept="image/*"></div>
+            <div class="form-group"><label>Blütedauer (z.B. 9 Wochen / 63 Tage)</label><input type="text" id="arc-bluetedauer" placeholder="z.B. 65 Tage"></div>
+            <div class="form-group"><label>Herausforderungen im Grow</label><textarea id="arc-herausforderungen" rows="2" placeholder="z.B. CalMag-Mangel ab BW4, RLF zu hoch..."></textarea></div>
+            <div class="form-group"><label>Smoke-Review & Erfahrung</label><textarea id="arc-review" rows="2" placeholder="z.B. beerig, süß, stark stoner..."></textarea></div>
+            <div class="form-group"><label>Titel-Foto</label><input type="file" id="arc-bild" accept="image/*"></div>
             <button type="submit" class="btn" id="btn-submit-archive">Ins Archiv speichern</button>
           </form>
         </details>
       </div>
-      <div class="card"><h2>🕰️ Archivierte Projekte</h2><div id="archive-list-container">Lädt Chronik...</div></div>
+
+      <!-- 4. ZUKUNFT & IDEEN (LISTE ZUERST MAX 5, FORMULAR DARUNTER) -->
       <div class="card">
         <h2>🚀 Zukunft & Ideen</h2>
-        <form id="futureForm" onsubmit="submitFuture(event)" style="margin-bottom: 16px; border-bottom: 1px dashed var(--card-border); padding-bottom: 16px;">
+        <div id="future-list-container" style="margin-bottom:14px;">Lädt Ideen...</div>
+        <button type="button" id="btn-expand-future" class="btn btn-secondary" style="display:none; font-size:12px; margin-bottom:16px;" onclick="expandFutureList()">Mehr Ideen anzeigen</button>
+
+        <form id="futureForm" onsubmit="submitFuture(event)" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
+          <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">+ Neue Idee speichern</h3>
           <div class="form-group">
             <select id="fut-kat">
               <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
@@ -484,13 +473,108 @@
           <div class="form-group"><input type="text" id="fut-titel" placeholder="Titel (z.B. Mutterzelt starten)" required></div>
           <button type="submit" class="btn btn-secondary">Idee speichern</button>
         </form>
-        <div id="future-list-container">Lädt Ideen...</div>
       </div>
     </div>
 
   </div> <!-- End container -->
 
-  <!-- Modal Dialog für Neue Pflanze / Stecklinge -->
+  <!-- MODALS SYSTEM -->
+
+  <!-- Modal 1: Growbox Management (Neu / Löschen) -->
+  <div class="modal-overlay" id="boxManagementModal">
+    <div class="modal-card">
+      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Growboxen verwalten</h3>
+      <div id="existingBoxesList" style="margin-bottom: 14px;"></div>
+      <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px;">
+        <label>Neue Growbox hinzufügen:</label>
+        <input type="text" id="newBoxNameInput" placeholder="z.B. Anzucht Zelt">
+      </div>
+      <button type="button" class="btn" onclick="addNewBox()">Box erstellen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeBoxManagementModal()">Schließen</button>
+    </div>
+  </div>
+
+  <!-- Modal 2: Log-Eintrag Bearbeiten / Löschen -->
+  <div class="modal-overlay" id="editLogModal">
+    <div class="modal-card">
+      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Log-Eintrag bearbeiten</h3>
+      <input type="hidden" id="editLogId">
+      <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="editLogWater" step="0.1"></div>
+      <div class="form-group"><label>Mängel</label><input type="text" id="editLogDefect"></div>
+      <div class="form-group"><label>Notiz</label><textarea id="editLogNote" rows="3"></textarea></div>
+      <div id="editLogImgWrapper" style="margin-bottom: 10px; display: none;">
+        <img id="editLogImgPreview" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px;">
+      </div>
+      <button type="button" class="btn" onclick="saveEditedLog()">Änderungen speichern</button>
+      <button type="button" class="btn btn-danger" onclick="deleteLogEntryConfirm()">🗑️ Eintrag löschen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeEditLogModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 3: Archive Detail & Edit Modal -->
+  <div class="modal-overlay" id="archiveDetailModal">
+    <div class="modal-card">
+      <div id="arcDetailView">
+        <img id="arcDetailMainImg" src="" style="width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; border: 1px solid var(--card-border); margin-bottom: 12px;">
+        <h3 id="arcDetailTitle" style="color: var(--plant-green); margin-bottom: 4px;">--</h3>
+        <div id="arcDetailStats" class="archive-stats" style="margin-bottom: 10px;"></div>
+        
+        <div style="font-size: 12px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 12px;">
+          <div><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
+          <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
+          <div style="margin-top: 4px;"><strong>💬 Review:</strong> <em id="arcDetailReviewText">--</em></div>
+        </div>
+
+        <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Bildergalerie vom Grow:</h4>
+        <div id="arcDetailGallery" class="gallery-grid"></div>
+
+        <div style="margin-top: 14px; border-top: 1px solid var(--card-border); padding-top: 10px; display: flex; gap: 8px;">
+          <input type="file" id="arcAddPhotoInput" accept="image/*" style="font-size: 11px; padding: 6px;" onchange="uploadAdditionalArchivePhoto(this)">
+        </div>
+
+        <button type="button" class="btn btn-secondary" style="margin-top: 12px;" onclick="switchToEditArchiveView()">✏️ Projekt bearbeiten</button>
+        <button type="button" class="btn btn-secondary" onclick="closeArchiveDetailModal()">Schließen</button>
+      </div>
+
+      <div id="arcEditView" style="display: none;">
+        <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
+        <input type="hidden" id="arcEditId">
+        <div class="form-group"><label>Sorte</label><input type="text" id="arcEditSorte"></div>
+        <div class="sensor-grid" style="margin-bottom:12px;">
+          <div class="form-group"><label>Ertrag (g)</label><input type="number" id="arcEditErtrag" step="0.1"></div>
+          <div class="form-group"><label>THC (%)</label><input type="number" id="arcEditThc" step="0.1"></div>
+        </div>
+        <div class="form-group"><label>Blütedauer</label><input type="text" id="arcEditBluetedauer"></div>
+        <div class="form-group"><label>Herausforderungen</label><textarea id="arcEditHerausforderungen" rows="2"></textarea></div>
+        <div class="form-group"><label>Review</label><textarea id="arcEditReview" rows="2"></textarea></div>
+
+        <button type="button" class="btn" onclick="saveEditedArchive()">Änderungen speichern</button>
+        <button type="button" class="btn btn-danger" onclick="deleteArchiveConfirm()">🗑️ Projekt löschen</button>
+        <button type="button" class="btn btn-secondary" onclick="closeArchiveDetailModal()">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Zukunft / Idee Bearbeiten -->
+  <div class="modal-overlay" id="editFutureModal">
+    <div class="modal-card">
+      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Idee bearbeiten</h3>
+      <input type="hidden" id="editFutureId">
+      <div class="form-group"><label>Kategorie</label>
+        <select id="editFutureKat">
+          <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
+          <option value="✂️ Technik">✂️ Training / Technik</option>
+          <option value="🛒 Equipment">🛒 Neues Equipment</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Titel</label><input type="text" id="editFutureTitel"></div>
+      <button type="button" class="btn" onclick="saveEditedFuture()">Speichern</button>
+      <button type="button" class="btn btn-danger" onclick="deleteFutureConfirm()">🗑️ Idee löschen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeEditFutureModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 5: Pflanze hinzufügen -->
   <div class="modal-overlay" id="addPlantModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">+ Neu ins Zelt</h3>
@@ -501,25 +585,18 @@
           <option value="stecklinge">📦 Stecklingsbox (Mehrere)</option>
         </select>
       </div>
-      <div class="form-group">
-        <label id="newPlantNameLabel">Name der Pflanze:</label>
-        <input type="text" id="newPlantName" placeholder="z.B. Lemon Haze" required>
-      </div>
-      <div class="form-group">
-        <label id="newPlantStrainLabel">Sorte / Genetik:</label>
-        <input type="text" id="newPlantStrain" placeholder="z.B. Sativa, Breeder..." required>
-        <div id="stecklingHint" style="display:none; font-size:10px; color:var(--text-muted); margin-top:4px;">Tipp: Du kannst hier mehrere Sorten reinschreiben (z.B. "2x Haze, 3x Kush").</div>
-      </div>
+      <div class="form-group"><label id="newPlantNameLabel">Name der Pflanze:</label><input type="text" id="newPlantName" required></div>
+      <div class="form-group"><label id="newPlantStrainLabel">Sorte / Genetik:</label><input type="text" id="newPlantStrain" required></div>
       <button type="button" class="btn" onclick="saveNewPlant()">Ins Zelt stellen</button>
       <button type="button" class="btn btn-secondary" onclick="closeAddPlantModal()">Abbrechen</button>
     </div>
   </div>
 
-  <!-- Modal Dialog für Zelt-Phase & Foto -->
+  <!-- Modal 6: Zelt Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <div id="boxImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
-        <img id="boxImgPreview" src="" alt="Zeltbild" onerror="this.parentElement.style.display='none'" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+        <img id="boxImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
       <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
       <div class="form-group">
@@ -541,17 +618,17 @@
     </div>
   </div>
 
-  <!-- MODAL FÜR PFLANZEN-DETAILS -->
+  <!-- Modal 7: Pflanzen Details -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
-        <img id="plantImgPreview" src="" alt="Pflanzenbild" onerror="handlePlantImageError()" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
+        <img id="plantImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
       <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 2px;">Pflanze</h3>
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
       
-      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase (Tage) anpassen</button>
+      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase anpassen</button>
       <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
@@ -565,7 +642,7 @@
          <button type="button" class="btn" style="padding:8px; font-size:12px;" onclick="saveCustomPlantPhase()">Speichern</button>
       </div>
 
-      <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Chronologisches Logbuch:</h4>
+      <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Logbuch dieser Pflanze:</h4>
       <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
       <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 8px; margin-bottom: 16px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
 
@@ -573,16 +650,17 @@
         <label>Foto hinzufügen:</label>
         <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
       </div>
+      <button type="button" class="btn btn-danger" style="margin-top:8px;" onclick="deleteCurrentPlantConfirm()">🗑️ Pflanze löschen</button>
       <button type="button" class="btn btn-secondary" style="margin-top: 8px;" onclick="closePlantDetailModal()">Schließen</button>
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('dashboard', this)"><span class="icon">📊</span><span>Home</span></div>
     <div class="nav-item" onclick="switchTab('plan', this)"><span class="icon">📅</span><span>Plan</span></div>
     <div class="nav-item" onclick="switchTab('calc', this)"><span class="icon">🧪</span><span>Rechner</span></div>
-    <div class="nav-item" onclick="switchTab('log', this)"><span class="icon">📝</span><span>Log</span></div>
+    <div class="nav-item" onclick="switchTab('log', this)"><span class="icon">📝</span><span>Logbuch</span></div>
     <div class="nav-item" onclick="switchTab('plants', this)"><span class="icon">⛺</span><span>Zelte</span></div>
     <div class="nav-item" onclick="switchTab('archiv', this)"><span class="icon">📚</span><span>Archiv</span></div>
   </nav>
@@ -622,17 +700,6 @@
       return incomingPlants;
     }
 
-    function populateLogDropdown() {
-      const select = document.getElementById('log-plant');
-      if (!select) return;
-      select.innerHTML = "";
-      Object.keys(boxesData).forEach(box => { select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`; });
-      plantsData.forEach(p => {
-        const icon = p.isSteckling ? "📦" : "🌱";
-        select.innerHTML += `<option value="${p.name}">${icon} ${p.name} (${p.box})</option>`;
-      });
-    }
-
     let boxesData = JSON.parse(localStorage.getItem('creamyp_boxes_v8')) || {
       "Mars Hydro": { phaseType: "blüte", startDate: todayStr, img: "" },
       "Grow Box": { phaseType: "blüte", startDate: todayStr, img: "" }
@@ -650,17 +717,29 @@
     let globalLogsCache = [];
     let archiveCache = [];
     let futureCache = [];
+
+    // Limits für 5-Einträge Begrenzung
+    let globalLogLimit = 5;
+    let archiveLimit = 5;
+    let futureLimit = 5;
     let plantLogLimit = 5;
+
+    let activeArchiveItem = null;
+    let activeLogItem = null;
+    let activeFutureItem = null;
 
     function formatNumberDE(val, decimals = 1) {
       if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
-    window.addEventListener('DOMContentLoaded', () => { fetchInitialData(); });
+    window.addEventListener('DOMContentLoaded', () => { 
+      document.getElementById('strom-input-date').value = todayStr;
+      fetchInitialData(); 
+    });
 
     function fetchInitialData() {
-      if(!API_URL || API_URL.includes("DEIN_NEUER")) { hideSplashScreen(); return; }
+      if(!API_URL) { hideSplashScreen(); return; }
       
       const noCacheUrl = API_URL + "?t=" + new Date().getTime();
       fetch(noCacheUrl)
@@ -676,7 +755,6 @@
           if (data && data.plants) {
             plantsData = ensureAllPlantsExist(data.plants);
             localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
-            if (Array.isArray(data.plants) && data.plants.length < 5) savePlantsDataCloudAndLocal();
           }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
@@ -687,16 +765,21 @@
           }
 
           if (data && data.history) klimaHistoryCache = data.history;
-          if (data && data.logs) { globalLogsCache = data.logs; renderRecentLogsList(data.logs); }
+          if (data && data.logs) { globalLogsCache = data.logs; renderRecentLogsList(); }
           if (data && data.strom) renderStromData(data.strom);
           if (data && data.archive) { archiveCache = data.archive; renderArchiveData(); }
           if (data && data.future) { futureCache = data.future; renderFutureData(); }
 
-          renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles(); populateLogDropdown();
+          updateCalcBoxDropdown();
+          renderDashboardSetup(); 
+          autoCalculateFertilizer(); 
+          renderBoxTiles(); 
+          populateLogDropdown();
           hideSplashScreen();
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
+          updateCalcBoxDropdown();
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
           hideSplashScreen();
         });
@@ -706,10 +789,9 @@
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) splash.classList.add('hidden');
-      }, 3500); 
+      }, 3000); 
     }
 
-    // Google Drive Upload Logik
     function uploadImageToCloud(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -783,19 +865,19 @@
         data: {
           labels: labels,
           datasets: [
-            { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y' },
-            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y' },
-            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.3, yAxisID: 'y1' }
+            { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
           ]
         },
         options: {
-          responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+          responsive: true, maintainAspectRatio: false,
           scales: {
-            x: { ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71', font: { size: 9 }, stepSize: 0.1, callback: function(val) { return Number(val).toFixed(1); } }, grid: { drawOnChartArea: false } }
+            x: { ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71', font: { size: 9 } }, grid: { drawOnChartArea: false } }
           },
-          plugins: { legend: { labels: { color: '#f3f7f4', font: { size: 10 }, boxWidth: 10, padding: 8 } } }
+          plugins: { legend: { labels: { color: '#f3f7f4', font: { size: 10 } } } }
         }
       });
     }
@@ -804,17 +886,22 @@
       if (!strom) return;
       document.getElementById('strom-val-stand').innerText = strom.latestStand ? formatNumberDE(strom.latestStand, 1) + " kWh" : "-- kWh";
       document.getElementById('strom-val-daily').innerText = strom.dailyAvg ? formatNumberDE(strom.dailyAvg, 2) + " kWh" : "-- kWh";
-      const yearlyKwhText = strom.estYearlyKwh ? formatNumberDE(strom.estYearlyKwh, 0) + " kWh (" + formatNumberDE(strom.estYearlyCost, 2) + " €)" : "--";
-      document.getElementById('strom-val-yearly').innerText = yearlyKwhText;
+      document.getElementById('strom-val-yearly').innerText = strom.estYearlyKwh ? formatNumberDE(strom.estYearlyKwh, 0) + " kWh" : "--";
       document.getElementById('strom-val-monthly').innerText = strom.estMonthlyCost ? formatNumberDE(strom.estMonthlyCost, 2) + " €/Monat" : "-- €/Monat";
     }
 
     function submitStrom(e) {
       e.preventDefault();
-      const val = parseFloat(document.getElementById('strom-input-stand').value);
-      if (isNaN(val)) return;
-      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveStrom", zaehlerstand: val }) })
-      .then(() => { alert("Zählerstand gespeichert!"); document.getElementById('stromForm').reset(); fetchInitialData(); })
+      const stand = parseFloat(document.getElementById('strom-input-stand').value);
+      const dateVal = document.getElementById('strom-input-date').value;
+      const noteVal = document.getElementById('strom-input-note').value;
+      if (isNaN(stand)) return;
+
+      fetch(API_URL, { 
+        method: "POST", 
+        body: JSON.stringify({ action: "saveStrom", date: dateVal, zaehlerstand: stand, notiz: noteVal }) 
+      })
+      .then(() => { alert("Zählerstand erfolgreich gespeichert!"); document.getElementById('stromForm').reset(); document.getElementById('strom-input-date').value = todayStr; fetchInitialData(); })
       .catch(err => alert("Fehler: " + err));
     }
 
@@ -867,26 +954,25 @@
       return calculatePhaseDetails('blüte', todayStr);
     }
 
+    function updateCalcBoxDropdown() {
+      const select = document.getElementById('calc-box');
+      if(!select) return;
+      select.innerHTML = "";
+      Object.keys(boxesData).forEach(b => {
+        select.innerHTML += `<option value="${b}">${b}</option>`;
+      });
+    }
+
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
-      const boxes = ["Mars Hydro", "Grow Box"];
 
-      const hardwareConfig = {
-        "Mars Hydro": ["💡 LED: Mars Hydro FC-E3000", "💨 Abluft: PrimaKlima 125 EC-TC", "🌬️ Umluft: 2x GHP Profan", "💧 Bewässerung: Manuell", "🌡️ Sensoren: Tuya & Inkbird"],
-        "Grow Box": ["💡 LED: Sanlight EVO 4-80", "💨 Abluft: AC Infinity Cloudline T4", "🌬️ Umluft: 1x Secret Jardin", "💧 Bewässerung: Autopot", "💧 Luftentfeuchter: Trotec TTK 33 E"]
-      };
-
-      boxes.forEach(boxName => {
+      Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
-        if (boxPlants.length === 0) return;
-        
         const info = getBoxInfo(boxName);
         const boxData = boxesData[boxName] || {};
-        const strainNames = boxPlants.map(p => p.name).join(', ');
-        const hardwareList = hardwareConfig[boxName].map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
+        const strainNames = boxPlants.length > 0 ? boxPlants.map(p => p.name).join(', ') : 'Keine Pflanzen im Zelt';
         
-        // Zelt Emoji weggelassen, wenn Foto vorhanden. Wenn kein Foto, bleibt das Zelt-Emoji
         const boxImgHtml = boxData.img 
           ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
           : ``;
@@ -899,10 +985,6 @@
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
-          <details style="margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
-            <summary style="font-size: 11px; color: var(--plant-green); cursor: pointer; font-weight: 600; outline: none;">Hardware & Setup Details anzeigen ▾</summary>
-            <ul style="font-size: 11px; color: var(--text-muted); padding-left: 14px; margin-top: 8px; list-style-type: square;">${hardwareList}</ul>
-          </details>
         `;
         container.appendChild(card);
       });
@@ -910,6 +992,7 @@
 
     function autoCalculateFertilizer(isOverride = false) {
       const selectedBox = document.getElementById('calc-box').value;
+      if(!selectedBox) return;
       const liters = parseFloat(document.getElementById('calc-water').value) || 0;
       const overrideKey = document.getElementById('calc-phase-override').value;
       document.getElementById('calc-liters-label').innerText = liters;
@@ -925,7 +1008,7 @@
           targetPhaseKey = "veg";
         } else {
           const w = info.week;
-          if (w === 1) targetPhaseKey = "bw1"; else if (w === 2) targetPhaseKey = "bw2"; else if (w === 3) targetPhaseKey = "bw3"; else if (w === 4) targetPhaseKey = "bw4"; else if (w === 5) targetPhaseKey = "bw5"; else if (w === 6) targetPhaseKey = "bw6"; else if (w === 7) targetPhaseKey = (selectedBox === "Grow Box") ? "bw6_ext" : "bw7"; else if (w === 8) targetPhaseKey = (selectedBox === "Grow Box") ? "bw7" : "bw8"; else if (w === 9) targetPhaseKey = (selectedBox === "Grow Box") ? "bw7_ext" : "flush"; else if (w === 10) targetPhaseKey = (selectedBox === "Grow Box") ? "bw8" : "flush"; else targetPhaseKey = "flush";
+          if (w === 1) targetPhaseKey = "bw1"; else if (w === 2) targetPhaseKey = "bw2"; else if (w === 3) targetPhaseKey = "bw3"; else if (w === 4) targetPhaseKey = "bw4"; else if (w === 5) targetPhaseKey = "bw5"; else if (w === 6) targetPhaseKey = "bw6"; else if (w === 7) targetPhaseKey = "bw7"; else if (w === 8) targetPhaseKey = "bw8"; else targetPhaseKey = "flush";
         }
       }
 
@@ -947,12 +1030,61 @@
       });
     }
 
+    // --- ZELT MANAGEMENT (Neu / Löschen) ---
+    function openBoxManagementModal() {
+      const container = document.getElementById('existingBoxesList');
+      container.innerHTML = "";
+      Object.keys(boxesData).forEach(b => {
+        container.innerHTML += `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+            <span>⛺ ${b}</span>
+            <button type="button" class="btn btn-danger" style="width:auto; padding:4px 10px; font-size:11px;" onclick="deleteBox('${b}')">Löschen</button>
+          </div>`;
+      });
+      document.getElementById('boxManagementModal').classList.add('active');
+    }
+
+    function closeBoxManagementModal() { document.getElementById('boxManagementModal').classList.remove('active'); }
+
+    function addNewBox() {
+      const name = document.getElementById('newBoxNameInput').value.trim();
+      if (!name) return alert("Bitte einen Namen für die Box eingeben!");
+      if (boxesData[name]) return alert("Box existiert bereits!");
+
+      boxesData[name] = { phaseType: "veg", startDate: todayStr, img: "" };
+      saveBoxesDataCloudAndLocal();
+      document.getElementById('newBoxNameInput').value = "";
+      openBoxManagementModal();
+      renderBoxTiles();
+      renderDashboardSetup();
+      updateCalcBoxDropdown();
+      populateLogDropdown();
+    }
+
+    function deleteBox(name) {
+      if (!confirm(`Möchtest du das Zelt "${name}" wirklich löschen?`)) return;
+      delete boxesData[name];
+      // Pflanzen in dieser Box auch löschen oder versetzen
+      plantsData = plantsData.filter(p => p.box !== name);
+      saveBoxesDataCloudAndLocal();
+      savePlantsDataCloudAndLocal();
+      openBoxManagementModal();
+      renderBoxTiles();
+      renderDashboardSetup();
+      updateCalcBoxDropdown();
+      populateLogDropdown();
+    }
+
+    function saveBoxesDataCloudAndLocal() {
+      localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
+    }
+
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
-      const boxes = ["Mars Hydro", "Grow Box"];
 
-      boxes.forEach(boxName => {
+      Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
         const plantCount = boxPlants.length;
         const info = getBoxInfo(boxName);
@@ -992,10 +1124,11 @@
 
       const boxData = boxesData[boxName] || {};
       const boxImgHtml = boxData.img 
-        ? `<img src="${boxData.img}" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
+        ? `<img src="${boxData.img}" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border);">` 
         : ``;
         
-      document.getElementById('selected-box-title').innerHTML = boxImgHtml + boxName;
+      // KORRIGIERTE ANZEIGE: Zeltname steht exakt direkt links neben dem Bild
+      document.getElementById('selected-box-title').innerHTML = boxImgHtml + `<span>${boxName}</span>`;
 
       const grid = document.getElementById('selected-box-plants-grid');
       grid.innerHTML = "";
@@ -1021,7 +1154,6 @@
         ? `<img src="${p.img}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0;">` 
         : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🌱</div>`;
 
-      // NEUES LAYOUT: Sorte ist jetzt auf 2 Zeilen limitiert und super klein (9px)
       card.innerHTML = `
         <div style="display: flex; gap: 8px;">
           ${imgThumbHtml}
@@ -1032,7 +1164,7 @@
         </div>
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
           <span class="plant-tag ${info.tagClass}" style="font-size: 10px; padding: 3px 6px;">${info.tagText}</span>
-          <span class="box-tag" style="font-size: 9px; float:none; margin: 0; padding: 2px 4px;">⏳ ${p.time}</span>
+          <span class="box-tag" style="font-size: 9px;">⏳ ${p.time}</span>
         </div>
       `;
       return card;
@@ -1050,31 +1182,25 @@
       document.getElementById('plantDetailModal').classList.add('active');
     }
 
-    function handlePlantImageError() {
-      console.warn("Bild konnte nicht geladen werden.");
-      document.getElementById('plantImgWrapper').style.display = 'none';
+    function deleteCurrentPlantConfirm() {
+      if(!currentDetailPlant) return;
+      if(!confirm(`Möchtest du die Pflanze "${currentDetailPlant.name}" wirklich löschen?`)) return;
+      
+      plantsData = plantsData.filter(p => p.id !== currentDetailPlant.id);
+      savePlantsDataCloudAndLocal();
+      closePlantDetailModal();
+      if(currentSelectedBox) openBoxDetail(currentSelectedBox);
+      populateLogDropdown();
     }
 
     function handlePlantFileUpload(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const btnUpload = document.getElementById('modalPlantFileInput');
-        btnUpload.disabled = true; document.getElementById('modalPlantName').innerText = "⏳ Lade Bild hoch...";
-
-        uploadImageToCloud(file)
-          .then(imageUrl => {
-            currentDetailPlant.img = imageUrl; updatePlantImageDisplay(imageUrl);
-            document.getElementById('modalPlantName').innerText = "⏳ Speichere in Google Sheet...";
-            return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "savePlants", plants: plantsData }) });
-          })
-          .then(() => {
-            document.getElementById('modalPlantName').innerText = "✅ Bild dauerhaft gespeichert!";
-            localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
-            setTimeout(() => { fetchInitialData(); closePlantDetailModal(); btnUpload.disabled = false; }, 1200);
-          })
-          .catch(err => {
-            console.error(err); document.getElementById('modalPlantName').innerText = "❌ Fehler beim Upload"; btnUpload.disabled = false;
-          });
+        uploadImageToCloud(file).then(imageUrl => {
+          currentDetailPlant.img = imageUrl;
+          updatePlantImageDisplay(imageUrl);
+          savePlantsDataCloudAndLocal();
+        });
       }
     }
 
@@ -1085,7 +1211,7 @@
 
     function savePlantsDataCloudAndLocal() {
       localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
-      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "savePlants", plants: plantsData }) }).catch(err => console.error(err));
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "savePlants", plants: plantsData }) });
     }
 
     function renderPlantSpecificLogs() {
@@ -1093,12 +1219,12 @@
       if (!currentDetailPlant) return;
       const matchingLogs = globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box);
       if (matchingLogs.length === 0) {
-        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 8px;">Keine spezifischen Log-Einträge gefunden.</div>`;
+        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 8px;">Keine spezifischen Log-Einträge vorhanden.</div>`;
         document.getElementById('btnExpandLogs').style.display = 'none'; return;
       }
       let html = "";
       matchingLogs.slice(0, plantLogLimit).forEach(l => {
-        html += `<div class="log-item-row"><div class="log-item-header"><span>📅 ${l.date}</span><span>💧 ${l.water ? l.water + 'L' : '0L'}</span></div><div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}</div>`;
+        html += `<div class="log-item-row" onclick="openEditLogModal('${l.id}')"><div class="log-item-header"><span>📅 ${l.date}</span><span>💧 ${l.water ? l.water + 'L' : '0L'}</span></div><div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}</div>`;
       });
       container.innerHTML = html;
       document.getElementById('btnExpandLogs').style.display = matchingLogs.length > plantLogLimit ? 'block' : 'none';
@@ -1114,9 +1240,7 @@
       document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
       document.getElementById('modalBoxStartDate').value = box.startDate || todayStr;
       
-      document.getElementById('modalBoxFileInput').value = "";
       const imgWrapper = document.getElementById('boxImgWrapper'); const imgPreview = document.getElementById('boxImgPreview');
-      
       if (box.img && box.img.trim() !== "") { imgPreview.src = box.img; imgWrapper.style.display = 'block'; } 
       else { imgWrapper.style.display = 'none'; }
       document.getElementById('boxModal').classList.add('active');
@@ -1124,28 +1248,13 @@
 
     function handleBoxFileUpload(input) {
       if (input.files && input.files[0]) {
-        const file = input.files[0]; const btnUpload = document.getElementById('modalBoxFileInput');
-        btnUpload.disabled = true; document.getElementById('modalBoxTitle').innerText = "⏳ Lade Bild hoch...";
-
-        uploadImageToCloud(file)
-          .then(imageUrl => {
-            if(!boxesData[activeEditingBox]) boxesData[activeEditingBox] = {};
-            boxesData[activeEditingBox].img = imageUrl;
-            document.getElementById('boxImgPreview').src = imageUrl; document.getElementById('boxImgWrapper').style.display = 'block';
-            document.getElementById('modalBoxTitle').innerText = "⏳ Speichere in Cloud...";
-            return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
-          })
-          .then(() => {
-            document.getElementById('modalBoxTitle').innerText = "✅ Bild gespeichert!";
-            localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
-            setTimeout(() => {
-              document.getElementById('modalBoxTitle').innerText = activeEditingBox + " anpassen";
-              btnUpload.disabled = false; renderDashboardSetup(); renderBoxTiles();
-            }, 1200);
-          })
-          .catch(err => {
-            console.error(err); document.getElementById('modalBoxTitle').innerText = "❌ Fehler beim Upload"; btnUpload.disabled = false;
-          });
+        uploadImageToCloud(input.files[0]).then(imageUrl => {
+          if(!boxesData[activeEditingBox]) boxesData[activeEditingBox] = {};
+          boxesData[activeEditingBox].img = imageUrl;
+          document.getElementById('boxImgPreview').src = imageUrl;
+          document.getElementById('boxImgWrapper').style.display = 'block';
+          saveBoxesDataCloudAndLocal();
+        });
       }
     }
 
@@ -1155,47 +1264,158 @@
       if (!activeEditingBox) return;
       const existingImg = (boxesData[activeEditingBox] && boxesData[activeEditingBox].img) ? boxesData[activeEditingBox].img : "";
       boxesData[activeEditingBox] = { phaseType: document.getElementById('modalBoxPhaseType').value, startDate: document.getElementById('modalBoxStartDate').value, img: existingImg };
-      localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
-      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
+      saveBoxesDataCloudAndLocal();
       renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
       if (currentSelectedBox) openBoxDetail(currentSelectedBox);
       closeBoxModal();
     }
 
-    function renderRecentLogsList(logs) {
+    // --- LOGBUCH LOGIK & MODAL ---
+    function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
-      if (!logs || logs.length === 0) { container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">Noch keine Einträge vorhanden.</p>`; return; }
+      if (!globalLogsCache || globalLogsCache.length === 0) { 
+        container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">Noch keine Einträge vorhanden.</p>`; 
+        document.getElementById('btn-expand-logs').style.display = 'none';
+        return; 
+      }
+      
       let html = "";
-      logs.slice(0, 10).forEach(l => {
-        html += `<div class="log-item-row"><div class="log-item-header"><span>⛺ ${l.plant}</span><span style="color: var(--text-muted);">${l.date}</span></div><div><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">${l.note}</div>` : ''}</div>`;
+      globalLogsCache.slice(0, globalLogLimit).forEach(l => {
+        const imgIcon = l.bild ? ` 📷` : ``;
+        html += `
+          <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
+            <div class="log-item-header"><span>⛺ ${l.plant}${imgIcon}</span><span style="color: var(--text-muted);">${l.date}</span></div>
+            <div><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>
+            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+          </div>`;
       });
       container.innerHTML = html;
+      document.getElementById('btn-expand-logs').style.display = globalLogsCache.length > globalLogLimit ? 'block' : 'none';
     }
+
+    function expandGlobalLogs() { globalLogLimit += 10; renderRecentLogsList(); }
 
     function submitLog(e) {
       e.preventDefault();
-      const payload = { pflanzenId: document.getElementById('log-plant').value, wasser: document.getElementById('log-water').value, maengel: document.getElementById('log-defect').value, notiz: document.getElementById('log-notes').value };
-      fetch(API_URL, { method: "POST", body: JSON.stringify(payload) })
-      .then(() => { alert("Eintrag erfolgreich in Google Sheet gespeichert!"); document.getElementById('logForm').reset(); fetchInitialData(); })
-      .catch(err => alert("Fehler beim Speichern: " + err));
+      const btn = document.getElementById('btn-submit-log');
+      btn.innerText = "Speichere..."; btn.disabled = true;
+
+      const fileInput = document.getElementById('log-file');
+      const payload = { 
+        pflanzenId: document.getElementById('log-plant').value, 
+        wasser: document.getElementById('log-water').value, 
+        maengel: document.getElementById('log-defect').value, 
+        notiz: document.getElementById('log-notes').value,
+        bild: ""
+      };
+
+      if (fileInput.files && fileInput.files[0]) {
+        uploadImageToCloud(fileInput.files[0]).then(url => {
+          payload.bild = url;
+          sendSaveLog(payload, btn);
+        }).catch(() => sendSaveLog(payload, btn));
+      } else {
+        sendSaveLog(payload, btn);
+      }
     }
 
+    function sendSaveLog(payload, btn) {
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveLog", entry: payload }) })
+      .then(() => { 
+        btn.innerText = "In Google Sheet speichern"; btn.disabled = false;
+        document.getElementById('logForm').reset(); 
+        fetchInitialData(); 
+      });
+    }
+
+    function openEditLogModal(id) {
+      activeLogItem = globalLogsCache.find(l => l.id == id);
+      if(!activeLogItem) return;
+
+      document.getElementById('editLogId').value = activeLogItem.id;
+      document.getElementById('editLogWater').value = activeLogItem.water || "";
+      document.getElementById('editLogDefect').value = activeLogItem.defects || "Keine";
+      document.getElementById('editLogNote').value = activeLogItem.note || "";
+      
+      const wrapper = document.getElementById('editLogImgWrapper');
+      const img = document.getElementById('editLogImgPreview');
+      if (activeLogItem.bild) { img.src = activeLogItem.bild; wrapper.style.display = 'block'; }
+      else { wrapper.style.display = 'none'; }
+
+      document.getElementById('editLogModal').classList.add('active');
+    }
+
+    function closeEditLogModal() { document.getElementById('editLogModal').classList.remove('active'); activeLogItem = null; }
+
+    function saveEditedLog() {
+      if(!activeLogItem) return;
+      activeLogItem.water = document.getElementById('editLogWater').value;
+      activeLogItem.defects = document.getElementById('editLogDefect').value;
+      activeLogItem.note = document.getElementById('editLogNote').value;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateLog", entry: activeLogItem }) })
+      .then(() => { closeEditLogModal(); fetchInitialData(); });
+    }
+
+    function deleteLogEntryConfirm() {
+      if(!activeLogItem) return;
+      if(!confirm("Eintrag wirklich löschen?")) return;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteLog", id: activeLogItem.id }) })
+      .then(() => { closeEditLogModal(); fetchInitialData(); });
+    }
+
+    function populateLogDropdown() {
+      const select = document.getElementById('log-plant');
+      if (!select) return;
+      select.innerHTML = "";
+      Object.keys(boxesData).forEach(box => { select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`; });
+      plantsData.forEach(p => {
+        const icon = p.isSteckling ? "📦" : "🌱";
+        select.innerHTML += `<option value="${p.name}">${icon} ${p.name} (${p.box})</option>`;
+      });
+    }
+
+    // --- ARCHIV & RANKING ---
     function renderArchiveData() {
       renderRanking();
       const container = document.getElementById('archive-list-container');
-      if (archiveCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Noch keine Projekte im Archiv.</p>"; return; }
+      if (archiveCache.length === 0) { 
+        container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Noch keine Projekte im Archiv.</p>"; 
+        document.getElementById('btn-expand-archive').style.display = 'none';
+        return; 
+      }
+      
       let html = "";
-      archiveCache.forEach(item => {
+      archiveCache.slice(0, archiveLimit).forEach(item => {
         const gesamtScore = ((Number(item.aussehen) + Number(item.aroma) + Number(item.geschmack) + Number(item.wirkung)) / 4).toFixed(1);
         const imgHtml = item.bild ? `<img src="${item.bild}" class="archive-img">` : `<div class="archive-img" style="background:#232d27; display:flex; align-items:center; justify-content:center; font-size:24px;">🌿</div>`;
-        html += `<div class="archive-card">${imgHtml}<div class="archive-info" style="flex-grow:1;"><h3>${item.sorte}</h3><div class="archive-stats"><span class="archive-tag">⚖️ ${item.ertrag}g</span><span class="archive-tag">🧪 ${item.thc || '?'}% THC</span><span class="archive-tag">⭐ ${gesamtScore}/10</span></div>${item.review ? `<div class="archive-review">"${item.review}"</div>` : ''}<div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">Geerntet am ${item.datum}</div></div></div>`;
+        html += `
+          <div class="archive-card" onclick="openArchiveDetailModal('${item.id}')">
+            ${imgHtml}
+            <div class="archive-info" style="flex-grow:1;">
+              <h3>${item.sorte}</h3>
+              <div class="archive-stats">
+                <span class="archive-tag">⚖️ ${item.ertrag}g</span>
+                <span class="archive-tag">🧪 ${item.thc || '?'}% THC</span>
+                <span class="archive-tag">⭐ ${gesamtScore}/10</span>
+              </div>
+              ${item.review ? `<div class="archive-review">"${item.review}"</div>` : ''}
+              <div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">Geerntet am ${item.datum}</div>
+            </div>
+          </div>`;
       });
       container.innerHTML = html;
+      document.getElementById('btn-expand-archive').style.display = archiveCache.length > archiveLimit ? 'block' : 'none';
     }
 
+    function expandArchiveList() { archiveLimit += 10; renderArchiveData(); }
+
+    // KORRIGIERT: ERTRAGSKÖNIG STRAHLENDES BLAU
     function renderRanking() {
       const container = document.getElementById('ranking-container');
       if (archiveCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Benötigt mindestens einen Archiv-Eintrag.</p>"; return; }
+      
       const bestYield = [...archiveCache].sort((a, b) => b.ertrag - a.ertrag)[0];
       const bestTaste = [...archiveCache].sort((a, b) => (b.aroma + b.geschmack) - (a.aroma + a.geschmack))[0];
       const bestOverall = [...archiveCache].sort((a, b) => {
@@ -1203,16 +1423,159 @@
         const scoreB = Number(b.aussehen) + Number(b.aroma) + Number(b.geschmack) + Number(b.wirkung);
         return scoreB - scoreA;
       })[0];
-      container.innerHTML = `<div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div><div style="display: flex; gap: 10px;"><div class="ranking-box" style="flex: 1;"><div class="ranking-title">⚖️ Ertrags-König</div><div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag}g</span></div></div><div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);"><div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div><div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div></div></div>`;
+
+      container.innerHTML = `
+        <div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
+        <div style="display: flex; gap: 10px;">
+          <!-- Ertrags-König in hellem, strahlendem Blau -->
+          <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
+            <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
+            <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag}g</span></div>
+          </div>
+          <div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);">
+            <div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div>
+            <div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div>
+          </div>
+        </div>`;
     }
 
+    function openArchiveDetailModal(id) {
+      activeArchiveItem = archiveCache.find(a => a.id == id);
+      if(!activeArchiveItem) return;
+
+      document.getElementById('arcDetailView').style.display = 'block';
+      document.getElementById('arcEditView').style.display = 'none';
+
+      document.getElementById('arcDetailTitle').innerText = activeArchiveItem.sorte;
+      document.getElementById('arcDetailMainImg').src = activeArchiveItem.bild || "https://images.unsplash.com/photo-1536882240095-0379873feb4e?auto=format&fit=crop&w=400&q=80";
+      
+      const gesamtScore = ((Number(activeArchiveItem.aussehen) + Number(activeArchiveItem.aroma) + Number(activeArchiveItem.geschmack) + Number(activeArchiveItem.wirkung)) / 4).toFixed(1);
+      document.getElementById('arcDetailStats').innerHTML = `
+        <span class="archive-tag">⚖️ ${activeArchiveItem.ertrag}g Ertrag</span>
+        <span class="archive-tag">🧪 ${activeArchiveItem.thc || '?'}% THC</span>
+        <span class="archive-tag">⭐ ${gesamtScore}/10 Gesamtnote</span>`;
+
+      document.getElementById('arcDetailBloom').innerText = activeArchiveItem.bluetedauer || "Nicht angegeben";
+      document.getElementById('arcDetailChallenges').innerText = activeArchiveItem.herausforderungen || "Keine besonderen Probleme";
+      document.getElementById('arcDetailReviewText').innerText = activeArchiveItem.review || "Kein Testbericht hinterlegt.";
+
+      // Galerie rendern
+      const gallery = document.getElementById('arcDetailGallery');
+      gallery.innerHTML = "";
+      if (Array.isArray(activeArchiveItem.mehrBilder) && activeArchiveItem.mehrBilder.length > 0) {
+        activeArchiveItem.mehrBilder.forEach(imgUrl => {
+          gallery.innerHTML += `<img src="${imgUrl}" class="gallery-thumb" onclick="window.open('${imgUrl}', '_blank')">`;
+        });
+      } else {
+        gallery.innerHTML = `<div style="font-size:11px; color:var(--text-muted); grid-column: span 3;">Keine zusätzlichen Fotos.</div>`;
+      }
+
+      document.getElementById('archiveDetailModal').classList.add('active');
+    }
+
+    function uploadAdditionalArchivePhoto(input) {
+      if(!activeArchiveItem) return;
+      if(input.files && input.files[0]) {
+        uploadImageToCloud(input.files[0]).then(url => {
+          if(!Array.isArray(activeArchiveItem.mehrBilder)) activeArchiveItem.mehrBilder = [];
+          activeArchiveItem.mehrBilder.push(url);
+
+          fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
+          .then(() => openArchiveDetailModal(activeArchiveItem.id));
+        });
+      }
+    }
+
+    function switchToEditArchiveView() {
+      if(!activeArchiveItem) return;
+      document.getElementById('arcDetailView').style.display = 'none';
+      document.getElementById('arcEditView').style.display = 'block';
+
+      document.getElementById('arcEditId').value = activeArchiveItem.id;
+      document.getElementById('arcEditSorte').value = activeArchiveItem.sorte;
+      document.getElementById('arcEditErtrag').value = activeArchiveItem.ertrag;
+      document.getElementById('arcEditThc').value = activeArchiveItem.thc;
+      document.getElementById('arcEditBluetedauer').value = activeArchiveItem.bluetedauer || "";
+      document.getElementById('arcEditHerausforderungen').value = activeArchiveItem.herausforderungen || "";
+      document.getElementById('arcEditReview').value = activeArchiveItem.review || "";
+    }
+
+    function saveEditedArchive() {
+      if(!activeArchiveItem) return;
+      activeArchiveItem.sorte = document.getElementById('arcEditSorte').value;
+      activeArchiveItem.ertrag = document.getElementById('arcEditErtrag').value;
+      activeArchiveItem.thc = document.getElementById('arcEditThc').value;
+      activeArchiveItem.bluetedauer = document.getElementById('arcEditBluetedauer').value;
+      activeArchiveItem.herausforderungen = document.getElementById('arcEditHerausforderungen').value;
+      activeArchiveItem.review = document.getElementById('arcEditReview').value;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
+      .then(() => { closeArchiveDetailModal(); fetchInitialData(); });
+    }
+
+    function deleteArchiveConfirm() {
+      if(!activeArchiveItem) return;
+      if(!confirm(`Möchtest du das Projekt "${activeArchiveItem.sorte}" wirklich aus dem Archiv löschen?`)) return;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteArchive", id: activeArchiveItem.id }) })
+      .then(() => { closeArchiveDetailModal(); fetchInitialData(); });
+    }
+
+    function closeArchiveDetailModal() { document.getElementById('archiveDetailModal').classList.remove('active'); activeArchiveItem = null; }
+
+    function submitArchive(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-archive'); btn.innerText = "Lade hoch..."; btn.disabled = true;
+      const fileInput = document.getElementById('arc-bild');
+      
+      const payload = { 
+        sorte: document.getElementById('arc-sorte').value, 
+        ertrag: document.getElementById('arc-ertrag').value, 
+        thc: document.getElementById('arc-thc').value, 
+        aussehen: document.getElementById('arc-aussehen').value, 
+        aroma: document.getElementById('arc-aroma').value, 
+        geschmack: document.getElementById('arc-geschmack').value, 
+        wirkung: document.getElementById('arc-wirkung').value, 
+        bluetedauer: document.getElementById('arc-bluetedauer').value,
+        herausforderungen: document.getElementById('arc-herausforderungen').value,
+        review: document.getElementById('arc-review').value, 
+        bild: "",
+        mehrBilder: []
+      };
+      
+      if (!fileInput.files || !fileInput.files[0]) { sendArchiveToSheet(payload, btn); return; }
+
+      uploadImageToCloud(fileInput.files[0])
+        .then(imageUrl => { payload.bild = imageUrl; sendArchiveToSheet(payload, btn); })
+        .catch(() => sendArchiveToSheet(payload, btn));
+    }
+
+    function sendArchiveToSheet(payload, btn) {
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveArchive", entry: payload }) })
+      .then(() => { document.getElementById('archiveForm').reset(); btn.innerText = "Ins Archiv speichern"; btn.disabled = false; fetchInitialData(); });
+    }
+
+    // --- ZUKUNFT & IDEEN ---
     function renderFutureData() {
       const container = document.getElementById('future-list-container');
-      if (futureCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Keine Ideen vorhanden.</p>"; return; }
+      if (futureCache.length === 0) { 
+        container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Keine Ideen vorhanden.</p>"; 
+        document.getElementById('btn-expand-future').style.display = 'none';
+        return; 
+      }
       let html = "";
-      futureCache.forEach(item => { html += `<div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);"><div style="font-size:10px; color:var(--plant-green); margin-bottom:2px;">${item.kategorie}</div><div style="font-size:14px; font-weight:600; color:#fff;">${item.titel}</div></div>`; });
+      futureCache.slice(0, futureLimit).forEach(item => { 
+        html += `
+          <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor:pointer;" onclick="openEditFutureModal('${item.id}')">
+            <div style="font-size:10px; color:var(--plant-green); margin-bottom:2px;">${item.kategorie}</div>
+            <div style="font-size:14px; font-weight:600; color:#fff;">${item.titel}</div>
+          </div>`; 
+      });
       container.innerHTML = html;
+      document.getElementById('btn-expand-future').style.display = futureCache.length > futureLimit ? 'block' : 'none';
     }
+
+    function expandFutureList() { futureLimit += 10; renderFutureData(); }
 
     function submitFuture(e) {
       e.preventDefault();
@@ -1220,38 +1583,50 @@
       .then(() => { document.getElementById('futureForm').reset(); fetchInitialData(); });
     }
 
-    function submitArchive(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn-submit-archive'); btn.innerText = "Lade hoch..."; btn.disabled = true;
-      const fileInput = document.getElementById('arc-bild');
-      const payload = { sorte: document.getElementById('arc-sorte').value, ertrag: document.getElementById('arc-ertrag').value, thc: document.getElementById('arc-thc').value, aussehen: document.getElementById('arc-aussehen').value, aroma: document.getElementById('arc-aroma').value, geschmack: document.getElementById('arc-geschmack').value, wirkung: document.getElementById('arc-wirkung').value, review: document.getElementById('arc-review').value, bild: "" };
-      
-      if (!fileInput.files || !fileInput.files[0]) { sendArchiveToSheet(payload, btn); return; }
+    function openEditFutureModal(id) {
+      activeFutureItem = futureCache.find(f => f.id == id);
+      if(!activeFutureItem) return;
 
-      uploadImageToCloud(fileInput.files[0])
-        .then(imageUrl => { payload.bild = imageUrl; sendArchiveToSheet(payload, btn); })
-        .catch(err => { alert("Bild-Upload fehlgeschlagen."); btn.innerText = "Ins Archiv speichern"; btn.disabled = false; });
+      document.getElementById('editFutureId').value = activeFutureItem.id;
+      document.getElementById('editFutureKat').value = activeFutureItem.kategorie;
+      document.getElementById('editFutureTitel').value = activeFutureItem.titel;
+      document.getElementById('editFutureModal').classList.add('active');
     }
 
-    function sendArchiveToSheet(payload, btn) {
-      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveArchive", entry: payload }) })
-      .then(() => { document.getElementById('archiveForm').reset(); btn.innerText = "Erfolgreich!"; setTimeout(() => { btn.innerText = "Ins Archiv speichern"; btn.disabled = false; fetchInitialData(); }, 1500); });
+    function closeEditFutureModal() { document.getElementById('editFutureModal').classList.remove('active'); activeFutureItem = null; }
+
+    function saveEditedFuture() {
+      if(!activeFutureItem) return;
+      activeFutureItem.kategorie = document.getElementById('editFutureKat').value;
+      activeFutureItem.titel = document.getElementById('editFutureTitel').value;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateFuture", entry: activeFutureItem }) })
+      .then(() => { closeEditFutureModal(); fetchInitialData(); });
     }
 
+    function deleteFutureConfirm() {
+      if(!activeFutureItem) return;
+      if(!confirm("Idee wirklich löschen?")) return;
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteFuture", id: activeFutureItem.id }) })
+      .then(() => { closeEditFutureModal(); fetchInitialData(); });
+    }
+
+    // --- NEUE PFLANZEN / STECKLINGE ---
     function openAddPlantModal() { document.getElementById('newPlantName').value = ""; document.getElementById('newPlantStrain').value = ""; document.getElementById('addPlantModal').classList.add('active'); }
     function closeAddPlantModal() { document.getElementById('addPlantModal').classList.remove('active'); }
     
     function toggleStecklingMode() {
       const type = document.getElementById('newPlantType').value;
-      if (type === "stecklinge") { document.getElementById('newPlantNameLabel').innerText = "Name der Box (z.B. Batch #1):"; document.getElementById('newPlantStrainLabel').innerText = "Enthaltene Sorten:"; document.getElementById('stecklingHint').style.display = 'block'; } 
-      else { document.getElementById('newPlantNameLabel').innerText = "Name der Pflanze:"; document.getElementById('newPlantStrainLabel').innerText = "Sorte / Genetik:"; document.getElementById('stecklingHint').style.display = 'none'; }
+      if (type === "stecklinge") { document.getElementById('newPlantNameLabel').innerText = "Name der Box (z.B. Batch #1):"; document.getElementById('newPlantStrainLabel').innerText = "Enthaltene Sorten:"; } 
+      else { document.getElementById('newPlantNameLabel').innerText = "Name der Pflanze:"; document.getElementById('newPlantStrainLabel').innerText = "Sorte / Genetik:"; }
     }
 
     function saveNewPlant() {
       const name = document.getElementById('newPlantName').value; const strain = document.getElementById('newPlantStrain').value; const type = document.getElementById('newPlantType').value;
       if(!name) return alert("Bitte einen Namen eingeben!");
       plantsData.push({ id: Date.now(), name: name, box: currentSelectedBox, strain: strain, time: type === "stecklinge" ? "Stecklinge" : "Neu", img: "", isSteckling: (type === "stecklinge"), hasCustomPhase: false, phaseType: "veg", startDate: todayStr });
-      savePlantsDataCloudAndLocal(); closeAddPlantModal(); openBoxDetail(currentSelectedBox); populateLogDropdown();
+      savePlantsDataCloudAndLocal(); closeAddPlantModal(); if(currentSelectedBox) openBoxDetail(currentSelectedBox); populateLogDropdown();
     }
 
     function toggleCustomPhaseUI() {
