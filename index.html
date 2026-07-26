@@ -1568,6 +1568,7 @@
       document.getElementById('plantImgWrapper').style.display = 'none';
     }
    // Allgemeine Bild-Upload Funktion (Nutzt Telegra.ph - Ohne Account/API-Key)
+    // Allgemeine Bild-Upload Funktion (Nutzt DEIN Google Drive)
     function uploadImageToCloud(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -1576,7 +1577,7 @@
           img.onload = function() {
             const canvas = document.createElement('canvas');
             let width = img.width; let height = img.height;
-            const maxDim = 800; 
+            const maxDim = 800; // Komprimierung für perfekten Upload
 
             if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } } 
             else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
@@ -1584,24 +1585,26 @@
             canvas.width = width; canvas.height = height;
             canvas.getContext('2d').drawImage(img, 0, 0, width, height);
             
-            canvas.toBlob((blob) => {
-              const formData = new FormData();
-              formData.append("file", blob, "photo.jpg");
-
-              fetch("https://telegra.ph/upload", {
-                method: "POST",
-                body: formData
+            // Bild in optimierten Base64-Text umwandeln
+            const base64String = canvas.toDataURL('image/jpeg', 0.6);
+            
+            // Wir senden das Bild an DEIN Google Apps Script Backend!
+            fetch(API_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "uploadImage",
+                base64: base64String
               })
-              .then(res => res.json())
-              .then(data => {
-                if (Array.isArray(data) && data[0] && data[0].src) {
-                  resolve("https://telegra.ph" + data[0].src);
-                } else {
-                  reject("Upload fehlgeschlagen");
-                }
-              })
-              .catch(reject);
-            }, "image/jpeg", 0.7);
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === "success" && data.url) {
+                resolve(data.url); // Fertiger Google Drive Link
+              } else {
+                reject(data.message || "Upload in Cloud fehlgeschlagen");
+              }
+            })
+            .catch(reject);
           };
           img.src = e.target.result;
         };
