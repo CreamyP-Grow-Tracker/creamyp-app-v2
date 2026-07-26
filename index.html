@@ -1428,71 +1428,73 @@ function handlePlantFileUpload(input) {
         
         const btnUpload = document.getElementById('modalPlantFileInput');
         btnUpload.disabled = true;
-        document.getElementById('modalPlantName').innerText = "⏳ Speichere Bild in Cloud...";
+        document.getElementById('modalPlantName').innerText = "⏳ Lade Bild hoch...";
 
         const reader = new FileReader();
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
+            // Bild komprimieren für schnellere Ladezeiten
             const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            const maxDim = 800;
+            let width = img.width; let height = img.height;
+            const maxDim = 800; 
 
-            if (width > height) {
-              if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-            } else {
-              if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-            }
+            if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } } 
+            else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
 
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = width; canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
+            // Base64 Code bereinigen für ImgBB
+            const base64String = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
             
-            if (currentDetailPlant) {
-              fetch(API_URL, {
-                method: "POST",
-                body: JSON.stringify({ 
-                  action: "uploadImage", 
-                  filename: currentDetailPlant.name,
-                  base64: compressedBase64 
+            const formData = new FormData();
+            formData.append("image", base64String);
+            
+            // ==========================================
+            // HIER DEINEN KOPIERTEN IMGBB KEY EINTRAGEN:
+            const IMGBB_KEY = "31a78936d0bb63cd605aceab03243c5d"; 
+            // ==========================================
+            
+            // Lade Bild anonym zu ImgBB hoch
+            fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+              method: "POST",
+              body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+              if(data.success) {
+                const imageUrl = data.data.url; // Der fertige, winzige JPG-Link
+                currentDetailPlant.img = imageUrl;
+                updatePlantImageDisplay(imageUrl);
+                
+                document.getElementById('modalPlantName').innerText = "⏳ Speichere in Google Sheet...";
+                
+                // Jetzt speichern wir nur den kurzen Link im Google Sheet
+                fetch(API_URL, {
+                  method: "POST",
+                  body: JSON.stringify({ action: "savePlants", plants: plantsData })
                 })
-              })
-              .then(res => res.json())
-              .then(resData => {
-                if(resData.status === "success" && resData.url) {
-                  currentDetailPlant.img = resData.url;
-                  updatePlantImageDisplay(resData.url);
+                .then(() => {
+                  document.getElementById('modalPlantName').innerText = "✅ Bild dauerhaft gespeichert!";
+                  localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
                   
-                  fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "savePlants", plants: plantsData })
-                  })
-                  .then(() => {
-                    document.getElementById('modalPlantName').innerText = "✅ Bild gespeichert!";
-                    localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
-                    
-                    setTimeout(() => {
-                      closePlantDetailModal();
-                      renderBoxTiles();
-                      if(currentSelectedBox) openBoxDetail(currentSelectedBox);
-                      btnUpload.disabled = false;
-                    }, 1500);
-                  });
-                  
-                } else {
-                  throw new Error("Cloud hat keine URL generiert.");
-                }
-              })
-              .catch(err => {
-                console.error("Upload-Fehler:", err);
-                document.getElementById('modalPlantName').innerText = "❌ Fehler beim Upload";
-                btnUpload.disabled = false;
-              });
-            }
+                  setTimeout(() => {
+                    fetchInitialData(); 
+                    closePlantDetailModal(); 
+                    btnUpload.disabled = false;
+                  }, 1200);
+                });
+              } else {
+                throw new Error("ImgBB Upload fehlgeschlagen");
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              document.getElementById('modalPlantName').innerText = "❌ Fehler beim Upload";
+              btnUpload.disabled = false;
+            });
           };
           img.src = e.target.result;
         };
