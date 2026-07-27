@@ -118,7 +118,7 @@
        ========================================================================= */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3)); /* EBENE 1: Lila Balken Hintergrund */
+      background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3));
       padding-top: max(12px, env(safe-area-inset-top)); 
       padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
       text-align: center; border-bottom: 1px solid var(--card-border);
@@ -127,19 +127,19 @@
       overflow: hidden;
     }
 
-    /* EBENE 2: Vollflächiges Blätter-Overlay (Exakt auf Logo-Mitte zentriert) */
-.header-leaf-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%; height: 100%;
-  background-repeat: repeat-x;
-  background-position: center calc(50% - 1px); /* Zentriert das Bild horizontal UND vertikal exakt auf 50% Höhe */
-  background-size: 240px auto;     /* Deine gewählte Zoom-Größe */
-  mix-blend-mode: screen;
-  opacity: 0.85;
-  z-index: 2;
-  pointer-events: none;
-}
+    /* EBENE 2: Vollflächiges Blätter-Overlay */
+    .header-leaf-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      background-repeat: repeat-x;
+      background-position: center center;
+      background-size: 240px auto;     
+      mix-blend-mode: screen;
+      opacity: 0.85;
+      z-index: 2;
+      pointer-events: none;
+    }
 
     /* EBENE 3: Logo-Badge & Zahnrad im Vordergrund */
     .logo-wrapper {
@@ -149,12 +149,13 @@
     }
     .app-logo { max-height: 44px; width: auto; display: block; }
 
+    /* Blickdichter schwarzer Hintergrund für das Zahnrad */
     .btn-lock-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border);
+      background: #000; border: 1px solid var(--card-border);
       color: #fff; width: 36px; height: 36px; border-radius: 50%;
       font-size: 15px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     /* Main Container & Tabs */
@@ -257,7 +258,7 @@
     .archive-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; cursor: pointer; transition: transform 0.15s; }
     .archive-card:active { transform: scale(0.98); }
     .archive-img { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0; }
-    .archive-info h3 { font-size: 15px; color: var(--plant-green); margin-bottom: 4px; }
+    .archive-info h3 { font-size: 15px; color: var(--plant-green); margin-bottom: 2px; }
     .archive-stats { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
     .archive-tag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
     .archive-review { font-size: 12px; color: #fff; font-style: italic; border-top: 1px dashed var(--card-border); padding-top: 6px; margin-top: 6px; }
@@ -320,7 +321,7 @@
   
   <!-- HEADER MIT VOLLFLÄCHIGER 3-EBENEN-SCHICHTUNG -->
   <header>
-    <!-- Ebene 2: Vollflächiges Blätter-Overlay für den gesamten Balken -->
+    <!-- Ebene 2: Vollflächiges Blätter-Overlay -->
     <div id="headerLeafOverlay" class="header-leaf-overlay" style="display:none;"></div>
     
     <!-- Ebene 3: Logo in der Mitte -->
@@ -328,7 +329,7 @@
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
 
-    <!-- Ebene 3: Zahnrad rechts -->
+    <!-- Ebene 3: Zahnrad rechts (blickdicht schwarz) -->
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
       ⚙️
     </button>
@@ -516,7 +517,8 @@
 
     <!-- TAB 6: ARCHIV & ZUKUNFT -->
     <div id="tab-archiv" class="tab-content">
-      <div class="card"><h2>🏆 Hall of Fame (Ranking)</h2><div id="ranking-container">Lädt Rankings...</div></div>
+      <!-- Ranking Überschrift angepasst -->
+      <div class="card"><h2>🏆 Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
       
       <div class="card">
         <h2>🕰️ Archivierte Projekte</h2>
@@ -529,8 +531,9 @@
         <details>
           <summary style="font-size: 13px; color: var(--plant-green); cursor: pointer; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
           <form id="archiveForm" onsubmit="submitArchive(event)" style="margin-top: 12px;">
-            <div class="form-group"><label>Sorte (Strain)</label><input type="text" id="arc-sorte" required></div>
-            <div class="form-group"><label>Erntedatum</label><input type="date" id="arc-datum"></div>
+            <div class="form-group"><label>Projektname / Hauptsorte</label><input type="text" id="arc-sorte" placeholder="z.B. Ethos Run 2026" required></div>
+            <div class="form-group"><label>Enthaltene Pflanzen & Sorten</label><textarea id="arc-pflanzen" rows="2" placeholder="z.B. Ethos Cookies #1 & #2, White Wedding Rbx #1 & #2"></textarea></div>
+            <div class="form-group"><label>Erntedatum / Datum</label><input type="date" id="arc-datum"></div>
             <div class="sensor-grid" style="margin-bottom:14px;">
               <div class="form-group" style="margin:0;"><label>Ertrag (g)</label><input type="number" id="arc-ertrag" step="0.1" required></div>
               <div class="form-group" style="margin:0;"><label>THC (%)</label><input type="number" id="arc-thc" step="0.1"></div>
@@ -615,6 +618,7 @@
         
         <div style="font-size: 12px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 12px;">
           <div><strong>📅 Erntedatum:</strong> <span id="arcDetailDateText">--</span></div>
+          <div style="margin-top: 4px;"><strong>🌱 Pflanzen / Sorten:</strong> <span id="arcDetailPlantsText">--</span></div>
           <div style="margin-top: 4px;"><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
           <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
           <div style="margin-top: 4px;"><strong>💬 Review:</strong> <em id="arcDetailReviewText">--</em></div>
@@ -634,7 +638,8 @@
       <div id="arcEditView" style="display: none;">
         <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
         <input type="hidden" id="arcEditId">
-        <div class="form-group"><label>Sorte</label><input type="text" id="arcEditSorte"></div>
+        <div class="form-group"><label>Projektname</label><input type="text" id="arcEditSorte"></div>
+        <div class="form-group"><label>Pflanzen & Sorten</label><textarea id="arcEditPflanzen" rows="2"></textarea></div>
         <div class="form-group"><label>Erntedatum anpassen</label><input type="date" id="arcEditDatum"></div>
         <div class="sensor-grid" style="margin-bottom:12px;">
           <div class="form-group"><label>Ertrag (g)</label><input type="number" id="arcEditErtrag" step="0.1"></div>
@@ -1717,18 +1722,22 @@
       archiveCache.slice(0, archiveLimit).forEach(item => {
         const gesamtScore = ((Number(item.aussehen) + Number(item.aroma) + Number(item.geschmack) + Number(item.wirkung)) / 4).toFixed(1);
         const imgHtml = item.bild ? `<img src="${item.bild}" class="archive-img">` : `<div class="archive-img" style="background:#232d27; display:flex; align-items:center; justify-content:center; font-size:24px;">🌿</div>`;
+        const pflanzenList = item.pflanzen ? `<div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">🌱 ${item.pflanzen}</div>` : '';
+        const displayDate = item.rawDate || item.datum || 'Nicht angegeben';
+
         html += `
           <div class="archive-card" onclick="openArchiveDetailModal('${item.id}')">
             ${imgHtml}
             <div class="archive-info" style="flex-grow:1;">
               <h3>${item.sorte}</h3>
+              ${pflanzenList}
               <div class="archive-stats">
                 <span class="archive-tag">⚖️ ${item.ertrag}g</span>
                 <span class="archive-tag">🧪 ${item.thc || '?'}% THC</span>
                 <span class="archive-tag">⭐ ${gesamtScore}/10</span>
               </div>
               ${item.review ? `<div class="archive-review">"${item.review}"</div>` : ''}
-              <div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">Geerntet am ${item.datum}</div>
+              <div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">📅 ${displayDate}</div>
             </div>
           </div>`;
       });
@@ -1780,7 +1789,8 @@
         <span class="archive-tag">🧪 ${activeArchiveItem.thc || '?'}% THC</span>
         <span class="archive-tag">⭐ ${gesamtScore}/10 Gesamtnote</span>`;
 
-      document.getElementById('arcDetailDateText').innerText = activeArchiveItem.datum || "Nicht angegeben";
+      document.getElementById('arcDetailDateText').innerText = activeArchiveItem.rawDate || activeArchiveItem.datum || "Nicht angegeben";
+      document.getElementById('arcDetailPlantsText').innerText = activeArchiveItem.pflanzen || "Keine einzelnen Pflanzen aufgelistet";
       document.getElementById('arcDetailBloom').innerText = activeArchiveItem.bluetedauer || "Nicht angegeben";
       document.getElementById('arcDetailChallenges').innerText = activeArchiveItem.herausforderungen || "Keine besonderen Probleme";
       document.getElementById('arcDetailReviewText').innerText = activeArchiveItem.review || "Kein Testbericht hinterlegt.";
@@ -1817,10 +1827,11 @@
       document.getElementById('arcEditView').style.display = 'block';
 
       document.getElementById('arcEditId').value = activeArchiveItem.id;
-      document.getElementById('arcEditSorte').value = activeArchiveItem.sorte;
-      document.getElementById('arcEditDatum').value = activeArchiveItem.rawDate || todayStr;
-      document.getElementById('arcEditErtrag').value = activeArchiveItem.ertrag;
-      document.getElementById('arcEditThc').value = activeArchiveItem.thc;
+      document.getElementById('arcEditSorte').value = activeArchiveItem.sorte || "";
+      document.getElementById('arcEditPflanzen').value = activeArchiveItem.pflanzen || "";
+      document.getElementById('arcEditDatum').value = activeArchiveItem.rawDate || activeArchiveItem.datum || todayStr;
+      document.getElementById('arcEditErtrag').value = activeArchiveItem.ertrag || "";
+      document.getElementById('arcEditThc').value = activeArchiveItem.thc || "";
       document.getElementById('arcEditBluetedauer').value = activeArchiveItem.bluetedauer || "";
       document.getElementById('arcEditHerausforderungen').value = activeArchiveItem.herausforderungen || "";
       document.getElementById('arcEditReview').value = activeArchiveItem.review || "";
@@ -1829,7 +1840,9 @@
     function saveEditedArchive() {
       if(!activeArchiveItem) return;
       activeArchiveItem.sorte = document.getElementById('arcEditSorte').value;
+      activeArchiveItem.pflanzen = document.getElementById('arcEditPflanzen').value;
       activeArchiveItem.rawDate = document.getElementById('arcEditDatum').value;
+      activeArchiveItem.datum = document.getElementById('arcEditDatum').value;
       activeArchiveItem.ertrag = document.getElementById('arcEditErtrag').value;
       activeArchiveItem.thc = document.getElementById('arcEditThc').value;
       activeArchiveItem.bluetedauer = document.getElementById('arcEditBluetedauer').value;
@@ -1857,7 +1870,9 @@
       
       const payload = { 
         sorte: document.getElementById('arc-sorte').value, 
+        pflanzen: document.getElementById('arc-pflanzen').value,
         rawDate: document.getElementById('arc-datum').value,
+        datum: document.getElementById('arc-datum').value,
         ertrag: document.getElementById('arc-ertrag').value, 
         thc: document.getElementById('arc-thc').value, 
         aussehen: document.getElementById('arc-aussehen').value, 
