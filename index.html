@@ -47,7 +47,7 @@
       100% { transform: scale(1); }
     }
     
-    /* Splash Screen Text Animations */
+    /* Splash Screen Text Animations (Fix für abgeschnittenes 'p') */
     .splash-text-container {
       margin-top: 20px;
       display: flex;
@@ -64,7 +64,8 @@
       color: rgba(255, 255, 255, 0.9);
       white-space: nowrap;
       opacity: 0;
-      clip-path: inset(0 100% 0 0);
+      padding: 4px 14px;
+      clip-path: inset(-10px 100% -10px -20px);
       animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
     }
 
@@ -75,15 +76,16 @@
       color: #fff;
       white-space: nowrap;
       opacity: 0;
-      clip-path: inset(0 100% 0 0);
+      padding: 0 10px;
+      clip-path: inset(-10px 100% -10px -20px);
       text-shadow: 0 4px 18px rgba(0,0,0,0.5);
       animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.4s forwards;
     }
 
     @keyframes revealText {
-      0% { opacity: 0; clip-path: inset(0 100% 0 0); }
-      1% { opacity: 1; clip-path: inset(0 100% 0 0); }
-      100% { opacity: 1; clip-path: inset(-20px -40px -20px -40px); }
+      0% { opacity: 0; clip-path: inset(-10px 100% -10px -20px); }
+      1% { opacity: 1; clip-path: inset(-10px 100% -10px -20px); }
+      100% { opacity: 1; clip-path: inset(-30px -60px -30px -60px); }
     }
 
     :root {
@@ -113,9 +115,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* =========================================================================
-       HEADER MIT VOLLFLÄCHIGEM VEKTOR-MUSTER
-       ========================================================================= */
     header {
       position: sticky; top: 0; z-index: 100;
       background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3));
@@ -127,7 +126,6 @@
       overflow: hidden;
     }
 
-    /* EBENE 2: Vollflächiges Blätter-Overlay */
     .header-leaf-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -141,7 +139,6 @@
       pointer-events: none;
     }
 
-    /* EBENE 3: Logo-Badge & Zahnrad im Vordergrund */
     .logo-wrapper {
       background-color: #fff; padding: 6px 18px; border-radius: 32px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
@@ -149,7 +146,6 @@
     }
     .app-logo { max-height: 56px; width: auto; display: block; }
 
-    /* Blickdichter schwarzer Hintergrund für das Zahnrad */
     .btn-lock-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       background: #000; border: 1px solid var(--card-border);
@@ -158,33 +154,28 @@
       justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* Main Container & Tabs */
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Cards */
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .clickable-card { cursor: pointer; transition: transform 0.15s; }
     .clickable-card:active { transform: scale(0.98); }
 
-    /* Sensor Grid */
     .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
     .sensor-box { background: rgba(46, 204, 113, 0.04); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
     .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: #fff; }
     .sensor-label { font-size: 11px; color: var(--text-muted); }
     .badge-good { color: var(--plant-green); }
 
-    /* Chart Dropdown */
     #chart-dropdown, #strom-dropdown { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--card-border); padding-bottom: 4px; }
     .chart-wrapper { position: relative; height: 180px; width: 100%; margin-top: 8px; }
     .chart-btn-group { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
     .btn-timefilter { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-timefilter.active { background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46, 204, 113, 0.4); }
 
-    /* Forms & Inputs */
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
     input, select, textarea { width: 100%; padding: 12px; background: #0f1411; border: 1px solid var(--card-border); border-radius: 10px; color: #fff; font-size: 15px; outline: none; }
@@ -194,7 +185,6 @@
     .btn-danger { background: #c0392b; color: #fff; box-shadow: none; margin-top: 8px; }
     .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
 
-    /* Düngerechner Ergebnis-Tabelle */
     .calc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
     .calc-table tr:last-child td { border-bottom: none; }
@@ -203,7 +193,6 @@
     .ec-badge.bloom-mode { background: linear-gradient(135deg, #d63031, var(--primary-pink)); color: #fff; }
     .calc-table td.val.bloom-val { color: var(--primary-pink); }
 
-    /* Setup Cards */
     .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .box-tile-card { background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform 0.15s, border-color 0.15s; }
@@ -212,7 +201,6 @@
     .box-tile-info p { font-size: 12px; color: var(--text-muted); }
     .box-tile-arrow { font-size: 20px; color: var(--plant-green); }
 
-    /* Pflanzen Grid & Tags */
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
     
     .plant-card { 
@@ -239,34 +227,22 @@
 
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
-    /* Modal Dialog */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
 
-    /* Log Liste Item */
     .log-item-row { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
     .log-item-row:hover { background: rgba(255,255,255,0.03); }
     .log-item-row:last-child { border-bottom: none; }
     .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; align-items: center; }
 
-    /* Ranking Styles */
     .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
     .ranking-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
     .ranking-value { font-size: 16px; color: #fff; font-weight: 700; }
-    
-    .archive-card { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; cursor: pointer; transition: transform 0.15s; }
-    .archive-card:active { transform: scale(0.98); }
-    .archive-img { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0; }
-    .archive-info h3 { font-size: 15px; color: var(--plant-green); margin-bottom: 2px; }
-    .archive-stats { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
-    .archive-tag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
-    .archive-review { font-size: 12px; color: #fff; font-style: italic; border-top: 1px dashed var(--card-border); padding-top: 6px; margin-top: 6px; }
 
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
 
-    /* Bottom Nav */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #05140b; border-top: 2px solid #143d22;
@@ -281,7 +257,6 @@
     .nav-item .icon { font-size: 20px; margin-bottom: 3px; }
     .nav-item.active { color: var(--plant-green); font-weight: 600; }
 
-    /* Biometric Lock Overlay */
     #biometric-lock-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: #0d120f; z-index: 10000;
@@ -321,15 +296,12 @@
   
   <!-- HEADER MIT VOLLFLÄCHIGER 3-EBENEN-SCHICHTUNG -->
   <header>
-    <!-- Ebene 2: Vollflächiges Blätter-Overlay -->
     <div id="headerLeafOverlay" class="header-leaf-overlay" style="display:none;"></div>
     
-    <!-- Ebene 3: Logo in der Mitte -->
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
     </div>
 
-    <!-- Ebene 3: Zahnrad rechts (blickdicht schwarz) -->
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
       ⚙️
     </button>
@@ -339,7 +311,6 @@
 
     <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
-      
       <div class="card clickable-card" onclick="toggleKlimaChart()">
         <h2>Live Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
         <div class="sensor-grid">
@@ -515,62 +486,107 @@
       </div>
     </div>
 
-    <!-- TAB 6: ARCHIV & ZUKUNFT -->
+    <!-- TAB 6: ARCHIV & ZUKUNFT (ÜBERARBEITET ALS PROJEKT-OVERVIEW) -->
     <div id="tab-archiv" class="tab-content">
-      <!-- Ranking Überschrift angepasst -->
-      <div class="card"><h2>🏆 Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
       
-      <div class="card">
-        <h2>🕰️ Archivierte Projekte</h2>
-        <div id="archive-list-container">Lädt Chronik...</div>
-        <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Archiv-Einträge anzeigen</button>
-      </div>
+      <!-- VIEW 1: PROJEKT-ÜBERSICHT -->
+      <div id="archive-overview-view">
+        <div class="card"><h2>🏆 Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
+        
+        <div class="card">
+          <h2>🕰️ Archivierte Projekte</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle ein Projekt aus, um Pflanzen und Details zu sehen:</p>
+          <div id="archive-tiles-container">Lädt Projekte...</div>
+          <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Projekte anzeigen</button>
+        </div>
 
-      <div class="card">
-        <h2>Ernte & Review eintragen</h2>
-        <details>
-          <summary style="font-size: 13px; color: var(--plant-green); cursor: pointer; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
-          <form id="archiveForm" onsubmit="submitArchive(event)" style="margin-top: 12px;">
-            <div class="form-group"><label>Projektname / Hauptsorte</label><input type="text" id="arc-sorte" placeholder="z.B. Ethos Run 2026" required></div>
-            <div class="form-group"><label>Enthaltene Pflanzen & Sorten</label><textarea id="arc-pflanzen" rows="2" placeholder="z.B. Ethos Cookies #1 & #2, White Wedding Rbx #1 & #2"></textarea></div>
-            <div class="form-group"><label>Erntedatum / Datum</label><input type="date" id="arc-datum"></div>
-            <div class="sensor-grid" style="margin-bottom:14px;">
-              <div class="form-group" style="margin:0;"><label>Ertrag (g)</label><input type="number" id="arc-ertrag" step="0.1" required></div>
-              <div class="form-group" style="margin:0;"><label>THC (%)</label><input type="number" id="arc-thc" step="0.1"></div>
+        <div class="card">
+          <h2>Ernte & Review eintragen</h2>
+          <details>
+            <summary style="font-size: 13px; color: var(--plant-green); cursor: pointer; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
+            <form id="archiveForm" onsubmit="submitArchive(event)" style="margin-top: 12px;">
+              <div class="form-group"><label>Projektname</label><input type="text" id="arc-sorte" placeholder="z.B. Ethos Run 2026" required></div>
+              <div class="form-group"><label>Enthaltene Pflanzen & Sorten (durch Komma getrennt)</label><textarea id="arc-pflanzen" rows="2" placeholder="z.B. Ethos Cookies #1, Ethos Cookies #2, White Wedding Rbx #1"></textarea></div>
+              <div class="form-group"><label>Erntedatum / Datum</label><input type="date" id="arc-datum"></div>
+              <div class="sensor-grid" style="margin-bottom:14px;">
+                <div class="form-group" style="margin:0;"><label>Ertrag (g)</label><input type="number" id="arc-ertrag" step="0.1" required></div>
+                <div class="form-group" style="margin:0;"><label>THC (%)</label><input type="number" id="arc-thc" step="0.1"></div>
+              </div>
+              <div class="sensor-grid" style="margin-bottom:14px; grid-template-columns: repeat(4, 1fr);">
+                <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aussehen</label><input type="number" id="arc-aussehen" min="1" max="10" placeholder="1-10"></div>
+                <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aroma</label><input type="number" id="arc-aroma" min="1" max="10" placeholder="1-10"></div>
+                <div class="form-group" style="margin:0;"><label style="font-size:10px;">Taste</label><input type="number" id="arc-geschmack" min="1" max="10" placeholder="1-10"></div>
+                <div class="form-group" style="margin:0;"><label style="font-size:10px;">Wirkung</label><input type="number" id="arc-wirkung" min="1" max="10" placeholder="1-10"></div>
+              </div>
+              <div class="form-group"><label>Blütedauer (z.B. 9 Wochen / 63 Tage)</label><input type="text" id="arc-bluetedauer" placeholder="z.B. 65 Tage"></div>
+              <div class="form-group"><label>Herausforderungen im Grow</label><textarea id="arc-herausforderungen" rows="2" placeholder="z.B. CalMag-Mangel ab BW4..."></textarea></div>
+              <div class="form-group"><label>Smoke-Review & Erfahrung</label><textarea id="arc-review" rows="2" placeholder="z.B. beerig, süß, stark stoner..."></textarea></div>
+              <div class="form-group"><label>Titel-Foto</label><input type="file" id="arc-bild" accept="image/*"></div>
+              <button type="submit" class="btn" id="btn-submit-archive">Ins Archiv speichern</button>
+            </form>
+          </details>
+        </div>
+
+        <div class="card">
+          <h2>🚀 Zukunft & Ideen</h2>
+          <div id="future-list-container" style="margin-bottom:14px;">Lädt Ideen...</div>
+          <button type="button" id="btn-expand-future" class="btn btn-secondary" style="display:none; font-size:12px; margin-bottom:16px;" onclick="expandFutureList()">Mehr Ideen anzeigen</button>
+
+          <form id="futureForm" onsubmit="submitFuture(event)" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
+            <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">+ Neue Idee speichern</h3>
+            <div class="form-group">
+              <select id="fut-kat">
+                <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
+                <option value="✂️ Technik">✂️ Training / Technik (z.B. Stecklinge)</option>
+                <option value="🛒 Equipment">🛒 Neues Equipment</option>
+              </select>
             </div>
-            <div class="sensor-grid" style="margin-bottom:14px; grid-template-columns: repeat(4, 1fr);">
-              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aussehen</label><input type="number" id="arc-aussehen" min="1" max="10" placeholder="1-10"></div>
-              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Aroma</label><input type="number" id="arc-aroma" min="1" max="10" placeholder="1-10"></div>
-              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Taste</label><input type="number" id="arc-geschmack" min="1" max="10" placeholder="1-10"></div>
-              <div class="form-group" style="margin:0;"><label style="font-size:10px;">Wirkung</label><input type="number" id="arc-wirkung" min="1" max="10" placeholder="1-10"></div>
-            </div>
-            <div class="form-group"><label>Blütedauer (z.B. 9 Wochen / 63 Tage)</label><input type="text" id="arc-bluetedauer" placeholder="z.B. 65 Tage"></div>
-            <div class="form-group"><label>Herausforderungen im Grow</label><textarea id="arc-herausforderungen" rows="2" placeholder="z.B. CalMag-Mangel ab BW4, RLF zu hoch..."></textarea></div>
-            <div class="form-group"><label>Smoke-Review & Erfahrung</label><textarea id="arc-review" rows="2" placeholder="z.B. beerig, süß, stark stoner..."></textarea></div>
-            <div class="form-group"><label>Titel-Foto</label><input type="file" id="arc-bild" accept="image/*"></div>
-            <button type="submit" class="btn" id="btn-submit-archive">Ins Archiv speichern</button>
+            <div class="form-group"><input type="text" id="fut-titel" placeholder="Titel (z.B. Mutterzelt starten)" required></div>
+            <button type="submit" class="btn btn-secondary">Idee speichern</button>
           </form>
-        </details>
+        </div>
       </div>
 
-      <div class="card">
-        <h2>🚀 Zukunft & Ideen</h2>
-        <div id="future-list-container" style="margin-bottom:14px;">Lädt Ideen...</div>
-        <button type="button" id="btn-expand-future" class="btn btn-secondary" style="display:none; font-size:12px; margin-bottom:16px;" onclick="expandFutureList()">Mehr Ideen anzeigen</button>
-
-        <form id="futureForm" onsubmit="submitFuture(event)" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
-          <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">+ Neue Idee speichern</h3>
-          <div class="form-group">
-            <select id="fut-kat">
-              <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
-              <option value="✂️ Technik">✂️ Training / Technik (z.B. Stecklinge)</option>
-              <option value="🛒 Equipment">🛒 Neues Equipment</option>
-            </select>
+      <!-- VIEW 2: PROJEKT-DETAILANSICHT (WIE ZELT-DETAIL) -->
+      <div id="archive-detail-view" style="display: none;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <button type="button" class="btn-back" onclick="showArchiveOverview()">← Projekte</button>
+            <div>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 6px;" onclick="openAddProjectPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="switchToEditArchiveView()">✏️ Bearbeiten</button>
+            </div>
           </div>
-          <div class="form-group"><input type="text" id="fut-titel" placeholder="Titel (z.B. Mutterzelt starten)" required></div>
-          <button type="submit" class="btn btn-secondary">Idee speichern</button>
-        </form>
+
+          <div id="projectDetailHeader" style="margin-bottom: 12px;">
+            <h2 id="arcDetailTitle" style="color: var(--plant-green); font-size: 20px; font-weight: 700; margin-bottom: 2px;">--</h2>
+            <p id="arcDetailSubtitle" style="font-size: 12px; color: var(--text-muted);"></p>
+          </div>
+
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">🌱 Pflanzen in diesem Projekt:</p>
+          <div id="arc-plants-grid" class="plants-grid"></div>
+
+          <div style="border-top: 1px dashed var(--card-border); margin-top: 16px; padding-top: 14px;">
+            <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">📊 Projekt-Auswertung & Reviews</h3>
+            <div id="arcDetailStats" class="archive-stats" style="margin-bottom: 10px;"></div>
+
+            <div style="font-size: 12px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 12px;">
+              <div><strong>📅 Erntedatum:</strong> <span id="arcDetailDateText">--</span></div>
+              <div style="margin-top: 4px;"><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
+              <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
+              <div style="margin-top: 4px;"><strong>💬 Review:</strong> <em id="arcDetailReviewText">--</em></div>
+            </div>
+
+            <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Bildergalerie vom Grow:</h4>
+            <div id="arcDetailGallery" class="gallery-grid"></div>
+
+            <div style="margin-top: 14px; border-top: 1px solid var(--card-border); padding-top: 10px; display: flex; gap: 8px;">
+              <input type="file" id="arcAddPhotoInput" accept="image/*" style="font-size: 11px; padding: 6px;" onchange="uploadAdditionalArchivePhoto(this)">
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
 
   </div> <!-- End container -->
@@ -608,55 +624,48 @@
     </div>
   </div>
 
-  <!-- Modal 3: Archive Detail & Edit Modal -->
-  <div class="modal-overlay" id="archiveDetailModal">
+  <!-- Modal 3: Archive Edit Modal -->
+  <div class="modal-overlay" id="archiveEditModal">
     <div class="modal-card">
-      <div id="arcDetailView">
-        <img id="arcDetailMainImg" src="" style="width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; border: 1px solid var(--card-border); margin-bottom: 12px;">
-        <h3 id="arcDetailTitle" style="color: var(--plant-green); margin-bottom: 4px;">--</h3>
-        <div id="arcDetailStats" class="archive-stats" style="margin-bottom: 10px;"></div>
-        
-        <div style="font-size: 12px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 12px;">
-          <div><strong>📅 Erntedatum:</strong> <span id="arcDetailDateText">--</span></div>
-          <div style="margin-top: 4px;"><strong>🌱 Pflanzen / Sorten:</strong> <span id="arcDetailPlantsText">--</span></div>
-          <div style="margin-top: 4px;"><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
-          <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
-          <div style="margin-top: 4px;"><strong>💬 Review:</strong> <em id="arcDetailReviewText">--</em></div>
-        </div>
-
-        <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Bildergalerie vom Grow:</h4>
-        <div id="arcDetailGallery" class="gallery-grid"></div>
-
-        <div style="margin-top: 14px; border-top: 1px solid var(--card-border); padding-top: 10px; display: flex; gap: 8px;">
-          <input type="file" id="arcAddPhotoInput" accept="image/*" style="font-size: 11px; padding: 6px;" onchange="uploadAdditionalArchivePhoto(this)">
-        </div>
-
-        <button type="button" class="btn btn-secondary" style="margin-top: 12px;" onclick="switchToEditArchiveView()">✏️ Projekt bearbeiten</button>
-        <button type="button" class="btn btn-secondary" onclick="closeArchiveDetailModal()">Schließen</button>
+      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
+      <input type="hidden" id="arcEditId">
+      <div class="form-group"><label>Projektname</label><input type="text" id="arcEditSorte"></div>
+      <div class="form-group"><label>Pflanzen & Sorten (kommagetrennt)</label><textarea id="arcEditPflanzen" rows="2"></textarea></div>
+      <div class="form-group"><label>Erntedatum anpassen</label><input type="date" id="arcEditDatum"></div>
+      <div class="sensor-grid" style="margin-bottom:12px;">
+        <div class="form-group"><label>Ertrag (g)</label><input type="number" id="arcEditErtrag" step="0.1"></div>
+        <div class="form-group"><label>THC (%)</label><input type="number" id="arcEditThc" step="0.1"></div>
       </div>
+      <div class="form-group"><label>Blütedauer</label><input type="text" id="arcEditBluetedauer"></div>
+      <div class="form-group"><label>Herausforderungen</label><textarea id="arcEditHerausforderungen" rows="2"></textarea></div>
+      <div class="form-group"><label>Review</label><textarea id="arcEditReview" rows="2"></textarea></div>
 
-      <div id="arcEditView" style="display: none;">
-        <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
-        <input type="hidden" id="arcEditId">
-        <div class="form-group"><label>Projektname</label><input type="text" id="arcEditSorte"></div>
-        <div class="form-group"><label>Pflanzen & Sorten</label><textarea id="arcEditPflanzen" rows="2"></textarea></div>
-        <div class="form-group"><label>Erntedatum anpassen</label><input type="date" id="arcEditDatum"></div>
-        <div class="sensor-grid" style="margin-bottom:12px;">
-          <div class="form-group"><label>Ertrag (g)</label><input type="number" id="arcEditErtrag" step="0.1"></div>
-          <div class="form-group"><label>THC (%)</label><input type="number" id="arcEditThc" step="0.1"></div>
-        </div>
-        <div class="form-group"><label>Blütedauer</label><input type="text" id="arcEditBluetedauer"></div>
-        <div class="form-group"><label>Herausforderungen</label><textarea id="arcEditHerausforderungen" rows="2"></textarea></div>
-        <div class="form-group"><label>Review</label><textarea id="arcEditReview" rows="2"></textarea></div>
-
-        <button type="button" class="btn" onclick="saveEditedArchive()">Änderungen speichern</button>
-        <button type="button" class="btn btn-danger" onclick="deleteArchiveConfirm()">🗑️ Projekt löschen</button>
-        <button type="button" class="btn btn-secondary" onclick="closeArchiveDetailModal()">Abbrechen</button>
-      </div>
+      <button type="button" class="btn" onclick="saveEditedArchive()">Änderungen speichern</button>
+      <button type="button" class="btn btn-danger" onclick="deleteArchiveConfirm()">🗑️ Projekt löschen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeArchiveEditModal()">Abbrechen</button>
     </div>
   </div>
 
-  <!-- Modal 4: Zukunft Bearbeiten -->
+  <!-- Modal 4: Projekt-Pflanze hinzufügen / bearbeiten -->
+  <div class="modal-overlay" id="projectPlantModal">
+    <div class="modal-card">
+      <h3 id="projPlantModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Pflanze im Projekt</h3>
+      <input type="hidden" id="projPlantIndex">
+      <div class="form-group"><label>Pflanzen- / Phäno-Name:</label><input type="text" id="projPlantName" placeholder="z.B. Ethos Cookies #1" required></div>
+      <div class="form-group"><label>Sorte / Strain:</label><input type="text" id="projPlantStrain" placeholder="z.B. Hybrid / Ethos Genetics"></div>
+      <div class="form-group"><label>Einzel-Ertrag / Notizen (optional):</label><input type="text" id="projPlantNotes" placeholder="z.B. 45g, sehr dichte Buds"></div>
+      <div id="projPlantImgWrapper" style="margin-bottom: 10px; display: none; text-align: center;">
+        <img id="projPlantImgPreview" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="form-group"><label>Foto der Pflanze:</label><input type="file" id="projPlantFileInput" accept="image/*" onchange="handleProjectPlantFileUpload(this)"></div>
+
+      <button type="button" class="btn" onclick="saveProjectPlant()">Pflanze speichern</button>
+      <button type="button" class="btn btn-danger" id="btnDeleteProjPlant" style="display:none;" onclick="deleteProjectPlant()">🗑️ Pflanze entfernen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeProjectPlantModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 5: Zukunft Bearbeiten -->
   <div class="modal-overlay" id="editFutureModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Idee bearbeiten</h3>
@@ -675,7 +684,7 @@
     </div>
   </div>
 
-  <!-- Modal 5: Pflanze hinzufügen -->
+  <!-- Modal 6: Pflanze hinzufügen (Zelte) -->
   <div class="modal-overlay" id="addPlantModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">+ Neu ins Zelt</h3>
@@ -693,7 +702,7 @@
     </div>
   </div>
 
-  <!-- Modal 6: Zelt Phase -->
+  <!-- Modal 7: Zelt Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <div id="boxImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
@@ -719,7 +728,7 @@
     </div>
   </div>
 
-  <!-- Modal 7: Pflanzen Details -->
+  <!-- Modal 8: Pflanzen Details (Zelte) -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
@@ -767,7 +776,6 @@
   </nav>
 
   <script>
-    // URL DER BLÄTTER-DATEI
     const HEADER_LEAF_URL = "https://lh3.googleusercontent.com/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH"; 
 
     function loadHeaderLeafImages() {
@@ -786,7 +794,6 @@
         splash.classList.add('hidden');
       }
     }
-    setTimeout(hideSplashScreen, 2800);
 
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
 
@@ -848,10 +855,25 @@
     let activeArchiveItem = null;
     let activeLogItem = null;
     let activeFutureItem = null;
+    let editingProjectPlantIndex = null;
 
     function formatNumberDE(val, decimals = 1) {
       if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
+    }
+
+    function formatDateForInput(dateStr) {
+      if (!dateStr) return todayStr;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+      if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) {
+        const parts = dateStr.split('.');
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      try {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+      } catch(e) {}
+      return todayStr;
     }
 
     // --- FACE ID & BIOMETRISCHE SPERRE ---
@@ -904,6 +926,8 @@
       if (isBiometricLockEnabled) {
         document.getElementById('biometric-lock-overlay').classList.add('active');
         authenticateUserBiometric();
+      } else {
+        setTimeout(hideSplashScreen, 2800);
       }
     }
 
@@ -930,6 +954,7 @@
 
         if (credential) {
           document.getElementById('biometric-lock-overlay').classList.remove('active');
+          setTimeout(hideSplashScreen, 1200);
           return;
         }
       } catch (e) {
@@ -943,6 +968,7 @@
       if (input === "1236") {
         document.getElementById('biometric-lock-overlay').classList.remove('active');
         document.getElementById('pinInput').value = "";
+        setTimeout(hideSplashScreen, 1200);
       } else {
         alert("Falscher PIN! Versuche 1236.");
       }
@@ -996,13 +1022,13 @@
           autoCalculateFertilizer(); 
           renderBoxTiles(); 
           populateLogDropdown();
-          hideSplashScreen();
+          if(!isBiometricLockEnabled) hideSplashScreen();
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
-          hideSplashScreen();
+          if(!isBiometricLockEnabled) hideSplashScreen();
         });
     }
 
@@ -1155,6 +1181,7 @@
       if (targetTab) targetTab.classList.add('active');
       if (element) element.classList.add('active');
       if (tabName === 'plants') showBoxOverview();
+      if (tabName === 'archiv') showArchiveOverview();
     }
 
     function getBoxInfo(boxName) {
@@ -1708,89 +1735,79 @@
       });
     }
 
-    // --- ARCHIV & RANKING ---
+    // --- ARCHIV & PROJEKTE (NEUES KACHEL-SYSTEM WIE ZELTE) ---
     function renderArchiveData() {
       renderRanking();
-      const container = document.getElementById('archive-list-container');
+      const container = document.getElementById('archive-tiles-container');
       if (archiveCache.length === 0) { 
         container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Noch keine Projekte im Archiv.</p>"; 
         document.getElementById('btn-expand-archive').style.display = 'none';
         return; 
       }
       
-      let html = "";
+      container.innerHTML = "";
       archiveCache.slice(0, archiveLimit).forEach(item => {
-        const gesamtScore = ((Number(item.aussehen) + Number(item.aroma) + Number(item.geschmack) + Number(item.wirkung)) / 4).toFixed(1);
-        const imgHtml = item.bild ? `<img src="${item.bild}" class="archive-img">` : `<div class="archive-img" style="background:#232d27; display:flex; align-items:center; justify-content:center; font-size:24px;">🌿</div>`;
-        const pflanzenList = item.pflanzen ? `<div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">🌱 ${item.pflanzen}</div>` : '';
+        const plantCount = getProjectPlantsList(item).length;
+        const gesamtScore = ((Number(item.aussehen || 0) + Number(item.aroma || 0) + Number(item.geschmack || 0) + Number(item.wirkung || 0)) / 4).toFixed(1);
         const displayDate = item.rawDate || item.datum || 'Nicht angegeben';
+        
+        const imgThumbHtml = item.bild 
+          ? `<img src="${item.bild}" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border);">` 
+          : `<div style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right:12px;">🌿</div>`;
 
-        html += `
-          <div class="archive-card" onclick="openArchiveDetailModal('${item.id}')">
-            ${imgHtml}
-            <div class="archive-info" style="flex-grow:1;">
+        const tile = document.createElement('div');
+        tile.className = 'box-tile-card';
+        tile.onclick = () => openProjectDetail(item.id);
+
+        tile.innerHTML = `
+          <div style="display:flex; align-items:center;">
+            ${imgThumbHtml}
+            <div class="box-tile-info">
               <h3>${item.sorte}</h3>
-              ${pflanzenList}
-              <div class="archive-stats">
-                <span class="archive-tag">⚖️ ${item.ertrag}g</span>
-                <span class="archive-tag">🧪 ${item.thc || '?'}% THC</span>
-                <span class="archive-tag">⭐ ${gesamtScore}/10</span>
-              </div>
-              ${item.review ? `<div class="archive-review">"${item.review}"</div>` : ''}
-              <div style="font-size:9px; color:var(--text-muted); margin-top:6px; text-align:right;">📅 ${displayDate}</div>
+              <p style="color:var(--text-muted);">${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color:var(--plant-green);">${item.ertrag || 0}g</strong> • ⭐ ${gesamtScore}/10</p>
             </div>
-          </div>`;
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px; color:var(--text-muted);">${displayDate}</div>
+            <div class="box-tile-arrow">➔</div>
+          </div>
+        `;
+        container.appendChild(tile);
       });
-      container.innerHTML = html;
+
       document.getElementById('btn-expand-archive').style.display = archiveCache.length > archiveLimit ? 'block' : 'none';
     }
 
     function expandArchiveList() { archiveLimit += 10; renderArchiveData(); }
 
-    function renderRanking() {
-      const container = document.getElementById('ranking-container');
-      if (archiveCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Benötigt mindestens einen Archiv-Eintrag.</p>"; return; }
-      
-      const bestYield = [...archiveCache].sort((a, b) => b.ertrag - a.ertrag)[0];
-      const bestTaste = [...archiveCache].sort((a, b) => (b.aroma + b.geschmack) - (a.aroma + a.geschmack))[0];
-      const bestOverall = [...archiveCache].sort((a, b) => {
-        const scoreA = Number(a.aussehen) + Number(a.aroma) + Number(a.geschmack) + Number(a.wirkung);
-        const scoreB = Number(b.aussehen) + Number(b.aroma) + Number(b.geschmack) + Number(b.wirkung);
-        return scoreB - scoreA;
-      })[0];
-
-      container.innerHTML = `
-        <div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
-        <div style="display: flex; gap: 10px;">
-          <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
-            <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
-            <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag}g</span></div>
-          </div>
-          <div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);">
-            <div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div>
-            <div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div>
-          </div>
-        </div>`;
+    function getProjectPlantsList(item) {
+      if (Array.isArray(item.plantList)) return item.plantList;
+      if (item.pflanzen && typeof item.pflanzen === 'string') {
+        return item.pflanzen.split(',').map(s => s.trim()).filter(s => s.length > 0).map((pName, idx) => ({ id: idx, name: pName, strain: pName, notes: '', img: '' }));
+      }
+      return [];
     }
 
-    function openArchiveDetailModal(id) {
+    function openProjectDetail(id) {
       activeArchiveItem = archiveCache.find(a => a.id == id);
-      if(!activeArchiveItem) return;
+      if (!activeArchiveItem) return;
 
-      document.getElementById('arcDetailView').style.display = 'block';
-      document.getElementById('arcEditView').style.display = 'none';
+      document.getElementById('archive-overview-view').style.display = 'none';
+      document.getElementById('archive-detail-view').style.display = 'block';
 
       document.getElementById('arcDetailTitle').innerText = activeArchiveItem.sorte;
-      document.getElementById('arcDetailMainImg').src = activeArchiveItem.bild || "https://images.unsplash.com/photo-1536882240095-0379873feb4e?auto=format&fit=crop&w=400&q=80";
-      
-      const gesamtScore = ((Number(activeArchiveItem.aussehen) + Number(activeArchiveItem.aroma) + Number(activeArchiveItem.geschmack) + Number(activeArchiveItem.wirkung)) / 4).toFixed(1);
+      const displayDate = activeArchiveItem.rawDate || activeArchiveItem.datum || "Nicht angegeben";
+      document.getElementById('arcDetailSubtitle').innerText = `Geerntet am: ${displayDate}`;
+
+      renderProjectPlantsGrid();
+
+      const gesamtScore = ((Number(activeArchiveItem.aussehen || 0) + Number(activeArchiveItem.aroma || 0) + Number(activeArchiveItem.geschmack || 0) + Number(activeArchiveItem.wirkung || 0)) / 4).toFixed(1);
       document.getElementById('arcDetailStats').innerHTML = `
-        <span class="archive-tag">⚖️ ${activeArchiveItem.ertrag}g Ertrag</span>
+        <span class="archive-tag">⚖️ ${activeArchiveItem.ertrag || 0}g Ertrag</span>
         <span class="archive-tag">🧪 ${activeArchiveItem.thc || '?'}% THC</span>
         <span class="archive-tag">⭐ ${gesamtScore}/10 Gesamtnote</span>`;
 
-      document.getElementById('arcDetailDateText').innerText = activeArchiveItem.rawDate || activeArchiveItem.datum || "Nicht angegeben";
-      document.getElementById('arcDetailPlantsText').innerText = activeArchiveItem.pflanzen || "Keine einzelnen Pflanzen aufgelistet";
+      document.getElementById('arcDetailDateText').innerText = displayDate;
       document.getElementById('arcDetailBloom').innerText = activeArchiveItem.bluetedauer || "Nicht angegeben";
       document.getElementById('arcDetailChallenges').innerText = activeArchiveItem.herausforderungen || "Keine besonderen Probleme";
       document.getElementById('arcDetailReviewText').innerText = activeArchiveItem.review || "Kein Testbericht hinterlegt.";
@@ -1804,8 +1821,171 @@
       } else {
         gallery.innerHTML = `<div style="font-size:11px; color:var(--text-muted); grid-column: span 3;">Keine zusätzlichen Fotos.</div>`;
       }
+    }
 
-      document.getElementById('archiveDetailModal').classList.add('active');
+    function renderProjectPlantsGrid() {
+      const grid = document.getElementById('arc-plants-grid');
+      grid.innerHTML = "";
+      if (!activeArchiveItem) return;
+
+      const plants = getProjectPlantsList(activeArchiveItem);
+      if (plants.length === 0) {
+        grid.innerHTML = `<div style="font-size:12px; color:var(--text-muted); grid-column: span 2;">Keine einzelnen Pflanzen angelegt. Klicke auf "+ Pflanze".</div>`;
+        return;
+      }
+
+      plants.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = "plant-card bloom-card";
+        card.onclick = () => openProjectPlantModal(index);
+
+        const imgThumbHtml = (p.img && p.img.trim() !== '') 
+          ? `<img src="${p.img}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0;">` 
+          : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🪴</div>`;
+
+        card.innerHTML = `
+          <div style="display: flex; gap: 8px;">
+            ${imgThumbHtml}
+            <div style="flex: 1; min-width: 0;">
+              <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h3>
+              <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2;">${p.strain || ''}</div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <span class="plant-tag tag-bloom" style="font-size: 10px; padding: 2px 6px;">Geerntet</span>
+            <span style="font-size: 10px; color: var(--plant-green); font-weight:700;">${p.notes || ''}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function showArchiveOverview() {
+      document.getElementById('archive-detail-view').style.display = 'none';
+      document.getElementById('archive-overview-view').style.display = 'block';
+      activeArchiveItem = null;
+      renderArchiveData();
+    }
+
+    function openAddProjectPlantModal() {
+      if (!activeArchiveItem) return;
+      editingProjectPlantIndex = null;
+      document.getElementById('projPlantModalTitle').innerText = "+ Pflanze zum Projekt hinzufügen";
+      document.getElementById('projPlantName').value = "";
+      document.getElementById('projPlantStrain').value = "";
+      document.getElementById('projPlantNotes').value = "";
+      document.getElementById('projPlantImgWrapper').style.display = 'none';
+      document.getElementById('btnDeleteProjPlant').style.display = 'none';
+      document.getElementById('projectPlantModal').classList.add('active');
+    }
+
+    function openProjectPlantModal(index) {
+      if (!activeArchiveItem) return;
+      const plants = getProjectPlantsList(activeArchiveItem);
+      const p = plants[index];
+      if (!p) return;
+
+      editingProjectPlantIndex = index;
+      document.getElementById('projPlantModalTitle').innerText = "Pflanze bearbeiten";
+      document.getElementById('projPlantName').value = p.name || "";
+      document.getElementById('projPlantStrain').value = p.strain || "";
+      document.getElementById('projPlantNotes').value = p.notes || "";
+      
+      const imgWrapper = document.getElementById('projPlantImgWrapper');
+      const imgPreview = document.getElementById('projPlantImgPreview');
+      if (p.img && p.img.trim() !== "") {
+        imgPreview.src = p.img; imgWrapper.style.display = 'block';
+      } else {
+        imgWrapper.style.display = 'none';
+      }
+
+      document.getElementById('btnDeleteProjPlant').style.display = 'block';
+      document.getElementById('projectPlantModal').classList.add('active');
+    }
+
+    function closeProjectPlantModal() {
+      document.getElementById('projectPlantModal').classList.remove('active');
+      editingProjectPlantIndex = null;
+    }
+
+    function handleProjectPlantFileUpload(input) {
+      if (input.files && input.files[0]) {
+        uploadImageToCloud(input.files[0]).then(url => {
+          document.getElementById('projPlantImgPreview').src = url;
+          document.getElementById('projPlantImgWrapper').style.display = 'block';
+        });
+      }
+    }
+
+    function saveProjectPlant() {
+      if (!activeArchiveItem) return;
+      let plants = getProjectPlantsList(activeArchiveItem);
+
+      const name = document.getElementById('projPlantName').value.trim();
+      const strain = document.getElementById('projPlantStrain').value.trim();
+      const notes = document.getElementById('projPlantNotes').value.trim();
+      const img = document.getElementById('projPlantImgWrapper').style.display !== 'none' ? document.getElementById('projPlantImgPreview').src : '';
+
+      if (!name) return alert("Bitte einen Pflanzennamen eingeben!");
+
+      const plantObj = { id: editingProjectPlantIndex !== null ? plants[editingProjectPlantIndex].id : Date.now(), name, strain, notes, img };
+
+      if (editingProjectPlantIndex !== null) {
+        plants[editingProjectPlantIndex] = plantObj;
+      } else {
+        plants.push(plantObj);
+      }
+
+      activeArchiveItem.plantList = plants;
+      activeArchiveItem.pflanzen = plants.map(p => p.name).join(', ');
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
+      .then(() => {
+        closeProjectPlantModal();
+        renderProjectPlantsGrid();
+      });
+    }
+
+    function deleteProjectPlant() {
+      if (!activeArchiveItem || editingProjectPlantIndex === null) return;
+      if (!confirm("Pflanze wirklich aus dem Projekt entfernen?")) return;
+
+      let plants = getProjectPlantsList(activeArchiveItem);
+      plants.splice(editingProjectPlantIndex, 1);
+      activeArchiveItem.plantList = plants;
+      activeArchiveItem.pflanzen = plants.map(p => p.name).join(', ');
+
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
+      .then(() => {
+        closeProjectPlantModal();
+        renderProjectPlantsGrid();
+      });
+    }
+
+    function renderRanking() {
+      const container = document.getElementById('ranking-container');
+      if (archiveCache.length === 0) { container.innerHTML = "<p style='font-size:12px; color:var(--text-muted);'>Benötigt mindestens einen Archiv-Eintrag.</p>"; return; }
+      
+      const bestYield = [...archiveCache].sort((a, b) => (b.ertrag || 0) - (a.ertrag || 0))[0];
+      const bestTaste = [...archiveCache].sort((a, b) => (Number(b.aroma || 0) + Number(b.geschmack || 0)) - (Number(a.aroma || 0) + Number(a.geschmack || 0)))[0];
+      const bestOverall = [...archiveCache].sort((a, b) => {
+        const scoreA = Number(a.aussehen || 0) + Number(a.aroma || 0) + Number(a.geschmack || 0) + Number(a.wirkung || 0);
+        const scoreB = Number(b.aussehen || 0) + Number(b.aroma || 0) + Number(b.geschmack || 0) + Number(b.wirkung || 0);
+        return scoreB - scoreA;
+      })[0];
+
+      container.innerHTML = `
+        <div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
+        <div style="display: flex; gap: 10px;">
+          <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
+            <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
+            <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag || 0}g</span></div>
+          </div>
+          <div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);">
+            <div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div>
+            <div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div>
+          </div>
+        </div>`;
     }
 
     function uploadAdditionalArchivePhoto(input) {
@@ -1816,33 +1996,38 @@
           activeArchiveItem.mehrBilder.push(url);
 
           fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
-          .then(() => openArchiveDetailModal(activeArchiveItem.id));
+          .then(() => openProjectDetail(activeArchiveItem.id));
         });
       }
     }
 
     function switchToEditArchiveView() {
       if(!activeArchiveItem) return;
-      document.getElementById('arcDetailView').style.display = 'none';
-      document.getElementById('arcEditView').style.display = 'block';
-
       document.getElementById('arcEditId').value = activeArchiveItem.id;
       document.getElementById('arcEditSorte').value = activeArchiveItem.sorte || "";
       document.getElementById('arcEditPflanzen').value = activeArchiveItem.pflanzen || "";
-      document.getElementById('arcEditDatum').value = activeArchiveItem.rawDate || activeArchiveItem.datum || todayStr;
+      document.getElementById('arcEditDatum').value = formatDateForInput(activeArchiveItem.rawDate || activeArchiveItem.datum);
       document.getElementById('arcEditErtrag').value = activeArchiveItem.ertrag || "";
       document.getElementById('arcEditThc').value = activeArchiveItem.thc || "";
       document.getElementById('arcEditBluetedauer').value = activeArchiveItem.bluetedauer || "";
       document.getElementById('arcEditHerausforderungen').value = activeArchiveItem.herausforderungen || "";
       document.getElementById('arcEditReview').value = activeArchiveItem.review || "";
+
+      document.getElementById('archiveEditModal').classList.add('active');
+    }
+
+    function closeArchiveEditModal() {
+      document.getElementById('archiveEditModal').classList.remove('active');
     }
 
     function saveEditedArchive() {
       if(!activeArchiveItem) return;
+      const newDate = document.getElementById('arcEditDatum').value;
+      
       activeArchiveItem.sorte = document.getElementById('arcEditSorte').value;
       activeArchiveItem.pflanzen = document.getElementById('arcEditPflanzen').value;
-      activeArchiveItem.rawDate = document.getElementById('arcEditDatum').value;
-      activeArchiveItem.datum = document.getElementById('arcEditDatum').value;
+      activeArchiveItem.rawDate = newDate;
+      activeArchiveItem.datum = newDate;
       activeArchiveItem.ertrag = document.getElementById('arcEditErtrag').value;
       activeArchiveItem.thc = document.getElementById('arcEditThc').value;
       activeArchiveItem.bluetedauer = document.getElementById('arcEditBluetedauer').value;
@@ -1850,7 +2035,11 @@
       activeArchiveItem.review = document.getElementById('arcEditReview').value;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
-      .then(() => { closeArchiveDetailModal(); fetchInitialData(); });
+      .then(() => { 
+        closeArchiveEditModal(); 
+        openProjectDetail(activeArchiveItem.id);
+        fetchInitialData(); 
+      });
     }
 
     function deleteArchiveConfirm() {
@@ -1858,21 +2047,20 @@
       if(!confirm(`Möchtest du das Projekt "${activeArchiveItem.sorte}" wirklich aus dem Archiv löschen?`)) return;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteArchive", id: activeArchiveItem.id }) })
-      .then(() => { closeArchiveDetailModal(); fetchInitialData(); });
+      .then(() => { closeArchiveEditModal(); showArchiveOverview(); fetchInitialData(); });
     }
-
-    function closeArchiveDetailModal() { document.getElementById('archiveDetailModal').classList.remove('active'); activeArchiveItem = null; }
 
     function submitArchive(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit-archive'); btn.innerText = "Lade hoch..."; btn.disabled = true;
       const fileInput = document.getElementById('arc-bild');
+      const rawDateVal = document.getElementById('arc-datum').value || todayStr;
       
       const payload = { 
         sorte: document.getElementById('arc-sorte').value, 
         pflanzen: document.getElementById('arc-pflanzen').value,
-        rawDate: document.getElementById('arc-datum').value,
-        datum: document.getElementById('arc-datum').value,
+        rawDate: rawDateVal,
+        datum: rawDateVal,
         ertrag: document.getElementById('arc-ertrag').value, 
         thc: document.getElementById('arc-thc').value, 
         aussehen: document.getElementById('arc-aussehen').value, 
@@ -1883,7 +2071,8 @@
         herausforderungen: document.getElementById('arc-herausforderungen').value,
         review: document.getElementById('arc-review').value, 
         bild: "",
-        mehrBilder: []
+        mehrBilder: [],
+        plantList: document.getElementById('arc-pflanzen').value.split(',').map(s => s.trim()).filter(s => s.length > 0).map((pName, i) => ({ id: i, name: pName, strain: pName, notes: '', img: '' }))
       };
       
       if (!fileInput.files || !fileInput.files[0]) { sendArchiveToSheet(payload, btn); return; }
@@ -1955,7 +2144,7 @@
       .then(() => { closeEditFutureModal(); fetchInitialData(); });
     }
 
-    // --- NEUE PFLANZEN / STECKLINGE ---
+    // --- NEUE PFLANZEN / STECKLINGE (ZELTE) ---
     function openAddPlantModal() { document.getElementById('newPlantName').value = ""; document.getElementById('newPlantStrain').value = ""; document.getElementById('addPlantModal').classList.add('active'); }
     function closeAddPlantModal() { document.getElementById('addPlantModal').classList.remove('active'); }
     
