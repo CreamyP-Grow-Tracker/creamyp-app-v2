@@ -47,7 +47,6 @@
       100% { transform: scale(1); }
     }
     
-    /* Splash Screen Text Animations (Fix für abgeschnittenes 'p') */
     .splash-text-container {
       margin-top: 20px;
       display: flex;
@@ -159,7 +158,7 @@
     .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); position: relative; }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .clickable-card { cursor: pointer; transition: transform 0.15s; }
     .clickable-card:active { transform: scale(0.98); }
@@ -182,8 +181,17 @@
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
     .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: 8px; }
-    .btn-danger { background: #c0392b; color: #fff; box-shadow: none; margin-top: 8px; }
     .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
+
+    /* Mülltonnen Button in Ecken */
+    .btn-trash-corner {
+      position: absolute; top: 14px; right: 14px;
+      background: rgba(192, 57, 43, 0.15); border: 1px solid rgba(192, 57, 43, 0.3);
+      color: #e74c3c; width: 32px; height: 32px; border-radius: 8px;
+      font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 5;
+    }
+    .btn-trash-corner:hover { background: rgba(192, 57, 43, 0.3); transform: scale(1.05); }
 
     .calc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
@@ -193,7 +201,7 @@
     .ec-badge.bloom-mode { background: linear-gradient(135deg, #d63031, var(--primary-pink)); color: #fff; }
     .calc-table td.val.bloom-val { color: var(--primary-pink); }
 
-    .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+    .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .box-tile-card { background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform 0.15s, border-color 0.15s; }
     .box-tile-card:active { transform: scale(0.98); border-color: var(--plant-green); }
@@ -229,9 +237,9 @@
 
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
-    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
+    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; position: relative; }
 
-    .log-item-row { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
+    .log-item-row { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
     .log-item-row:hover { background: rgba(255,255,255,0.03); }
     .log-item-row:last-child { border-bottom: none; }
     .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; align-items: center; }
@@ -242,6 +250,20 @@
 
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
+
+    /* Toast Animation für Speichern */
+    .toast-notification {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: #181f1b; border: 1px solid #2ecc71; color: #2ecc71;
+      padding: 12px 24px; border-radius: 30px; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 10000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+      opacity: 0; pointer-events: none; font-weight: 600; font-size: 14px;
+    }
+    .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .checkmark-icon {
+      width: 22px; height: 22px; background: #2ecc71; color: #0f1411; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;
+    }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -293,6 +315,12 @@
       </div>
     </div>
   </div>
+
+  <!-- TOAST SPEICHER-BENACHRICHTIGUNG -->
+  <div id="success-toast" class="toast-notification">
+    <span class="checkmark-icon">✓</span>
+    <span id="toast-msg">Erfolgreich gespeichert!</span>
+  </div>
   
   <!-- HEADER MIT VOLLFLÄCHIGER 3-EBENEN-SCHICHTUNG -->
   <header>
@@ -312,7 +340,7 @@
     <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="card clickable-card" onclick="toggleKlimaChart()">
-        <h2>Live Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
+        <h2>Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box"><div class="sensor-label">TEMP</div><div class="sensor-val" id="val-temp">--°C</div></div>
           <div class="sensor-box"><div class="sensor-label">FEUCHTE</div><div class="sensor-val" id="val-humidity">--%</div></div>
@@ -329,9 +357,21 @@
         </div>
       </div>
 
+      <!-- HARDWARE & SETUP DETAILS (MIT AUSRÜSTUNG UND SORTEN) -->
       <div class="card">
-        <h2>Setups</h2>
-        <div id="dashboard-setup-container"></div>
+        <h2>
+          <span>Hardware & Setup-Details</span>
+          <button type="button" class="btn-back" style="font-size: 11px;" onclick="openEquipmentModal()">+ Ausrüstung</button>
+        </h2>
+        
+        <!-- Sortenübersicht oben -->
+        <div id="strains-overview-box" style="background: rgba(46, 204, 113, 0.05); border: 1px solid rgba(46, 204, 113, 0.15); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; font-size: 12px;">
+          <strong style="color: var(--plant-green); display: block; margin-bottom: 4px;">🌱 Aktive Sorten in Zelten:</strong>
+          <div id="active-strains-list" style="color: #fff;">Lädt Sorten...</div>
+        </div>
+
+        <div id="equipment-list-container"></div>
+        <div id="dashboard-setup-container" style="margin-top: 10px;"></div>
       </div>
 
       <div class="card clickable-card" onclick="toggleStromDropdown()">
@@ -354,7 +394,7 @@
           </div>
 
           <form id="stromForm" onsubmit="submitStrom(event)">
-            <div class="form-group" style="margin-bottom: 8px;"><label>Datum (auch für alte Daten):</label><input type="date" id="strom-input-date"></div>
+            <div class="form-group" style="margin-bottom: 8px;"><label>Datum:</label><input type="date" id="strom-input-date"></div>
             <div class="form-group" style="margin-bottom: 8px;"><label>Neuer Zählerstand (kWh):</label><input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 29750" required></div>
             <div class="form-group" style="margin-bottom: 8px;"><label>Notiz (optional):</label><input type="text" id="strom-input-note" placeholder="z.B. Stand Mai"></div>
             <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
@@ -366,8 +406,14 @@
     <!-- TAB 2: GROWPLAN -->
     <div id="tab-plan" class="tab-content">
       <div class="card">
-        <h2>Zielwerte & Ablauf</h2>
-        <ul style="margin: 10px 0 0 20px; font-size: 13px; line-height: 1.6;">
+        <h2>
+          <span>Zielwerte & Ablauf</span>
+          <button type="button" class="btn-back" style="font-size: 11px;" onclick="openGoalModal()">+ Ziele</button>
+        </h2>
+        
+        <div id="custom-goals-container" style="margin-bottom: 14px;"></div>
+
+        <ul style="margin: 10px 0 0 20px; font-size: 13px; line-height: 1.6; border-top: 1px dashed var(--card-border); padding-top: 10px;">
           <li><strong style="color: var(--plant-green);">Vegetationsphase:</strong> EC 1.0 | RLF ~65%</li>
           <li><strong style="color: var(--bloom-pink);">Frühe Blüte (BW 1-3):</strong> EC 1.4 - 1.9 | RLF ~55%</li>
           <li><strong style="color: var(--bloom-pink);">Hauptblüte (BW 4-6):</strong> EC 1.9 | RLF ~50%</li>
@@ -381,12 +427,15 @@
     <!-- TAB 3: DÜNGERECHNER -->
     <div id="tab-calc" class="tab-content">
       <div class="card">
-        <h2>Smarter Düngerechner</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2 style="margin-bottom: 0;">Smarter Düngerechner</h2>
+          <img id="bionova-logo" src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="BioNova" style="height: 36px; width: auto; max-width: 90px; object-fit: contain; cursor: pointer; border-radius: 6px;" onclick="changeBioNovaLogoUrl()" title="Klicken zum Ändern des BioNova Fotos">
+        </div>
         <div class="form-group">
           <label>1. Growbox oder einzelne Pflanze wählen:</label>
           <select id="calc-box" onchange="autoCalculateFertilizer()"></select>
         </div>
-        <div class="form-group"><label>2. Wassermenge (in Litern):</label><input type="number" id="calc-water" value="10" step="0.5" oninput="autoCalculateFertilizer()"></div>
+        <div class="form-group"><label>2. Wassermenge (in Litern):</label><input type="number" id="calc-water" value="10" step="0.1" min="0.1" oninput="autoCalculateFertilizer()"></div>
         <div id="calc-status-box" style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
           <span>Status / Phase:</span><strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
         </div>
@@ -439,7 +488,7 @@
         <h2>Neuen Log-Eintrag hinzufügen</h2>
         <form id="logForm" onsubmit="submitLog(event)">
           <div class="form-group"><label>Zelt / Pflanze wählen</label><select id="log-plant"></select></div>
-          <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="log-water" placeholder="z. B. 5.0" step="0.1"></div>
+          <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="log-water" placeholder="z. B. 0.5" step="0.1" min="0.1"></div>
           <div class="form-group">
             <label>Auffälligkeiten / Mängel</label>
             <select id="log-defect">
@@ -461,7 +510,7 @@
       <div class="card">
         <div id="box-overview-view">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <h2 onclick="openBoxManagementModal()" style="cursor: pointer;" title="Klicken zum Hinzufügen / Löschen">Deine Growboxen ⚙️</h2>
+            <h2 onclick="openBoxManagementModal()" style="cursor: pointer;" title="Klicken zum Hinzufügen / Löschen">Deine Growboxen</h2>
           </div>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle eine Growbox (Tippe auf die Überschrift oben, um Zelte hinzuzufügen/löschen):</p>
           <div id="box-tiles-container"></div>
@@ -472,7 +521,7 @@
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
             <div>
               <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 6px;" onclick="openAddPlantModal()">+ Pflanze</button>
-              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">⚙️ Zelt-Phase</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
             </div>
           </div>
 
@@ -486,15 +535,15 @@
       </div>
     </div>
 
-    <!-- TAB 6: ARCHIV & ZUKUNFT (ÜBERARBEITET ALS PROJEKT-OVERVIEW) -->
+    <!-- TAB 6: ARCHIV & ZUKUNFT -->
     <div id="tab-archiv" class="tab-content">
       
       <!-- VIEW 1: PROJEKT-ÜBERSICHT -->
       <div id="archive-overview-view">
-        <div class="card"><h2>🏆 Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
+        <div class="card"><h2>Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
         
         <div class="card">
-          <h2>🕰️ Archivierte Projekte</h2>
+          <h2>Archivierte Projekte</h2>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle ein Projekt aus, um Pflanzen und Details zu sehen:</p>
           <div id="archive-tiles-container">Lädt Projekte...</div>
           <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Projekte anzeigen</button>
@@ -528,7 +577,7 @@
         </div>
 
         <div class="card">
-          <h2>🚀 Zukunft & Ideen</h2>
+          <h2>Zukunft & Ideen</h2>
           <div id="future-list-container" style="margin-bottom:14px;">Lädt Ideen...</div>
           <button type="button" id="btn-expand-future" class="btn btn-secondary" style="display:none; font-size:12px; margin-bottom:16px;" onclick="expandFutureList()">Mehr Ideen anzeigen</button>
 
@@ -547,7 +596,7 @@
         </div>
       </div>
 
-      <!-- VIEW 2: PROJEKT-DETAILANSICHT (WIE ZELT-DETAIL) -->
+      <!-- VIEW 2: PROJEKT-DETAILANSICHT -->
       <div id="archive-detail-view" style="display: none;">
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -610,16 +659,16 @@
   <!-- Modal 2: Log-Eintrag Bearbeiten -->
   <div class="modal-overlay" id="editLogModal">
     <div class="modal-card">
+      <button type="button" class="btn-trash-corner" onclick="deleteLogEntryConfirm()" title="Eintrag löschen">🗑️</button>
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Log-Eintrag bearbeiten</h3>
       <input type="hidden" id="editLogId">
-      <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="editLogWater" step="0.1"></div>
+      <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="editLogWater" step="0.1" min="0.1"></div>
       <div class="form-group"><label>Mängel</label><input type="text" id="editLogDefect"></div>
       <div class="form-group"><label>Notiz</label><textarea id="editLogNote" rows="3"></textarea></div>
       <div id="editLogImgWrapper" style="margin-bottom: 10px; display: none;">
         <img id="editLogImgPreview" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px;">
       </div>
       <button type="button" class="btn" onclick="saveEditedLog()">Änderungen speichern</button>
-      <button type="button" class="btn btn-danger" onclick="deleteLogEntryConfirm()">🗑️ Eintrag löschen</button>
       <button type="button" class="btn btn-secondary" onclick="closeEditLogModal()">Abbrechen</button>
     </div>
   </div>
@@ -627,6 +676,7 @@
   <!-- Modal 3: Archive Edit Modal -->
   <div class="modal-overlay" id="archiveEditModal">
     <div class="modal-card">
+      <button type="button" class="btn-trash-corner" onclick="deleteArchiveConfirm()" title="Projekt löschen">🗑️</button>
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
       <input type="hidden" id="arcEditId">
       <div class="form-group"><label>Projektname</label><input type="text" id="arcEditSorte"></div>
@@ -641,7 +691,6 @@
       <div class="form-group"><label>Review</label><textarea id="arcEditReview" rows="2"></textarea></div>
 
       <button type="button" class="btn" onclick="saveEditedArchive()">Änderungen speichern</button>
-      <button type="button" class="btn btn-danger" onclick="deleteArchiveConfirm()">🗑️ Projekt löschen</button>
       <button type="button" class="btn btn-secondary" onclick="closeArchiveEditModal()">Abbrechen</button>
     </div>
   </div>
@@ -649,6 +698,7 @@
   <!-- Modal 4: Projekt-Pflanze hinzufügen / bearbeiten -->
   <div class="modal-overlay" id="projectPlantModal">
     <div class="modal-card">
+      <button type="button" class="btn-trash-corner" id="btnDeleteProjPlant" style="display:none;" onclick="deleteProjectPlant()" title="Pflanze entfernen">🗑️</button>
       <h3 id="projPlantModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Pflanze im Projekt</h3>
       <input type="hidden" id="projPlantIndex">
       <div class="form-group"><label>Pflanzen- / Phäno-Name:</label><input type="text" id="projPlantName" placeholder="z.B. Ethos Cookies #1" required></div>
@@ -660,7 +710,6 @@
       <div class="form-group"><label>Foto der Pflanze:</label><input type="file" id="projPlantFileInput" accept="image/*" onchange="handleProjectPlantFileUpload(this)"></div>
 
       <button type="button" class="btn" onclick="saveProjectPlant()">Pflanze speichern</button>
-      <button type="button" class="btn btn-danger" id="btnDeleteProjPlant" style="display:none;" onclick="deleteProjectPlant()">🗑️ Pflanze entfernen</button>
       <button type="button" class="btn btn-secondary" onclick="closeProjectPlantModal()">Abbrechen</button>
     </div>
   </div>
@@ -668,6 +717,7 @@
   <!-- Modal 5: Zukunft Bearbeiten -->
   <div class="modal-overlay" id="editFutureModal">
     <div class="modal-card">
+      <button type="button" class="btn-trash-corner" onclick="deleteFutureConfirm()" title="Idee löschen">🗑️</button>
       <h3 style="color: var(--plant-green); margin-bottom: 12px;">Idee bearbeiten</h3>
       <input type="hidden" id="editFutureId">
       <div class="form-group"><label>Kategorie</label>
@@ -679,7 +729,6 @@
       </div>
       <div class="form-group"><label>Titel</label><input type="text" id="editFutureTitel"></div>
       <button type="button" class="btn" onclick="saveEditedFuture()">Speichern</button>
-      <button type="button" class="btn btn-danger" onclick="deleteFutureConfirm()">🗑️ Idee löschen</button>
       <button type="button" class="btn btn-secondary" onclick="closeEditFutureModal()">Abbrechen</button>
     </div>
   </div>
@@ -731,6 +780,7 @@
   <!-- Modal 8: Pflanzen Details (Zelte) -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
+      <button type="button" class="btn-trash-corner" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="plantImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
@@ -738,7 +788,7 @@
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
       
-      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">⚙️ Individuelle Phase anpassen</button>
+      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
       <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
@@ -760,8 +810,52 @@
         <label>Foto hinzufügen:</label>
         <input type="file" id="modalPlantFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handlePlantFileUpload(this)">
       </div>
-      <button type="button" class="btn btn-danger" style="margin-top:8px;" onclick="deleteCurrentPlantConfirm()">🗑️ Pflanze löschen</button>
       <button type="button" class="btn btn-secondary" style="margin-top: 8px;" onclick="closePlantDetailModal()">Schließen</button>
+    </div>
+  </div>
+
+  <!-- Modal 9: Ausrüstung Hinzufügen / Bearbeiten -->
+  <div class="modal-overlay" id="equipmentModal">
+    <div class="modal-card">
+      <button type="button" class="btn-trash-corner" id="btnDeleteEquipment" style="display:none;" onclick="deleteEquipmentConfirm()" title="Ausrüstung löschen">🗑️</button>
+      <h3 id="equipmentModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Ausrüstung</h3>
+      <input type="hidden" id="editEquipmentId">
+      <div class="form-group"><label>Zelt / Bereich:</label><select id="eqBoxSelect"></select></div>
+      <div class="form-group"><label>Name des Gegenstands:</label><input type="text" id="eqNameInput" placeholder="z.B. Sanlight EVO 4-80" required></div>
+      <div class="form-group">
+        <label>Kategorie / Typ:</label>
+        <select id="eqCategorySelect">
+          <option value="💡 LED / Licht">💡 LED / Licht</option>
+          <option value="💨 Abluft / Filter">💨 Abluft / Filter</option>
+          <option value="🌬️ Umluft / Ventilator">🌬️ Umluft / Ventilator</option>
+          <option value="💧 Bewässerung">💧 Bewässerung</option>
+          <option value="🌡️ Sensor / Steuergerät">🌡️ Sensor / Steuergerät</option>
+          <option value="⚙️ Sonstiges Equipment">⚙️ Sonstiges Equipment</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Notizen / Details:</label><input type="text" id="eqNotesInput" placeholder="z.B. 250W, gedimmt auf 80%"></div>
+      <div id="eqImgWrapper" style="margin-bottom: 10px; display: none; text-align: center;">
+        <img id="eqImgPreview" src="" style="width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="form-group"><label>Foto der Ausrüstung (Optional):</label><input type="file" id="eqFileInput" accept="image/*" onchange="handleEquipmentFileUpload(this)"></div>
+
+      <button type="button" class="btn" onclick="saveEquipmentItem()">Ausrüstung speichern</button>
+      <button type="button" class="btn btn-secondary" onclick="closeEquipmentModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 10: Zielwert / Ablauf Schritt Hinzufügen / Bearbeiten -->
+  <div class="modal-overlay" id="goalModal">
+    <div class="modal-card">
+      <button type="button" class="btn-trash-corner" id="btnDeleteGoal" style="display:none;" onclick="deleteGoalConfirm()" title="Ziel löschen">🗑️</button>
+      <h3 id="goalModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zielwert / Ablaufschritt</h3>
+      <input type="hidden" id="editGoalId">
+      <div class="form-group"><label>Titel / Thema:</label><input type="text" id="goalTitleInput" placeholder="z.B. Ziel-EC Phase Peak" required></div>
+      <div class="form-group"><label>Phase / Woche (Optional):</label><input type="text" id="goalWeekInput" placeholder="z.B. Vegetationswoche 2 oder Blütewoche 4"></div>
+      <div class="form-group"><label>Details & Zielwerte:</label><textarea id="goalDescInput" rows="3" placeholder="z.B. EC 1.9, RLF ~50%, Temp 25°C"></textarea></div>
+
+      <button type="button" class="btn" onclick="saveGoalItem()">Ziel speichern</button>
+      <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Abbrechen</button>
     </div>
   </div>
 
@@ -793,6 +887,13 @@
       if (splash && !splash.classList.contains('hidden')) {
         splash.classList.add('hidden');
       }
+    }
+
+    function showSuccessToast(msg = "Erfolgreich gespeichert!") {
+      const toast = document.getElementById('success-toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2200);
     }
 
     const API_URL = "https://script.google.com/macros/s/AKfycbypwQMsKOIGrT65_FXs_lKMgVjTd-QWihjh94vI9TcV33gTy6GQl2-KeuXbaohLnQVt/exec";
@@ -838,6 +939,10 @@
     try { loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v10')); } catch(e) {}
     let plantsData = ensureAllPlantsExist(loadedPlants);
 
+    let equipmentData = JSON.parse(localStorage.getItem('creamyp_equipment_v1')) || [];
+    let goalsData = JSON.parse(localStorage.getItem('creamyp_goals_v1')) || [];
+    let bionovaLogoUrl = localStorage.getItem('creamyp_bionova_logo') || "https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5";
+
     let activeEditingBox = null;
     let currentSelectedBox = null;
     let currentDetailPlant = null;
@@ -855,6 +960,8 @@
     let activeArchiveItem = null;
     let activeLogItem = null;
     let activeFutureItem = null;
+    let activeEquipmentItem = null;
+    let activeGoalItem = null;
     let editingProjectPlantIndex = null;
 
     function formatNumberDE(val, decimals = 1) {
@@ -979,6 +1086,9 @@
       if(stromDate) stromDate.value = todayStr;
       const arcDate = document.getElementById('arc-datum');
       if(arcDate) arcDate.value = todayStr;
+
+      const logoImg = document.getElementById('bionova-logo');
+      if(logoImg && bionovaLogoUrl) logoImg.src = bionovaLogoUrl;
       
       loadHeaderLeafImages();
       checkLockOnStart();
@@ -1003,6 +1113,16 @@
             plantsData = ensureAllPlantsExist(data.plants);
             localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
           }
+
+          if (data && data.equipment && Array.isArray(data.equipment)) {
+            equipmentData = data.equipment;
+            localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
+          }
+
+          if (data && data.goals && Array.isArray(data.goals)) {
+            goalsData = data.goals;
+            localStorage.setItem('creamyp_goals_v1', JSON.stringify(goalsData));
+          }
           
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
             document.getElementById('val-temp').innerText = latest.temp + "°C";
@@ -1019,6 +1139,8 @@
 
           updateCalcBoxDropdown();
           renderDashboardSetup(); 
+          renderEquipmentList();
+          renderCustomGoals();
           autoCalculateFertilizer(); 
           renderBoxTiles(); 
           populateLogDropdown();
@@ -1027,7 +1149,7 @@
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
-          renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
+          renderDashboardSetup(); renderEquipmentList(); renderCustomGoals(); autoCalculateFertilizer(); renderBoxTiles();
           if(!isBiometricLockEnabled) hideSplashScreen();
         });
     }
@@ -1106,7 +1228,7 @@
           labels: labels,
           datasets: [
             { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
-            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+            { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' },
             { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
           ]
         },
@@ -1170,7 +1292,12 @@
         method: "POST", 
         body: JSON.stringify({ action: "saveStrom", date: dateVal, zaehlerstand: stand, notiz: noteVal }) 
       })
-      .then(() => { alert("Zählerstand erfolgreich gespeichert!"); document.getElementById('stromForm').reset(); document.getElementById('strom-input-date').value = todayStr; fetchInitialData(); })
+      .then(() => { 
+        showSuccessToast("Zählerstand gespeichert!"); 
+        document.getElementById('stromForm').reset(); 
+        document.getElementById('strom-input-date').value = todayStr; 
+        fetchInitialData(); 
+      })
       .catch(err => alert("Fehler: " + err));
     }
 
@@ -1245,10 +1372,16 @@
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
-      const hardwareConfig = {
-        "Mars Hydro": ["💡 LED: Mars Hydro FC-E3000", "💨 Abluft: PrimaKlima 125 EC-TC", "🌬️ Umluft: 2x GHP Profan", "💧 Bewässerung: Manuell", "🌡️ Sensoren: Tuya & Inkbird"],
-        "Grow Box": ["💡 LED: Sanlight EVO 4-80", "💨 Abluft: AC Infinity Cloudline T4", "🌬️ Umluft: 1x Secret Jardin", "💧 Bewässerung: Autopot", "💧 Luftentfeuchter: Trotec TTK 33 E"]
-      };
+      // Sorten-Übersicht oben aktualisieren
+      const strainsListElem = document.getElementById('active-strains-list');
+      if (strainsListElem) {
+        if (plantsData && plantsData.length > 0) {
+          const allStrains = plantsData.map(p => `<strong>${p.name}</strong> (${p.strain || 'Sorte unb.'})`).join(' • ');
+          strainsListElem.innerHTML = allStrains;
+        } else {
+          strainsListElem.innerHTML = "Keine Pflanzen/Sorten vorhanden.";
+        }
+      }
 
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
@@ -1260,9 +1393,6 @@
           ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
           : ``;
 
-        const listItems = (hardwareConfig[boxName] || ["Keine Hardware-Details hinterlegt."])
-          .map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
-
         const card = document.createElement('div');
         card.className = 'setup-card-box';
         card.innerHTML = `
@@ -1270,14 +1400,242 @@
             <span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span>
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </h3>
-          <p style="font-size: 13px; color: #fff; margin-top: 6px;"><strong>Sorten:</strong> ${strainNames}</p>
-          <details style="margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
-            <summary style="font-size: 11px; color: var(--plant-green); cursor: pointer; font-weight: 600; outline: none;">Hardware & Setup Details anzeigen ▾</summary>
-            <ul style="font-size: 11px; color: var(--text-muted); padding-left: 14px; margin-top: 8px; list-style-type: square;">${listItems}</ul>
-          </details>
+          <p style="font-size: 12px; color: #fff; margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
         `;
         container.appendChild(card);
       });
+    }
+
+    /* AUSRÜSTUNG (EQUIPMENT) LOGIK */
+    function renderEquipmentList() {
+      const container = document.getElementById('equipment-list-container');
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (!equipmentData || equipmentData.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:8px; text-align:center;">Noch keine Ausrüstung angelegt. Klicke oben auf "+ Ausrüstung".</div>`;
+        return;
+      }
+
+      equipmentData.forEach(item => {
+        const imgHtml = item.img 
+          ? `<img src="${item.img}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
+          : `<div style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
+
+        const tile = document.createElement('div');
+        tile.style.cssText = "background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;";
+        tile.onclick = () => openEditEquipmentModal(item.id);
+
+        tile.innerHTML = `
+          <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
+            ${imgHtml}
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+              <div style="font-size: 11px; color: var(--plant-green); margin-top: 2px;">${item.category || 'Equipment'} • <span style="color:var(--text-muted);">${item.box || 'Allgemein'}</span></div>
+              ${item.notes ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
+            </div>
+          </div>
+          <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0; margin-left:8px; flex-shrink:0;" onclick="event.stopPropagation(); deleteEquipmentDirect('${item.id}')" title="Löschen">🗑️</button>
+        `;
+        container.appendChild(tile);
+      });
+    }
+
+    function openEquipmentModal() {
+      activeEquipmentItem = null;
+      document.getElementById('equipmentModalTitle').innerText = "+ Ausrüstung hinzufügen";
+      document.getElementById('editEquipmentId').value = "";
+      document.getElementById('eqNameInput').value = "";
+      document.getElementById('eqNotesInput').value = "";
+      document.getElementById('eqImgWrapper').style.display = 'none';
+      document.getElementById('btnDeleteEquipment').style.display = 'none';
+
+      const select = document.getElementById('eqBoxSelect');
+      select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
+      Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
+
+      document.getElementById('equipmentModal').classList.add('active');
+    }
+
+    function openEditEquipmentModal(id) {
+      activeEquipmentItem = equipmentData.find(e => e.id == id);
+      if(!activeEquipmentItem) return;
+
+      document.getElementById('equipmentModalTitle').innerText = "Ausrüstung bearbeiten";
+      document.getElementById('editEquipmentId').value = activeEquipmentItem.id;
+      document.getElementById('eqNameInput').value = activeEquipmentItem.name || "";
+      document.getElementById('eqNotesInput').value = activeEquipmentItem.notes || "";
+      document.getElementById('eqCategorySelect').value = activeEquipmentItem.category || "⚙️ Sonstiges Equipment";
+
+      const select = document.getElementById('eqBoxSelect');
+      select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
+      Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
+      select.value = activeEquipmentItem.box || "Allgemein";
+
+      const wrapper = document.getElementById('eqImgWrapper');
+      const img = document.getElementById('eqImgPreview');
+      if (activeEquipmentItem.img) { img.src = activeEquipmentItem.img; wrapper.style.display = 'block'; }
+      else { wrapper.style.display = 'none'; }
+
+      document.getElementById('btnDeleteEquipment').style.display = 'block';
+      document.getElementById('equipmentModal').classList.add('active');
+    }
+
+    function closeEquipmentModal() {
+      document.getElementById('equipmentModal').classList.remove('active');
+      activeEquipmentItem = null;
+    }
+
+    function handleEquipmentFileUpload(input) {
+      if (input.files && input.files[0]) {
+        uploadImageToCloud(input.files[0]).then(url => {
+          document.getElementById('eqImgPreview').src = url;
+          document.getElementById('eqImgWrapper').style.display = 'block';
+        });
+      }
+    }
+
+    function saveEquipmentItem() {
+      const name = document.getElementById('eqNameInput').value.trim();
+      if (!name) return alert("Bitte einen Namen für den Gegenstand eingeben!");
+
+      const id = document.getElementById('editEquipmentId').value || "eq_" + Date.now();
+      const box = document.getElementById('eqBoxSelect').value;
+      const category = document.getElementById('eqCategorySelect').value;
+      const notes = document.getElementById('eqNotesInput').value;
+      const img = document.getElementById('eqImgWrapper').style.display !== 'none' ? document.getElementById('eqImgPreview').src : '';
+
+      const itemObj = { id, name, category, box, notes, img };
+
+      const existingIndex = equipmentData.findIndex(e => e.id == id);
+      if (existingIndex > -1) { equipmentData[existingIndex] = itemObj; }
+      else { equipmentData.push(itemObj); }
+
+      saveEquipmentCloudAndLocal();
+      closeEquipmentModal();
+      renderEquipmentList();
+      showSuccessToast("Ausrüstung gespeichert!");
+    }
+
+    function deleteEquipmentConfirm() {
+      if (!activeEquipmentItem) return;
+      deleteEquipmentDirect(activeEquipmentItem.id);
+      closeEquipmentModal();
+    }
+
+    function deleteEquipmentDirect(id) {
+      if (!confirm("Ausrüstungsgegenstand wirklich löschen?")) return;
+      equipmentData = equipmentData.filter(e => e.id != id);
+      saveEquipmentCloudAndLocal();
+      renderEquipmentList();
+      showSuccessToast("Ausrüstung gelöscht!");
+    }
+
+    function saveEquipmentCloudAndLocal() {
+      localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveEquipment", equipment: equipmentData }) });
+    }
+
+    /* ZIELWERTE & ABLAUF LOGIK */
+    function renderCustomGoals() {
+      const container = document.getElementById('custom-goals-container');
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (!goalsData || goalsData.length === 0) return;
+
+      goalsData.forEach(g => {
+        const card = document.createElement('div');
+        card.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;";
+        card.onclick = () => openEditGoalModal(g.id);
+
+        card.innerHTML = `
+          <button type="button" class="btn-trash-corner" style="position:absolute; top:10px; right:10px;" onclick="event.stopPropagation(); deleteGoalDirect('${g.id}')" title="Ziel löschen">🗑️</button>
+          <div style="font-size: 14px; font-weight: 700; color: var(--plant-green); margin-bottom: 2px;">${g.title}</div>
+          ${g.week ? `<div style="font-size: 11px; color: var(--bloom-pink); font-weight: 600; margin-bottom: 4px;">🗓️ ${g.week}</div>` : ''}
+          <div style="font-size: 12px; color: #fff; line-height: 1.4;">${g.desc || ''}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openGoalModal() {
+      activeGoalItem = null;
+      document.getElementById('goalModalTitle').innerText = "+ Zielwert / Ablauf hinzufügen";
+      document.getElementById('editGoalId').value = "";
+      document.getElementById('goalTitleInput').value = "";
+      document.getElementById('goalWeekInput').value = "";
+      document.getElementById('goalDescInput').value = "";
+      document.getElementById('btnDeleteGoal').style.display = 'none';
+      document.getElementById('goalModal').classList.add('active');
+    }
+
+    function openEditGoalModal(id) {
+      activeGoalItem = goalsData.find(g => g.id == id);
+      if (!activeGoalItem) return;
+
+      document.getElementById('goalModalTitle').innerText = "Zielwert bearbeiten";
+      document.getElementById('editGoalId').value = activeGoalItem.id;
+      document.getElementById('goalTitleInput').value = activeGoalItem.title || "";
+      document.getElementById('goalWeekInput').value = activeGoalItem.week || "";
+      document.getElementById('goalDescInput').value = activeGoalItem.desc || "";
+
+      document.getElementById('btnDeleteGoal').style.display = 'block';
+      document.getElementById('goalModal').classList.add('active');
+    }
+
+    function closeGoalModal() {
+      document.getElementById('goalModal').classList.remove('active');
+      activeGoalItem = null;
+    }
+
+    function saveGoalItem() {
+      const title = document.getElementById('goalTitleInput').value.trim();
+      if (!title) return alert("Bitte einen Titel eingeben!");
+
+      const id = document.getElementById('editGoalId').value || "goal_" + Date.now();
+      const week = document.getElementById('goalWeekInput').value;
+      const desc = document.getElementById('goalDescInput').value;
+
+      const goalObj = { id, title, week, desc };
+
+      const existingIndex = goalsData.findIndex(g => g.id == id);
+      if (existingIndex > -1) { goalsData[existingIndex] = goalObj; }
+      else { goalsData.push(goalObj); }
+
+      saveGoalsCloudAndLocal();
+      closeGoalModal();
+      renderCustomGoals();
+      showSuccessToast("Ziel/Ablauf gespeichert!");
+    }
+
+    function deleteGoalConfirm() {
+      if (!activeGoalItem) return;
+      deleteGoalDirect(activeGoalItem.id);
+      closeGoalModal();
+    }
+
+    function deleteGoalDirect(id) {
+      if (!confirm("Dieses Ziel wirklich löschen?")) return;
+      goalsData = goalsData.filter(g => g.id != id);
+      saveGoalsCloudAndLocal();
+      renderCustomGoals();
+      showSuccessToast("Ziel gelöscht!");
+    }
+
+    function saveGoalsCloudAndLocal() {
+      localStorage.setItem('creamyp_goals_v1', JSON.stringify(goalsData));
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveGoals", goals: goalsData }) });
+    }
+
+    function changeBioNovaLogoUrl() {
+      const url = prompt("BioNova Bild-URL eingeben:", bionovaLogoUrl);
+      if (url && url.trim() !== "") {
+        bionovaLogoUrl = url.trim();
+        localStorage.setItem('creamyp_bionova_logo', bionovaLogoUrl);
+        document.getElementById('bionova-logo').src = bionovaLogoUrl;
+        showSuccessToast("BioNova Logo aktualisiert!");
+      }
     }
 
     /* DÜNGERECHNER-LOGIK */
@@ -1306,7 +1664,7 @@
           if (boxName === "Grow Box") isSilverHazeOrLongBloomer = true;
           else {
             const boxPlants = plantsData.filter(p => p.box === boxName);
-            if (boxPlants.some(p => p.name.toLowerCase().includes("silver haze") || p.strain.toLowerCase().includes("silver haze"))) {
+            if (boxPlants.some(p => p.name.toLowerCase().includes("silver haze") || (p.strain && p.strain.toLowerCase().includes("silver haze")))) {
               isSilverHazeOrLongBloomer = true;
             }
           }
@@ -1315,7 +1673,7 @@
           const plant = plantsData.find(p => p.id === plantId);
           if (plant) {
             info = getPlantInfo(plant);
-            if (plant.name.toLowerCase().includes("silver haze") || plant.strain.toLowerCase().includes("silver haze") || plant.time.includes("10-11")) {
+            if (plant.name.toLowerCase().includes("silver haze") || (plant.strain && plant.strain.toLowerCase().includes("silver haze")) || (plant.time && plant.time.includes("10-11"))) {
               isSilverHazeOrLongBloomer = true;
             }
           }
@@ -1382,7 +1740,7 @@
         container.innerHTML += `
           <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
             <span>⛺ ${b}</span>
-            <button type="button" class="btn btn-danger" style="width:auto; padding:4px 10px; font-size:11px;" onclick="deleteBox('${b}')">Löschen</button>
+            <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0;" onclick="deleteBox('${b}')" title="Löschen">🗑️</button>
           </div>`;
       });
       document.getElementById('boxManagementModal').classList.add('active');
@@ -1403,6 +1761,7 @@
       renderDashboardSetup();
       updateCalcBoxDropdown();
       populateLogDropdown();
+      showSuccessToast("Zelt angelegt!");
     }
 
     function deleteBox(name) {
@@ -1416,6 +1775,7 @@
       renderDashboardSetup();
       updateCalcBoxDropdown();
       populateLogDropdown();
+      showSuccessToast("Zelt gelöscht!");
     }
 
     function saveBoxesDataCloudAndLocal() {
@@ -1501,12 +1861,12 @@
           ${imgThumbHtml}
           <div style="flex: 1; min-width: 0;">
             <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h3>
-            <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.strain}</div>
+            <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.strain || ''}</div>
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
           <span class="plant-tag ${info.tagClass}" style="font-size: 10px; padding: 3px 6px;">${info.tagText}</span>
-          <span class="box-tag" style="font-size: 9px;">⏳ ${p.time}</span>
+          <span class="box-tag" style="font-size: 9px;">⏳ ${p.time || 'Aktiv'}</span>
         </div>
       `;
       return card;
@@ -1516,7 +1876,7 @@
       currentDetailPlant = plant; plantLogLimit = 5;
       const info = getPlantInfo(plant);
       document.getElementById('modalPlantName').innerText = plant.name;
-      document.getElementById('modalPlantStrain').innerText = plant.strain + " (" + plant.box + ")";
+      document.getElementById('modalPlantStrain').innerText = (plant.strain || '') + " (" + plant.box + ")";
       document.getElementById('modalPlantDayTag').innerText = info.exactDayText;
       document.getElementById('modalPlantFileInput').value = "";
       updatePlantImageDisplay(plant.img || "");
@@ -1533,6 +1893,7 @@
       closePlantDetailModal();
       if(currentSelectedBox) openBoxDetail(currentSelectedBox);
       populateLogDropdown();
+      showSuccessToast("Pflanze gelöscht!");
     }
 
     function handlePlantFileUpload(input) {
@@ -1542,6 +1903,7 @@
           currentDetailPlant.img = imageUrl;
           updatePlantImageDisplay(imageUrl);
           savePlantsDataCloudAndLocal();
+          showSuccessToast("Foto gespeichert!");
         });
       }
     }
@@ -1554,6 +1916,8 @@
     function savePlantsDataCloudAndLocal() {
       localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "savePlants", plants: plantsData }) });
+      renderDashboardSetup();
+      updateCalcBoxDropdown();
     }
 
     function renderPlantSpecificLogs() {
@@ -1596,6 +1960,7 @@
           document.getElementById('boxImgPreview').src = imageUrl;
           document.getElementById('boxImgWrapper').style.display = 'block';
           saveBoxesDataCloudAndLocal();
+          showSuccessToast("Foto gespeichert!");
         });
       }
     }
@@ -1610,6 +1975,7 @@
       renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
       if (currentSelectedBox) openBoxDetail(currentSelectedBox);
       closeBoxModal();
+      showSuccessToast("Zeltphase gespeichert!");
     }
 
     function getEntityImage(plantOrBoxName) {
@@ -1622,7 +1988,7 @@
       return "";
     }
 
-    // --- LOGBUCH LOGIK ---
+    // --- LOGBUCH LOGIK (MIT GROSSER FOTOANZEIGE) ---
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
@@ -1638,14 +2004,21 @@
           ? `<img src="${entityImg}" style="width:24px; height:24px; border-radius:6px; object-fit:cover; margin-right:8px; border:1px solid var(--card-border); flex-shrink:0;">`
           : `<span style="font-size:16px; margin-right:6px;">🌱</span>`;
 
+        const logImgHtml = l.bild 
+          ? `<div style="margin-top: 8px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
+               <img src="${l.bild}" style="width: 100%; height: 180px; object-fit: cover; display: block;" onclick="event.stopPropagation(); window.open('${l.bild}', '_blank')">
+             </div>`
+          : ``;
+
         html += `
           <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
             <div class="log-item-header">
               <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:#fff;">${l.plant}</strong></span>
               <span style="color: var(--text-muted); font-size:11px;">${l.date}</span>
             </div>
-            <div style="margin-top:2px;"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects}</div>
+            <div style="margin-top:2px;"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
             ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+            ${logImgHtml}
           </div>`;
       });
       container.innerHTML = html;
@@ -1683,6 +2056,7 @@
       .then(() => { 
         btn.innerText = "In Google Sheet speichern"; btn.disabled = false;
         document.getElementById('logForm').reset(); 
+        showSuccessToast("Logbuch-Eintrag gespeichert!");
         fetchInitialData(); 
       });
     }
@@ -1713,7 +2087,11 @@
       activeLogItem.note = document.getElementById('editLogNote').value;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateLog", entry: activeLogItem }) })
-      .then(() => { closeEditLogModal(); fetchInitialData(); });
+      .then(() => { 
+        closeEditLogModal(); 
+        showSuccessToast("Eintrag aktualisiert!");
+        fetchInitialData(); 
+      });
     }
 
     function deleteLogEntryConfirm() {
@@ -1721,7 +2099,11 @@
       if(!confirm("Eintrag wirklich löschen?")) return;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteLog", id: activeLogItem.id }) })
-      .then(() => { closeEditLogModal(); fetchInitialData(); });
+      .then(() => { 
+        closeEditLogModal(); 
+        showSuccessToast("Eintrag gelöscht!");
+        fetchInitialData(); 
+      });
     }
 
     function populateLogDropdown() {
@@ -1735,7 +2117,7 @@
       });
     }
 
-    // --- ARCHIV & PROJEKTE (NEUES KACHEL-SYSTEM WIE ZELTE) ---
+    // --- ARCHIV & PROJEKTE ---
     function renderArchiveData() {
       renderRanking();
       const container = document.getElementById('archive-tiles-container');
@@ -1749,7 +2131,7 @@
       archiveCache.slice(0, archiveLimit).forEach(item => {
         const plantCount = getProjectPlantsList(item).length;
         const gesamtScore = ((Number(item.aussehen || 0) + Number(item.aroma || 0) + Number(item.geschmack || 0) + Number(item.wirkung || 0)) / 4).toFixed(1);
-        const displayDate = item.rawDate || item.datum || 'Nicht angegeben';
+        const displayDate = item.datum || item.rawDate || 'Nicht angegeben';
         
         const imgThumbHtml = item.bild 
           ? `<img src="${item.bild}" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border);">` 
@@ -1796,16 +2178,16 @@
       document.getElementById('archive-detail-view').style.display = 'block';
 
       document.getElementById('arcDetailTitle').innerText = activeArchiveItem.sorte;
-      const displayDate = activeArchiveItem.rawDate || activeArchiveItem.datum || "Nicht angegeben";
+      const displayDate = activeArchiveItem.datum || activeArchiveItem.rawDate || "Nicht angegeben";
       document.getElementById('arcDetailSubtitle').innerText = `Geerntet am: ${displayDate}`;
 
       renderProjectPlantsGrid();
 
       const gesamtScore = ((Number(activeArchiveItem.aussehen || 0) + Number(activeArchiveItem.aroma || 0) + Number(activeArchiveItem.geschmack || 0) + Number(activeArchiveItem.wirkung || 0)) / 4).toFixed(1);
       document.getElementById('arcDetailStats').innerHTML = `
-        <span class="archive-tag">⚖️ ${activeArchiveItem.ertrag || 0}g Ertrag</span>
-        <span class="archive-tag">🧪 ${activeArchiveItem.thc || '?'}% THC</span>
-        <span class="archive-tag">⭐ ${gesamtScore}/10 Gesamtnote</span>`;
+        <span class="plant-tag tag-veg">⚖️ ${activeArchiveItem.ertrag || 0}g Ertrag</span>
+        <span class="plant-tag tag-bloom">🧪 ${activeArchiveItem.thc || '?'}% THC</span>
+        <span class="plant-tag tag-root">⭐ ${gesamtScore}/10 Note</span>`;
 
       document.getElementById('arcDetailDateText').innerText = displayDate;
       document.getElementById('arcDetailBloom').innerText = activeArchiveItem.bluetedauer || "Nicht angegeben";
@@ -1943,6 +2325,7 @@
       .then(() => {
         closeProjectPlantModal();
         renderProjectPlantsGrid();
+        showSuccessToast("Pflanze im Projekt gespeichert!");
       });
     }
 
@@ -1959,6 +2342,7 @@
       .then(() => {
         closeProjectPlantModal();
         renderProjectPlantsGrid();
+        showSuccessToast("Pflanze entfernt!");
       });
     }
 
@@ -1975,7 +2359,7 @@
       })[0];
 
       container.innerHTML = `
-        <div class="ranking-box"><div class="ranking-title">🏆 All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
+        <div class="ranking-box"><div class="ranking-title">All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
         <div style="display: flex; gap: 10px;">
           <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
             <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
@@ -1996,7 +2380,10 @@
           activeArchiveItem.mehrBilder.push(url);
 
           fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateArchive", entry: activeArchiveItem }) })
-          .then(() => openProjectDetail(activeArchiveItem.id));
+          .then(() => {
+            openProjectDetail(activeArchiveItem.id);
+            showSuccessToast("Foto zur Galerie hinzugefügt!");
+          });
         });
       }
     }
@@ -2038,6 +2425,7 @@
       .then(() => { 
         closeArchiveEditModal(); 
         openProjectDetail(activeArchiveItem.id);
+        showSuccessToast("Projekt aktualisiert!");
         fetchInitialData(); 
       });
     }
@@ -2047,7 +2435,12 @@
       if(!confirm(`Möchtest du das Projekt "${activeArchiveItem.sorte}" wirklich aus dem Archiv löschen?`)) return;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteArchive", id: activeArchiveItem.id }) })
-      .then(() => { closeArchiveEditModal(); showArchiveOverview(); fetchInitialData(); });
+      .then(() => { 
+        closeArchiveEditModal(); 
+        showArchiveOverview(); 
+        showSuccessToast("Projekt gelöscht!");
+        fetchInitialData(); 
+      });
     }
 
     function submitArchive(e) {
@@ -2084,7 +2477,13 @@
 
     function sendArchiveToSheet(payload, btn) {
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveArchive", entry: payload }) })
-      .then(() => { document.getElementById('archiveForm').reset(); document.getElementById('arc-datum').value = todayStr; btn.innerText = "Ins Archiv speichern"; btn.disabled = false; fetchInitialData(); });
+      .then(() => { 
+        document.getElementById('archiveForm').reset(); 
+        document.getElementById('arc-datum').value = todayStr; 
+        btn.innerText = "Ins Archiv speichern"; btn.disabled = false; 
+        showSuccessToast("Projekt im Archiv gespeichert!");
+        fetchInitialData(); 
+      });
     }
 
     // --- ZUKUNFT & IDEEN ---
@@ -2112,7 +2511,11 @@
     function submitFuture(e) {
       e.preventDefault();
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveFuture", entry: { kategorie: document.getElementById('fut-kat').value, titel: document.getElementById('fut-titel').value } }) })
-      .then(() => { document.getElementById('futureForm').reset(); fetchInitialData(); });
+      .then(() => { 
+        document.getElementById('futureForm').reset(); 
+        showSuccessToast("Idee gespeichert!");
+        fetchInitialData(); 
+      });
     }
 
     function openEditFutureModal(id) {
@@ -2133,7 +2536,11 @@
       activeFutureItem.titel = document.getElementById('editFutureTitel').value;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateFuture", entry: activeFutureItem }) })
-      .then(() => { closeEditFutureModal(); fetchInitialData(); });
+      .then(() => { 
+        closeEditFutureModal(); 
+        showSuccessToast("Idee aktualisiert!");
+        fetchInitialData(); 
+      });
     }
 
     function deleteFutureConfirm() {
@@ -2141,7 +2548,11 @@
       if(!confirm("Idee wirklich löschen?")) return;
 
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteFuture", id: activeFutureItem.id }) })
-      .then(() => { closeEditFutureModal(); fetchInitialData(); });
+      .then(() => { 
+        closeEditFutureModal(); 
+        showSuccessToast("Idee gelöscht!");
+        fetchInitialData(); 
+      });
     }
 
     // --- NEUE PFLANZEN / STECKLINGE (ZELTE) ---
@@ -2158,7 +2569,11 @@
       const name = document.getElementById('newPlantName').value; const strain = document.getElementById('newPlantStrain').value; const type = document.getElementById('newPlantType').value;
       if(!name) return alert("Bitte einen Namen eingeben!");
       plantsData.push({ id: Date.now(), name: name, box: currentSelectedBox, strain: strain, time: type === "stecklinge" ? "Stecklinge" : "Neu", img: "", isSteckling: (type === "stecklinge"), hasCustomPhase: false, phaseType: "veg", startDate: todayStr });
-      savePlantsDataCloudAndLocal(); closeAddPlantModal(); if(currentSelectedBox) openBoxDetail(currentSelectedBox); populateLogDropdown();
+      savePlantsDataCloudAndLocal(); 
+      closeAddPlantModal(); 
+      if(currentSelectedBox) openBoxDetail(currentSelectedBox); 
+      populateLogDropdown();
+      showSuccessToast("Pflanze ins Zelt gestellt!");
     }
 
     function toggleCustomPhaseUI() {
@@ -2175,6 +2590,7 @@
       if (type === "box") { currentDetailPlant.hasCustomPhase = false; } 
       else { currentDetailPlant.hasCustomPhase = true; currentDetailPlant.phaseType = type; currentDetailPlant.startDate = document.getElementById('customPhaseDate').value; }
       savePlantsDataCloudAndLocal(); document.getElementById('customPhaseUI').style.display = 'none'; openPlantDetailModal(currentDetailPlant); openBoxDetail(currentSelectedBox);
+      showSuccessToast("Phasenanpassung gespeichert!");
     }
   </script>
 </body>
