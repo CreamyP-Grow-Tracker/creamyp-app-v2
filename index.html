@@ -19,6 +19,47 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+    :root {
+      --bg-color: #0c100d;
+      --card-bg: #141a16;
+      --card-border: rgba(255, 255, 255, 0.08);
+      
+      --primary-purple: #9b51e0;
+      --primary-pink: #ff75c3;
+      --electric-blue: #00d2d3;
+      
+      --plant-green: #2ecc71;
+      --plant-green-dark: #27ae60;
+      --plant-green-bg: rgba(46, 204, 113, 0.15);
+      
+      --bloom-pink: #ff75c3;
+      --bloom-pink-bg: rgba(255, 117, 195, 0.15);
+      --root-blue: #00d2d3;
+      --root-blue-bg: rgba(0, 210, 211, 0.15);
+      --dry-brown: #dca570;
+      --dry-brown-bg: rgba(220, 165, 112, 0.15);
+
+      --text-main: #f3f7f4;
+      --text-muted: #8e9e94;
+
+      /* 8-Point-Grid Standardisierung */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      
+      --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
+
     /* Splash Screen */
     #splash-screen {
       position: fixed;
@@ -87,33 +128,6 @@
       100% { opacity: 1; clip-path: inset(-30px -60px -30px -60px); }
     }
 
-    :root {
-      --bg-color: #101412;
-      --card-bg: #181f1b;
-      --card-border: #26332c;
-      --primary-purple: #9b51e0;
-      --primary-pink: #ff75c3;
-      --electric-blue: #00d2d3;
-      
-      --plant-green: #2ecc71;
-      --plant-green-dark: #27ae60;
-      --plant-green-bg: rgba(46, 204, 113, 0.15);
-      
-      --bloom-pink: #ff75c3;
-      --bloom-pink-bg: rgba(255, 117, 195, 0.15);
-      --root-blue: #00d2d3;
-      --root-blue-bg: rgba(0, 210, 211, 0.15);
-      --dry-brown: #dca570;
-      --dry-brown-bg: rgba(220, 165, 112, 0.15);
-
-      --text-main: #f3f7f4;
-      --text-muted: #8e9e94;
-      --radius: 16px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
-
     header {
       position: sticky; top: 0; z-index: 100;
       background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3));
@@ -153,17 +167,17 @@
       justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    .container { padding: 16px; max-width: 500px; margin: 0 auto; }
+    .container { padding: var(--space-md); max-width: 500px; margin: 0 auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); position: relative; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); box-shadow: 0 4px 12px rgba(0,0,0,0.4); position: relative; }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .clickable-card { cursor: pointer; transition: transform 0.15s; }
+    .clickable-card { cursor: pointer; transition: transform var(--transition-fast); }
     .clickable-card:active { transform: scale(0.98); }
 
-    .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+    .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); text-align: center; }
     .sensor-box { background: rgba(46, 204, 113, 0.04); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
     .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: #fff; }
     .sensor-label { font-size: 11px; color: var(--text-muted); }
@@ -171,8 +185,8 @@
 
     #chart-dropdown, #strom-dropdown { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--card-border); padding-bottom: 4px; }
     .chart-wrapper { position: relative; height: 180px; width: 100%; margin-top: 8px; }
-    .chart-btn-group { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
-    .btn-timefilter { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .chart-btn-group { display: flex; gap: var(--space-sm); margin-bottom: 12px; justify-content: center; }
+    .btn-timefilter { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-timefilter.active { background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46, 204, 113, 0.4); }
 
     .form-group { margin-bottom: 14px; }
@@ -180,16 +194,16 @@
     input, select, textarea { width: 100%; padding: 12px; background: #0f1411; border: 1px solid var(--card-border); border-radius: 10px; color: #fff; font-size: 15px; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
-    .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: 8px; }
+    .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
     .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
 
-    /* Mülltonnen Button in Ecken */
+    /* Mülltonnen Button */
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
       background: rgba(192, 57, 43, 0.15); border: 1px solid rgba(192, 57, 43, 0.3);
-      color: #e74c3c; width: 32px; height: 32px; border-radius: 8px;
+      color: #e74c3c; width: 32px; height: 32px; border-radius: var(--radius-sm);
       font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; z-index: 5;
+      transition: all var(--transition-fast); z-index: 5;
     }
     .btn-trash-corner:hover { background: rgba(192, 57, 43, 0.3); transform: scale(1.05); }
 
@@ -203,11 +217,25 @@
 
     .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .box-tile-card { background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform 0.15s, border-color 0.15s; }
+    .box-tile-card { background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform var(--transition-fast), border-color var(--transition-fast); }
     .box-tile-card:active { transform: scale(0.98); border-color: var(--plant-green); }
     .box-tile-info h3 { font-size: 16px; color: #fff; margin-bottom: 4px; }
     .box-tile-info p { font-size: 12px; color: var(--text-muted); }
     .box-tile-arrow { font-size: 20px; color: var(--plant-green); }
+
+    .list-item-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+    .list-item-card:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
 
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
     
@@ -235,9 +263,57 @@
 
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
-    .modal-overlay.active { display: flex; }
-    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; position: relative; }
+    /* MOBILE BOTTOM SHEETS MODALS */
+    .modal-overlay {
+      display: flex;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-fast);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: var(--space-lg);
+      width: 100%;
+      max-width: 500px;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform var(--transition-smooth);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    /* Grab bar für Haptik-Look */
+    .modal-card::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      margin: 0 auto var(--space-md) auto;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
 
     .log-item-row { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
     .log-item-row:hover { background: rgba(255,255,255,0.03); }
@@ -251,19 +327,29 @@
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
 
-    /* Toast Animation für Speichern */
+    /* TOAST BANNER MIT SVG HAKEN ANIMATION */
     .toast-notification {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-      background: #181f1b; border: 1px solid #2ecc71; color: #2ecc71;
-      padding: 12px 24px; border-radius: 30px; display: flex; align-items: center; gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 10000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+      position: fixed; top: var(--space-md); left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: #18221b; border: 1px solid var(--plant-green); color: var(--text-main);
+      padding: var(--space-sm) var(--space-md); border-radius: 40px; display: flex; align-items: center; gap: var(--space-sm);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 10000; transition: transform var(--transition-smooth), opacity var(--transition-fast);
       opacity: 0; pointer-events: none; font-weight: 600; font-size: 14px;
     }
     .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .checkmark-icon {
-      width: 22px; height: 22px; background: #2ecc71; color: #0f1411; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;
+    
+    .animated-checkmark {
+      width: 22px; height: 22px; border-radius: 50%; display: block;
+      stroke-width: 4; stroke: var(--plant-green); stroke-miterlimit: 10;
     }
+    .checkmark-circle {
+      stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 4;
+      stroke: var(--plant-green); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    .checkmark-check {
+      transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48;
+      animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+    }
+    @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -316,13 +402,18 @@
     </div>
   </div>
 
-  <!-- TOAST SPEICHER-BENACHRICHTIGUNG -->
+  <!-- TOAST SPEICHER-BENACHRICHTIGUNG MIT SVG ANIMATION -->
   <div id="success-toast" class="toast-notification">
-    <span class="checkmark-icon">✓</span>
+    <div class="checkmark-wrapper">
+      <svg class="animated-checkmark" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="23" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
     <span id="toast-msg">Erfolgreich gespeichert!</span>
   </div>
   
-  <!-- HEADER MIT VOLLFLÄCHIGER 3-EBENEN-SCHICHTUNG -->
+  <!-- HEADER -->
   <header>
     <div id="headerLeafOverlay" class="header-leaf-overlay" style="display:none;"></div>
     
@@ -357,14 +448,13 @@
         </div>
       </div>
 
-      <!-- HARDWARE & SETUP DETAILS (MIT AUSRÜSTUNG UND SORTEN) -->
+      <!-- HARDWARE & SETUP DETAILS -->
       <div class="card">
         <h2>
           <span>Hardware & Setup-Details</span>
           <button type="button" class="btn-back" style="font-size: 11px;" onclick="openEquipmentModal()">+ Ausrüstung</button>
         </h2>
         
-        <!-- Sortenübersicht oben -->
         <div id="strains-overview-box" style="background: rgba(46, 204, 113, 0.05); border: 1px solid rgba(46, 204, 113, 0.15); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; font-size: 12px;">
           <strong style="color: var(--plant-green); display: block; margin-bottom: 4px;">🌱 Aktive Sorten in Zelten:</strong>
           <div id="active-strains-list" style="color: #fff;">Lädt Sorten...</div>
@@ -640,7 +730,7 @@
 
   </div> <!-- End container -->
 
-  <!-- MODALS SYSTEM -->
+  <!-- MODALS SYSTEM (MOBILE BOTTOM SHEETS) -->
 
   <!-- Modal 1: Growbox Management -->
   <div class="modal-overlay" id="boxManagementModal">
@@ -892,6 +982,14 @@
     function showSuccessToast(msg = "Erfolgreich gespeichert!") {
       const toast = document.getElementById('success-toast');
       document.getElementById('toast-msg').innerText = msg;
+      
+      // Re-trigger Haken SVG Animation
+      const svg = toast.querySelector('.animated-checkmark');
+      if (svg) {
+        const clone = svg.cloneNode(true);
+        svg.parentNode.replaceChild(clone, svg);
+      }
+
       toast.classList.add('show');
       setTimeout(() => { toast.classList.remove('show'); }, 2200);
     }
@@ -1372,7 +1470,6 @@
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
-      // Sorten-Übersicht oben aktualisieren
       const strainsListElem = document.getElementById('active-strains-list');
       if (strainsListElem) {
         if (plantsData && plantsData.length > 0) {
@@ -1406,7 +1503,7 @@
       });
     }
 
-    /* AUSRÜSTUNG (EQUIPMENT) LOGIK */
+    /* AUSRÜSTUNG (EQUIPMENT) LOGIK - MIT SAUBEREN CSS KLASSEN */
     function renderEquipmentList() {
       const container = document.getElementById('equipment-list-container');
       if (!container) return;
@@ -1423,7 +1520,7 @@
           : `<div style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
 
         const tile = document.createElement('div');
-        tile.style.cssText = "background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;";
+        tile.className = 'list-item-card';
         tile.onclick = () => openEditEquipmentModal(item.id);
 
         tile.innerHTML = `
@@ -1988,7 +2085,7 @@
       return "";
     }
 
-    // --- LOGBUCH LOGIK (MIT GROSSER FOTOANZEIGE) ---
+    // --- LOGBUCH LOGIK ---
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
