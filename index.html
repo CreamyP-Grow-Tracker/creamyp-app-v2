@@ -176,8 +176,8 @@
 
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); box-shadow: 0 4px 12px rgba(0,0,0,0.4); position: relative; }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .clickable-card { cursor: pointer; transition: transform var(--transition-fast); }
-    .clickable-card:active { transform: scale(0.98); }
+    .clickable-card { cursor: pointer; transition: transform var(--transition-fast), border-color var(--transition-fast); }
+    .clickable-card:active { transform: scale(0.98); border-color: var(--plant-green); }
 
     .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); text-align: center; }
     .sensor-box { background: rgba(46, 204, 113, 0.04); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
@@ -197,9 +197,29 @@
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
     .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
-    .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
+    
+    /* Standardisierte Header-Buttons mit exakter Höhenanpassung */
+    .btn-back {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 0 14px;
+      height: 36px;
+      line-height: 34px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+      width: auto;
+      box-sizing: border-box;
+      vertical-align: middle;
+    }
 
-    /* Neutraler Mülltonnen-Button (Ohne rote Umrandung) */
+    /* Neutraler Mülltonnen-Button */
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
       background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border);
@@ -220,7 +240,7 @@
     .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     
-    /* Größere Zelt-Kacheln */
+    /* Zelt-Kacheln */
     .box-tile-card { 
       background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); 
       border: 1px solid var(--card-border); 
@@ -343,7 +363,7 @@
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
 
-    /* TOAST BANNER UNTER DEM HEADER (HÖHE CA. 80PX) */
+    /* TOAST BANNER UNTER DEM HEADER */
     .toast-notification {
       position: fixed; 
       top: calc(75px + env(safe-area-inset-top)); 
@@ -420,7 +440,7 @@
     </div>
   </div>
 
-  <!-- TOAST SPEICHER-BENACHRICHTIGUNG MIT SVG ANIMATION -->
+  <!-- TOAST SPEICHER-BENACHRICHTIGUNG -->
   <div id="success-toast" class="toast-notification">
     <div class="checkmark-wrapper">
       <svg class="animated-checkmark" viewBox="0 0 52 52">
@@ -446,7 +466,7 @@
 
   <div class="container">
 
-    <!-- TAB 1: DASHBOARD -->
+    <!-- TAB 1: DASHBOARD (HOME) -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="card clickable-card" onclick="toggleKlimaChart()">
         <h2>Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
@@ -613,19 +633,15 @@
         <div id="box-detail-view" style="display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
-            <div>
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 4px;" onclick="openAddPlantModal()">+ Pflanze</button>
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 4px;" onclick="openEquipmentModal()">+ Ausrüstung</button>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05);" onclick="openAddPlantModal()">+ Pflanze</button>
               <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
             </div>
           </div>
 
-          <div id="selected-box-title" style="margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
+          <div id="selected-box-title" style="margin-bottom: 14px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
             Zelt Name
           </div>
-          
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px; margin-bottom: 8px; font-weight: 600;">⚙️ Ausrüstung in diesem Zelt:</p>
-          <div id="selected-box-equipment-container" style="margin-bottom: 14px;"></div>
 
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">🌱 Pflanzen in diesem Zelt:</p>
           <div id="selected-box-plants-grid" class="plants-grid"></div>
@@ -699,8 +715,8 @@
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showArchiveOverview()">← Projekte</button>
-            <div>
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 6px;" onclick="openAddProjectPlantModal()">+ Pflanze</button>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05);" onclick="openAddProjectPlantModal()">+ Pflanze</button>
               <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="switchToEditArchiveView()">✏️ Bearbeiten</button>
             </div>
           </div>
@@ -875,7 +891,7 @@
     </div>
   </div>
 
-  <!-- Modal 8: Pflanzen Details (Zelte) -->
+  <!-- Modal 8: Pflanzen Details & Logbuch-Einträge (Zelte) -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
@@ -885,9 +901,9 @@
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
       
-      <!-- Aktionszeile mit Phasen-Anpassung und neutralem Mülltonnen-Button rechts -->
+      <!-- Aktionszeile -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <button type="button" class="btn-back" style="font-size:11px; padding:6px 12px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
+        <button type="button" class="btn-back" style="font-size:11px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
         <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       </div>
 
@@ -905,8 +921,10 @@
       </div>
 
       <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Logbuch dieser Pflanze:</h4>
-      <div id="plantLogList" style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 10px;"></div>
-      <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 8px; margin-bottom: 16px;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
+      
+      <!-- GROßE KACHEL-ANSICHT FÜR PLANT LOGS -->
+      <div id="plantLogList" style="margin-bottom: 10px;"></div>
+      <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 10px; margin-bottom: 16px; display:none;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
 
       <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 6px;">
         <label>Foto hinzufügen:</label>
@@ -923,7 +941,7 @@
       <h3 id="equipmentModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Ausrüstung</h3>
       <input type="hidden" id="editEquipmentId">
       <div class="form-group"><label>Zelt / Bereich:</label><select id="eqBoxSelect"></select></div>
-      <div class="form-group"><label>Name des Gegenstands:</label><input type="text" id="eqNameInput" placeholder="z.B. Sanlight EVO 4-80" required></div>
+      <div class="form-group"><label>Name des Gegenstands / Modell:</label><input type="text" id="eqNameInput" placeholder="z.B. Sanlight EVO 4-80" required></div>
       <div class="form-group">
         <label>Kategorie / Typ:</label>
         <select id="eqCategorySelect">
@@ -958,6 +976,19 @@
 
       <button type="button" class="btn" onclick="saveGoalItem()">Ziel speichern</button>
       <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 11: Ausrüstung für spezifisches Zelt (geöffnet über Home Hardware-Kachel) -->
+  <div class="modal-overlay" id="boxEquipmentListModal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 id="boxEquipmentModalTitle" style="color: var(--plant-green); margin-bottom: 0;">⚙️ Zelt Ausrüstung</h3>
+        <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openEquipmentModalForBox()">+ Ausrüstung</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Hinterlegte Ausrüstung und Lampen in dieser Growbox:</p>
+      <div id="boxEquipmentModalListContainer" style="margin-bottom: 14px;"></div>
+      <button type="button" class="btn btn-secondary" onclick="closeBoxEquipmentListModal()">Schließen</button>
     </div>
   </div>
 
@@ -1073,7 +1104,7 @@
     let globalLogLimit = 5;
     let archiveLimit = 5;
     let futureLimit = 5;
-    let plantLogLimit = 5;
+    let plantLogLimit = 2;
 
     let activeArchiveItem = null;
     let activeLogItem = null;
@@ -1087,16 +1118,23 @@
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
+    // VOLLSTÄNDIGE REPARATUR: Robustes Parsen von Datums-Strings zur Vermeidung von 1970
     function formatDateForInput(dateStr) {
-      if (!dateStr) return todayStr;
-      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-      if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) {
-        const parts = dateStr.split('.');
+      if (!dateStr || dateStr === "1970-01-01" || String(dateStr).includes("1970")) return todayStr;
+      const str = String(dateStr).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+      if (/^\d{2}\.\d{2}\.\d{4}$/.test(str)) {
+        const parts = str.split('.');
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
       }
       try {
-        const d = new Date(dateStr);
-        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+        const d = new Date(str);
+        if (!isNaN(d.getTime()) && d.getFullYear() > 1975) {
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        }
       } catch(e) {}
       return todayStr;
     }
@@ -1484,6 +1522,7 @@
       if(currentVal) select.value = currentVal;
     }
 
+    // HOME: renderDashboardSetup() macht die Mars Hydro & Growbox Kacheln anklickbar für Ausrüstung!
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
@@ -1509,35 +1548,56 @@
           : ``;
 
         const card = document.createElement('div');
-        card.className = 'setup-card-box';
+        card.className = 'setup-card-box clickable-card';
+        card.onclick = () => openBoxEquipmentListModal(boxName);
+
         card.innerHTML = `
           <h3>
             <span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span>
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </h3>
           <p style="font-size: 12px; color: #fff; margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+            <span>⚙️ Ausrüstung & Hardware anzeigen</span>
+            <span>➔</span>
+          </div>
         `;
         container.appendChild(card);
       });
     }
 
-    /* AUSRÜSTUNG (EQUIPMENT) LOGIK - SPEZIELL FÜR ZELTANSICHT */
-    function renderBoxEquipmentList(boxName) {
-      const container = document.getElementById('selected-box-equipment-container');
+    /* AUSRÜSTUNG (EQUIPMENT) LOGIK */
+    function openBoxEquipmentListModal(boxName) {
+      currentSelectedBox = boxName;
+      document.getElementById('boxEquipmentModalTitle').innerText = "⚙️ Ausrüstung - " + boxName;
+      renderBoxEquipmentListModal(boxName);
+      document.getElementById('boxEquipmentListModal').classList.add('active');
+    }
+
+    function closeBoxEquipmentListModal() {
+      document.getElementById('boxEquipmentListModal').classList.remove('active');
+    }
+
+    function openEquipmentModalForBox() {
+      openEquipmentModal();
+    }
+
+    function renderBoxEquipmentListModal(boxName) {
+      const container = document.getElementById('boxEquipmentModalListContainer');
       if (!container) return;
       container.innerHTML = "";
 
       const boxEquipment = equipmentData.filter(item => item.box === boxName || item.box === "Allgemein");
 
       if (boxEquipment.length === 0) {
-        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:6px 0;">Keine Ausrüstung für dieses Zelt hinterlegt. Klicke auf "+ Ausrüstung".</div>`;
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px 0;">Keine Ausrüstung für dieses Zelt hinterlegt.<br>Klicke oben auf "+ Ausrüstung" um welche hinzuzufügen.</div>`;
         return;
       }
 
       boxEquipment.forEach(item => {
         const imgHtml = item.img 
-          ? `<img src="${item.img}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
-          : `<div style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
+          ? `<img src="${item.img}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
+          : `<div style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
 
         const tile = document.createElement('div');
         tile.className = 'list-item-card';
@@ -1547,9 +1607,9 @@
           <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
             ${imgHtml}
             <div style="flex: 1; min-width: 0;">
-              <div style="font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+              <div style="font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
               <div style="font-size: 11px; color: var(--plant-green); margin-top: 2px;">${item.category || 'Equipment'} • <span style="color:var(--text-muted);">${item.box || 'Allgemein'}</span></div>
-              ${item.notes ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
+              ${item.notes ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
             </div>
           </div>
           <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0; margin-left:8px; flex-shrink:0;" onclick="event.stopPropagation(); deleteEquipmentDirect('${item.id}')" title="Löschen">🗑️</button>
@@ -1631,7 +1691,7 @@
 
       saveEquipmentCloudAndLocal();
       closeEquipmentModal();
-      if (currentSelectedBox) renderBoxEquipmentList(currentSelectedBox);
+      if (currentSelectedBox) renderBoxEquipmentListModal(currentSelectedBox);
       showSuccessToast("Ausrüstung gespeichert!");
     }
 
@@ -1645,7 +1705,7 @@
       if (!confirm("Ausrüstungsgegenstand wirklich löschen?")) return;
       equipmentData = equipmentData.filter(e => e.id != id);
       saveEquipmentCloudAndLocal();
-      if (currentSelectedBox) renderBoxEquipmentList(currentSelectedBox);
+      if (currentSelectedBox) renderBoxEquipmentListModal(currentSelectedBox);
       showSuccessToast("Ausrüstung gelöscht!");
     }
 
@@ -1654,7 +1714,7 @@
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveEquipment", equipment: equipmentData }) });
     }
 
-    /* ZIELWERTE & ABLAUF LOGIK - JETZT ALLE ALS BEARBEITBARE KACHELN */
+    /* ZIELWERTE & ABLAUF LOGIK */
     function renderCustomGoals() {
       const container = document.getElementById('custom-goals-container');
       if (!container) return;
@@ -1901,7 +1961,6 @@
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
     }
 
-    /* VEROEDERTE & HOHE ZELT-KACHELN */
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
@@ -1951,8 +2010,6 @@
         
       document.getElementById('selected-box-title').innerHTML = boxImgHtml + `<span>${boxName}</span>`;
 
-      renderBoxEquipmentList(boxName);
-
       const grid = document.getElementById('selected-box-plants-grid');
       grid.innerHTML = "";
 
@@ -1994,7 +2051,8 @@
     }
 
     function openPlantDetailModal(plant) {
-      currentDetailPlant = plant; plantLogLimit = 5;
+      currentDetailPlant = plant; 
+      plantLogLimit = 2; // Erst 2 Einträge anzeigen
       const info = getPlantInfo(plant);
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = (plant.strain || '') + " (" + plant.box + ")";
@@ -2041,40 +2099,76 @@
       updateCalcBoxDropdown();
     }
 
-    /* KLICKBARE PFLANZEN-LOGS IN DER PFLANZEN-ANSICHT */
+    /* GROßE KACHEL-ANSICHT FÜR PLANT LOGS (WIE IM HAUPTLOGBUCH) */
     function renderPlantSpecificLogs() {
       const container = document.getElementById('plantLogList');
       if (!currentDetailPlant) return;
       const matchingLogs = globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box);
+      
       if (matchingLogs.length === 0) {
-        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 8px;">Keine spezifischen Log-Einträge vorhanden.</div>`;
-        document.getElementById('btnExpandLogs').style.display = 'none'; return;
+        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: rgba(0,0,0,0.2); border-radius: 10px;">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
+        document.getElementById('btnExpandLogs').style.display = 'none'; 
+        return;
       }
+
       let html = "";
       matchingLogs.slice(0, plantLogLimit).forEach(l => {
+        const defectText = l.defects || 'Keine (Gesund)';
+        const defectBadgeColor = (defectText !== 'Keine' && defectText !== 'Keine (Gesund)') ? '#e74c3c' : 'var(--plant-green)';
+
+        const logImgHtml = l.bild 
+          ? `<div style="margin-top: 10px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
+               <img src="${l.bild}" style="width: 100%; max-height: 200px; object-fit: cover; display: block; cursor: pointer;" onclick="event.stopPropagation(); window.open('${l.bild}', '_blank')">
+             </div>`
+          : ``;
+
         html += `
-          <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
-            <div class="log-item-header">
-              <span>📅 ${l.date}</span>
-              <span>💧 ${l.water ? l.water + 'L' : '0L'}</span>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 12px; color: var(--plant-green); font-weight: 700;">📅 ${l.date}</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; background: rgba(0, 210, 211, 0.15); color: var(--electric-blue); padding: 2px 8px; border-radius: 10px; font-weight: 600;">💧 ${l.water ? l.water + 'L' : '0L'}</span>
+                <button type="button" class="btn-back" style="padding: 0 8px; height: 26px; line-height: 24px; font-size: 11px;" onclick="openEditLogModal('${l.id}')" title="Bearbeiten">✏️</button>
+              </div>
             </div>
-            <div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
-            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+            
+            <div style="font-size: 12px; color: #fff; margin-bottom: 4px;">
+              <strong>Mängel / Status:</strong> <span style="color: ${defectBadgeColor}; font-weight:600;">${defectText}</span>
+            </div>
+
+            ${l.note ? `<div style="font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px; margin-top: 6px; font-style: italic;">"${l.note}"</div>` : ''}
+            
+            ${logImgHtml}
           </div>`;
       });
+
       container.innerHTML = html;
-      document.getElementById('btnExpandLogs').style.display = matchingLogs.length > plantLogLimit ? 'block' : 'none';
+      
+      const expandBtn = document.getElementById('btnExpandLogs');
+      if (matchingLogs.length > plantLogLimit) {
+        expandBtn.style.display = 'block';
+        expandBtn.innerText = `Mehr Einträge anzeigen (${matchingLogs.length - plantLogLimit} verbleibend)`;
+      } else {
+        expandBtn.style.display = 'none';
+      }
     }
 
-    function expandPlantLogs() { plantLogLimit += 10; renderPlantSpecificLogs(); }
-    function closePlantDetailModal() { document.getElementById('plantDetailModal').classList.remove('active'); currentDetailPlant = null; }
+    function expandPlantLogs() { 
+      plantLogLimit += 5; 
+      renderPlantSpecificLogs(); 
+    }
+
+    function closePlantDetailModal() { 
+      document.getElementById('plantDetailModal').classList.remove('active'); 
+      currentDetailPlant = null; 
+    }
 
     function openBoxModal(boxName) {
       activeEditingBox = boxName;
       const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr, img: "" };
       document.getElementById('modalBoxTitle').innerText = "⛺ " + boxName + " anpassen";
       document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
-      document.getElementById('modalBoxStartDate').value = box.startDate || todayStr;
+      document.getElementById('modalBoxStartDate').value = formatDateForInput(box.startDate || todayStr);
       
       const imgWrapper = document.getElementById('boxImgWrapper'); const imgPreview = document.getElementById('boxImgPreview');
       if (box.img && box.img.trim() !== "") { imgPreview.src = box.img; imgWrapper.style.display = 'block'; } 
@@ -2539,7 +2633,7 @@
 
     function saveEditedArchive() {
       if(!activeArchiveItem) return;
-      const newDate = document.getElementById('arcEditDatum').value;
+      const newDate = document.getElementById('arcEditDatum').value || todayStr;
       
       activeArchiveItem.sorte = document.getElementById('arcEditSorte').value;
       activeArchiveItem.pflanzen = document.getElementById('arcEditPflanzen').value;
@@ -2710,8 +2804,8 @@
       const ui = document.getElementById('customPhaseUI'); ui.style.display = ui.style.display === 'none' ? 'block' : 'none';
       if(currentDetailPlant) {
         document.getElementById('customPhasePlantName').innerText = currentDetailPlant.name;
-        if(currentDetailPlant.hasCustomPhase) { document.getElementById('customPhaseType').value = currentDetailPlant.phaseType; document.getElementById('customPhaseDate').value = currentDetailPlant.startDate; } 
-        else { document.getElementById('customPhaseType').value = "box"; document.getElementById('customPhaseDate').value = boxesData[currentDetailPlant.box] ? boxesData[currentDetailPlant.box].startDate : todayStr; }
+        if(currentDetailPlant.hasCustomPhase) { document.getElementById('customPhaseType').value = currentDetailPlant.phaseType; document.getElementById('customPhaseDate').value = formatDateForInput(currentDetailPlant.startDate); } 
+        else { document.getElementById('customPhaseType').value = "box"; document.getElementById('customPhaseDate').value = formatDateForInput(boxesData[currentDetailPlant.box] ? boxesData[currentDetailPlant.box].startDate : todayStr); }
       }
     }
 
