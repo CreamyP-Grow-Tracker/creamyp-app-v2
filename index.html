@@ -145,7 +145,7 @@
       width: 100%; height: 100%;
       background-repeat: repeat-x;
       background-position: center center;
-      background-size: 360px auto;     
+      background-size: 400px auto;     
       mix-blend-mode: screen;
       opacity: 0.85;
       z-index: 2;
@@ -159,12 +159,14 @@
     }
     .app-logo { max-height: 56px; width: auto; display: block; }
 
+    /* Zentrierter Einstellungen / Lock-Button */
     .btn-lock-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       background: #000; border: 1px solid var(--card-border);
       color: #fff; width: 36px; height: 36px; border-radius: 50%;
-      font-size: 15px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      font-size: 16px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; line-height: 1; padding: 0; margin: 0;
+      z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .container { padding: var(--space-md); max-width: 500px; margin: 0 auto; }
@@ -197,15 +199,15 @@
     .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
     .btn-back { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-block; box-shadow: none; width: auto; }
 
-    /* Mülltonnen Button */
+    /* Neutraler Mülltonnen-Button (Ohne rote Umrandung) */
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
-      background: rgba(192, 57, 43, 0.15); border: 1px solid rgba(192, 57, 43, 0.3);
-      color: #e74c3c; width: 32px; height: 32px; border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border);
+      color: var(--text-muted); width: 34px; height: 34px; border-radius: var(--radius-sm);
       font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: all var(--transition-fast); z-index: 5;
     }
-    .btn-trash-corner:hover { background: rgba(192, 57, 43, 0.3); transform: scale(1.05); }
+    .btn-trash-corner:hover, .btn-trash-corner:active { background: rgba(192, 57, 43, 0.2); color: #e74c3c; border-color: rgba(192, 57, 43, 0.4); transform: scale(1.05); }
 
     .calc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
@@ -217,11 +219,25 @@
 
     .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .box-tile-card { background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform var(--transition-fast), border-color var(--transition-fast); }
+    
+    /* Größere Zelt-Kacheln */
+    .box-tile-card { 
+      background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--radius-md); 
+      padding: 18px; 
+      margin-bottom: 16px; 
+      cursor: pointer; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      min-height: 110px;
+      transition: transform var(--transition-fast), border-color var(--transition-fast); 
+    }
     .box-tile-card:active { transform: scale(0.98); border-color: var(--plant-green); }
-    .box-tile-info h3 { font-size: 16px; color: #fff; margin-bottom: 4px; }
-    .box-tile-info p { font-size: 12px; color: var(--text-muted); }
-    .box-tile-arrow { font-size: 20px; color: var(--plant-green); }
+    .box-tile-info h3 { font-size: 18px; color: #fff; margin-bottom: 6px; }
+    .box-tile-info p { font-size: 13px; color: var(--text-muted); }
+    .box-tile-arrow { font-size: 24px; color: var(--plant-green); }
 
     .list-item-card {
       background: rgba(255,255,255,0.02);
@@ -327,9 +343,11 @@
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
 
-    /* TOAST BANNER MIT SVG HAKEN ANIMATION */
+    /* TOAST BANNER UNTER DEM HEADER (HÖHE CA. 80PX) */
     .toast-notification {
-      position: fixed; top: var(--space-md); left: 50%; transform: translateX(-50%) translateY(-100px);
+      position: fixed; 
+      top: calc(75px + env(safe-area-inset-top)); 
+      left: 50%; transform: translateX(-50%) translateY(-100px);
       background: #18221b; border: 1px solid var(--plant-green); color: var(--text-main);
       padding: var(--space-sm) var(--space-md); border-radius: 40px; display: flex; align-items: center; gap: var(--space-sm);
       box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 10000; transition: transform var(--transition-smooth), opacity var(--transition-fast);
@@ -450,17 +468,13 @@
 
       <!-- HARDWARE & SETUP DETAILS -->
       <div class="card">
-        <h2>
-          <span>Hardware & Setup-Details</span>
-          <button type="button" class="btn-back" style="font-size: 11px;" onclick="openEquipmentModal()">+ Ausrüstung</button>
-        </h2>
+        <h2>Hardware & Setup-Details</h2>
         
         <div id="strains-overview-box" style="background: rgba(46, 204, 113, 0.05); border: 1px solid rgba(46, 204, 113, 0.15); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; font-size: 12px;">
           <strong style="color: var(--plant-green); display: block; margin-bottom: 4px;">🌱 Aktive Sorten in Zelten:</strong>
           <div id="active-strains-list" style="color: #fff;">Lädt Sorten...</div>
         </div>
 
-        <div id="equipment-list-container"></div>
         <div id="dashboard-setup-container" style="margin-top: 10px;"></div>
       </div>
 
@@ -486,7 +500,6 @@
           <form id="stromForm" onsubmit="submitStrom(event)">
             <div class="form-group" style="margin-bottom: 8px;"><label>Datum:</label><input type="date" id="strom-input-date"></div>
             <div class="form-group" style="margin-bottom: 8px;"><label>Neuer Zählerstand (kWh):</label><input type="number" id="strom-input-stand" step="0.1" placeholder="z. B. 29750" required></div>
-            <div class="form-group" style="margin-bottom: 8px;"><label>Notiz (optional):</label><input type="text" id="strom-input-note" placeholder="z.B. Stand Mai"></div>
             <button type="submit" class="btn btn-secondary" style="margin-top: 4px;">Zählerstand eintragen</button>
           </form>
         </div>
@@ -502,15 +515,6 @@
         </h2>
         
         <div id="custom-goals-container" style="margin-bottom: 14px;"></div>
-
-        <ul style="margin: 10px 0 0 20px; font-size: 13px; line-height: 1.6; border-top: 1px dashed var(--card-border); padding-top: 10px;">
-          <li><strong style="color: var(--plant-green);">Vegetationsphase:</strong> EC 1.0 | RLF ~65%</li>
-          <li><strong style="color: var(--bloom-pink);">Frühe Blüte (BW 1-3):</strong> EC 1.4 - 1.9 | RLF ~55%</li>
-          <li><strong style="color: var(--bloom-pink);">Hauptblüte (BW 4-6):</strong> EC 1.9 | RLF ~50%</li>
-          <li><strong>Extrawochen (Silver Haze):</strong> Peak (BW 6 & 7) & Reduzierung 1 (BW 8 & 9) verlängern!</li>
-          <li><strong>Spätblüte (BW 8 / 10):</strong> EC 1.7 - 1.4 | RLF ~45%</li>
-          <li><strong>Vor Ernte (Spülen):</strong> Nur BN-Zym & VitaSol</li>
-        </ul>
       </div>
     </div>
 
@@ -610,7 +614,8 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
             <div>
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 6px;" onclick="openAddPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 4px;" onclick="openAddPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05); margin-right: 4px;" onclick="openEquipmentModal()">+ Ausrüstung</button>
               <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
             </div>
           </div>
@@ -618,8 +623,11 @@
           <div id="selected-box-title" style="margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
             Zelt Name
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Pflanzen in diesem Zelt:</p>
+          
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px; margin-bottom: 8px; font-weight: 600;">⚙️ Ausrüstung in diesem Zelt:</p>
+          <div id="selected-box-equipment-container" style="margin-bottom: 14px;"></div>
 
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">🌱 Pflanzen in diesem Zelt:</p>
           <div id="selected-box-plants-grid" class="plants-grid"></div>
         </div>
       </div>
@@ -870,7 +878,6 @@
   <!-- Modal 8: Pflanzen Details (Zelte) -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
-      <button type="button" class="btn-trash-corner" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="plantImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
@@ -878,7 +885,12 @@
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
       
-      <button type="button" class="btn-back" style="margin-bottom:14px; font-size:10px; padding:4px 8px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
+      <!-- Aktionszeile mit Phasen-Anpassung und neutralem Mülltonnen-Button rechts -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <button type="button" class="btn-back" style="font-size:11px; padding:6px 12px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
+        <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
+      </div>
+
       <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
@@ -983,7 +995,6 @@
       const toast = document.getElementById('success-toast');
       document.getElementById('toast-msg').innerText = msg;
       
-      // Re-trigger Haken SVG Animation
       const svg = toast.querySelector('.animated-checkmark');
       if (svg) {
         const clone = svg.cloneNode(true);
@@ -1022,6 +1033,15 @@
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
+    const DEFAULT_GOALS = [
+      { id: "goal_def_1", title: "Vegetationsphase", week: "VT 1+", desc: "EC 1.0 | RLF ~65%" },
+      { id: "goal_def_2", title: "Frühe Blüte", week: "BW 1-3", desc: "EC 1.4 - 1.9 | RLF ~55%" },
+      { id: "goal_def_3", title: "Hauptblüte", week: "BW 4-6", desc: "EC 1.9 | RLF ~50%" },
+      { id: "goal_def_4", title: "Extrawochen (Silver Haze)", week: "BW 6-9", desc: "Peak (BW 6 & 7) & Reduzierung 1 (BW 8 & 9) verlängern!" },
+      { id: "goal_def_5", title: "Spätblüte", week: "BW 8 / 10", desc: "EC 1.7 - 1.4 | RLF ~45%" },
+      { id: "goal_def_6", title: "Vor Ernte (Spülen)", week: "BW End", desc: "Nur BN-Zym & VitaSol" }
+    ];
+
     function ensureAllPlantsExist(incomingPlants) {
       if (!Array.isArray(incomingPlants) || incomingPlants.length === 0) return DEFAULT_PLANTS;
       incomingPlants.forEach(p => { if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) p.img = SWISS_WATCH_IMG; });
@@ -1038,7 +1058,7 @@
     let plantsData = ensureAllPlantsExist(loadedPlants);
 
     let equipmentData = JSON.parse(localStorage.getItem('creamyp_equipment_v1')) || [];
-    let goalsData = JSON.parse(localStorage.getItem('creamyp_goals_v1')) || [];
+    let goalsData = JSON.parse(localStorage.getItem('creamyp_goals_v1')) || DEFAULT_GOALS;
     let bionovaLogoUrl = localStorage.getItem('creamyp_bionova_logo') || "https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5";
 
     let activeEditingBox = null;
@@ -1217,7 +1237,7 @@
             localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
           }
 
-          if (data && data.goals && Array.isArray(data.goals)) {
+          if (data && data.goals && Array.isArray(data.goals) && data.goals.length > 0) {
             goalsData = data.goals;
             localStorage.setItem('creamyp_goals_v1', JSON.stringify(goalsData));
           }
@@ -1237,7 +1257,6 @@
 
           updateCalcBoxDropdown();
           renderDashboardSetup(); 
-          renderEquipmentList();
           renderCustomGoals();
           autoCalculateFertilizer(); 
           renderBoxTiles(); 
@@ -1247,7 +1266,7 @@
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
-          renderDashboardSetup(); renderEquipmentList(); renderCustomGoals(); autoCalculateFertilizer(); renderBoxTiles();
+          renderDashboardSetup(); renderCustomGoals(); autoCalculateFertilizer(); renderBoxTiles();
           if(!isBiometricLockEnabled) hideSplashScreen();
         });
     }
@@ -1383,12 +1402,11 @@
       e.preventDefault();
       const stand = parseFloat(document.getElementById('strom-input-stand').value);
       const dateVal = document.getElementById('strom-input-date').value;
-      const noteVal = document.getElementById('strom-input-note').value;
       if (isNaN(stand)) return;
 
       fetch(API_URL, { 
         method: "POST", 
-        body: JSON.stringify({ action: "saveStrom", date: dateVal, zaehlerstand: stand, notiz: noteVal }) 
+        body: JSON.stringify({ action: "saveStrom", date: dateVal, zaehlerstand: stand }) 
       })
       .then(() => { 
         showSuccessToast("Zählerstand gespeichert!"); 
@@ -1503,21 +1521,23 @@
       });
     }
 
-    /* AUSRÜSTUNG (EQUIPMENT) LOGIK - MIT SAUBEREN CSS KLASSEN */
-    function renderEquipmentList() {
-      const container = document.getElementById('equipment-list-container');
+    /* AUSRÜSTUNG (EQUIPMENT) LOGIK - SPEZIELL FÜR ZELTANSICHT */
+    function renderBoxEquipmentList(boxName) {
+      const container = document.getElementById('selected-box-equipment-container');
       if (!container) return;
       container.innerHTML = "";
 
-      if (!equipmentData || equipmentData.length === 0) {
-        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:8px; text-align:center;">Noch keine Ausrüstung angelegt. Klicke oben auf "+ Ausrüstung".</div>`;
+      const boxEquipment = equipmentData.filter(item => item.box === boxName || item.box === "Allgemein");
+
+      if (boxEquipment.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:6px 0;">Keine Ausrüstung für dieses Zelt hinterlegt. Klicke auf "+ Ausrüstung".</div>`;
         return;
       }
 
-      equipmentData.forEach(item => {
+      boxEquipment.forEach(item => {
         const imgHtml = item.img 
-          ? `<img src="${item.img}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
-          : `<div style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
+          ? `<img src="${item.img}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
+          : `<div style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
 
         const tile = document.createElement('div');
         tile.className = 'list-item-card';
@@ -1550,6 +1570,7 @@
       const select = document.getElementById('eqBoxSelect');
       select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
       Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
+      if (currentSelectedBox) select.value = currentSelectedBox;
 
       document.getElementById('equipmentModal').classList.add('active');
     }
@@ -1610,7 +1631,7 @@
 
       saveEquipmentCloudAndLocal();
       closeEquipmentModal();
-      renderEquipmentList();
+      if (currentSelectedBox) renderBoxEquipmentList(currentSelectedBox);
       showSuccessToast("Ausrüstung gespeichert!");
     }
 
@@ -1624,7 +1645,7 @@
       if (!confirm("Ausrüstungsgegenstand wirklich löschen?")) return;
       equipmentData = equipmentData.filter(e => e.id != id);
       saveEquipmentCloudAndLocal();
-      renderEquipmentList();
+      if (currentSelectedBox) renderBoxEquipmentList(currentSelectedBox);
       showSuccessToast("Ausrüstung gelöscht!");
     }
 
@@ -1633,7 +1654,7 @@
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveEquipment", equipment: equipmentData }) });
     }
 
-    /* ZIELWERTE & ABLAUF LOGIK */
+    /* ZIELWERTE & ABLAUF LOGIK - JETZT ALLE ALS BEARBEITBARE KACHELN */
     function renderCustomGoals() {
       const container = document.getElementById('custom-goals-container');
       if (!container) return;
@@ -1643,7 +1664,7 @@
 
       goalsData.forEach(g => {
         const card = document.createElement('div');
-        card.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;";
+        card.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative; cursor: pointer;";
         card.onclick = () => openEditGoalModal(g.id);
 
         card.innerHTML = `
@@ -1880,6 +1901,7 @@
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
     }
 
+    /* VEROEDERTE & HOHE ZELT-KACHELN */
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
@@ -1891,8 +1913,8 @@
         const boxData = boxesData[boxName] || {};
         
         const boxImgHtml = boxData.img 
-          ? `<img src="${boxData.img}" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border);">` 
-          : ``;
+          ? `<img src="${boxData.img}" style="width: 70px; height: 70px; border-radius: 12px; object-fit: cover; margin-right: 16px; border: 1px solid var(--card-border); flex-shrink: 0;">` 
+          : `<div style="width: 70px; height: 70px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 32px; margin-right: 16px; flex-shrink: 0;">⛺</div>`;
 
         let tagColor = 'var(--bloom-pink)';
         if(info.phase === 'veg') tagColor = 'var(--plant-green)';
@@ -1904,14 +1926,14 @@
         tile.onclick = () => openBoxDetail(boxName);
 
         tile.innerHTML = `
-          <div style="display:flex; align-items:center;">
+          <div style="display:flex; align-items:center; flex:1; min-width:0;">
             ${boxImgHtml}
-            <div class="box-tile-info">
+            <div class="box-tile-info" style="flex:1; min-width:0;">
               <h3>${boxName}</h3>
               <p>${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color: ${tagColor}">${info.tagText}</strong></p>
             </div>
           </div>
-          <div class="box-tile-arrow">➔</div>
+          <div class="box-tile-arrow" style="margin-left:12px;">➔</div>
         `;
         container.appendChild(tile);
       });
@@ -1928,6 +1950,8 @@
         : ``;
         
       document.getElementById('selected-box-title').innerHTML = boxImgHtml + `<span>${boxName}</span>`;
+
+      renderBoxEquipmentList(boxName);
 
       const grid = document.getElementById('selected-box-plants-grid');
       grid.innerHTML = "";
@@ -2017,6 +2041,7 @@
       updateCalcBoxDropdown();
     }
 
+    /* KLICKBARE PFLANZEN-LOGS IN DER PFLANZEN-ANSICHT */
     function renderPlantSpecificLogs() {
       const container = document.getElementById('plantLogList');
       if (!currentDetailPlant) return;
@@ -2027,7 +2052,15 @@
       }
       let html = "";
       matchingLogs.slice(0, plantLogLimit).forEach(l => {
-        html += `<div class="log-item-row" onclick="openEditLogModal('${l.id}')"><div class="log-item-header"><span>📅 ${l.date}</span><span>💧 ${l.water ? l.water + 'L' : '0L'}</span></div><div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}</div>`;
+        html += `
+          <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
+            <div class="log-item-header">
+              <span>📅 ${l.date}</span>
+              <span>💧 ${l.water ? l.water + 'L' : '0L'}</span>
+            </div>
+            <div><strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
+            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+          </div>`;
       });
       container.innerHTML = html;
       document.getElementById('btnExpandLogs').style.display = matchingLogs.length > plantLogLimit ? 'block' : 'none';
