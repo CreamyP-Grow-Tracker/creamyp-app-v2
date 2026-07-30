@@ -73,14 +73,17 @@
     }
     #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .splash-content { text-align: center; }
+    
     .pulse-anim {
-      animation: pulse 1.5s infinite;
       height: 150px; width: auto;
       background-color: #fff;
       padding: 20px 40px;
       border-radius: 50px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.4);
       display: inline-block;
+    }
+    #splash-screen.animate-splash .pulse-anim {
+      animation: pulse 1.5s infinite;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -106,6 +109,8 @@
       opacity: 0;
       padding: 4px 14px;
       clip-path: inset(-10px 100% -10px -20px);
+    }
+    #splash-screen.animate-splash .splash-line1 {
       animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
     }
 
@@ -119,6 +124,8 @@
       padding: 0 10px;
       clip-path: inset(-10px 100% -10px -20px);
       text-shadow: 0 4px 18px rgba(0,0,0,0.5);
+    }
+    #splash-screen.animate-splash .splash-line2 {
       animation: revealText 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.4s forwards;
     }
 
@@ -198,7 +205,6 @@
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
     .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
     
-    /* Standardisierte Header-Buttons mit exakter Höhenanpassung */
     .btn-back {
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
@@ -219,7 +225,6 @@
       vertical-align: middle;
     }
 
-    /* Neutraler Mülltonnen-Button */
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
       background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border);
@@ -240,7 +245,6 @@
     .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     
-    /* Zelt-Kacheln */
     .box-tile-card { 
       background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); 
       border: 1px solid var(--card-border); 
@@ -299,7 +303,6 @@
 
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
-    /* MOBILE BOTTOM SHEETS MODALS */
     .modal-overlay {
       display: flex;
       position: fixed;
@@ -336,7 +339,6 @@
       position: relative;
     }
 
-    /* Grab bar für Haptik-Look */
     .modal-card::before {
       content: '';
       display: block;
@@ -363,7 +365,6 @@
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
 
-    /* TOAST BANNER UNTER DEM HEADER */
     .toast-notification {
       position: fixed; 
       top: calc(75px + env(safe-area-inset-top)); 
@@ -901,7 +902,6 @@
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
       
-      <!-- Aktionszeile -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <button type="button" class="btn-back" style="font-size:11px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
         <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
@@ -922,7 +922,6 @@
 
       <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; border-top: 1px solid var(--card-border); padding-top: 12px;">Logbuch dieser Pflanze:</h4>
       
-      <!-- GROßE KACHEL-ANSICHT FÜR PLANT LOGS -->
       <div id="plantLogList" style="margin-bottom: 10px;"></div>
       <button type="button" id="btnExpandLogs" class="btn btn-secondary" style="font-size: 11px; padding: 10px; margin-bottom: 16px; display:none;" onclick="expandPlantLogs()">Mehr Einträge anzeigen</button>
 
@@ -979,7 +978,7 @@
     </div>
   </div>
 
-  <!-- Modal 11: Ausrüstung für spezifisches Zelt (geöffnet über Home Hardware-Kachel) -->
+  <!-- Modal 11: Ausrüstung für spezifisches Zelt -->
   <div class="modal-overlay" id="boxEquipmentListModal">
     <div class="modal-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -1019,6 +1018,17 @@
       const splash = document.getElementById('splash-screen');
       if (splash && !splash.classList.contains('hidden')) {
         splash.classList.add('hidden');
+      }
+    }
+
+    // Startet erst nach Entsperren die sichtbare Text-Animation
+    function startSplashAnimation() {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.classList.remove('hidden');
+        splash.classList.add('animate-splash');
+        // Nach Ablauf der Text-Animation (ca. 2.8s) Splash-Screen ausblenden
+        setTimeout(hideSplashScreen, 2800);
       }
     }
 
@@ -1118,7 +1128,6 @@
       return Number(val).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
     }
 
-    // VOLLSTÄNDIGE REPARATUR: Robustes Parsen von Datums-Strings zur Vermeidung von 1970
     function formatDateForInput(dateStr) {
       if (!dateStr || dateStr === "1970-01-01" || String(dateStr).includes("1970")) return todayStr;
       const str = String(dateStr).trim();
@@ -1190,8 +1199,17 @@
         document.getElementById('biometric-lock-overlay').classList.add('active');
         authenticateUserBiometric();
       } else {
-        setTimeout(hideSplashScreen, 2800);
+        // Falls kein Lock aktiv ist, sofort Animation starten
+        startSplashAnimation();
       }
+    }
+
+    function handleUnlockSuccess() {
+      document.getElementById('biometric-lock-overlay').classList.remove('active');
+      // Kurz warten und dann Splash-Animation abspielen lassen
+      setTimeout(() => {
+        startSplashAnimation();
+      }, 300);
     }
 
     async function authenticateUserBiometric() {
@@ -1216,8 +1234,7 @@
         });
 
         if (credential) {
-          document.getElementById('biometric-lock-overlay').classList.remove('active');
-          setTimeout(hideSplashScreen, 1200);
+          handleUnlockSuccess();
           return;
         }
       } catch (e) {
@@ -1229,9 +1246,8 @@
     function unlockWithPIN() {
       const input = document.getElementById('pinInput').value;
       if (input === "1236") {
-        document.getElementById('biometric-lock-overlay').classList.remove('active');
         document.getElementById('pinInput').value = "";
-        setTimeout(hideSplashScreen, 1200);
+        handleUnlockSuccess();
       } else {
         alert("Falscher PIN! Versuche 1236.");
       }
@@ -1252,7 +1268,7 @@
     });
 
     function fetchInitialData() {
-      if(!API_URL) { hideSplashScreen(); return; }
+      if(!API_URL) return;
       
       const noCacheUrl = API_URL + "?t=" + new Date().getTime();
       fetch(noCacheUrl)
@@ -1299,13 +1315,11 @@
           autoCalculateFertilizer(); 
           renderBoxTiles(); 
           populateLogDropdown();
-          if(!isBiometricLockEnabled) hideSplashScreen();
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
           renderDashboardSetup(); renderCustomGoals(); autoCalculateFertilizer(); renderBoxTiles();
-          if(!isBiometricLockEnabled) hideSplashScreen();
         });
     }
 
@@ -1522,7 +1536,6 @@
       if(currentVal) select.value = currentVal;
     }
 
-    // HOME: renderDashboardSetup() macht die Mars Hydro & Growbox Kacheln anklickbar für Ausrüstung!
     function renderDashboardSetup() {
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
@@ -2052,7 +2065,7 @@
 
     function openPlantDetailModal(plant) {
       currentDetailPlant = plant; 
-      plantLogLimit = 2; // Erst 2 Einträge anzeigen
+      plantLogLimit = 2;
       const info = getPlantInfo(plant);
       document.getElementById('modalPlantName').innerText = plant.name;
       document.getElementById('modalPlantStrain').innerText = (plant.strain || '') + " (" + plant.box + ")";
@@ -2099,7 +2112,6 @@
       updateCalcBoxDropdown();
     }
 
-    /* GROßE KACHEL-ANSICHT FÜR PLANT LOGS (WIE IM HAUPTLOGBUCH) */
     function renderPlantSpecificLogs() {
       const container = document.getElementById('plantLogList');
       if (!currentDetailPlant) return;
