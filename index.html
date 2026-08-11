@@ -223,6 +223,8 @@
       width: auto;
       box-sizing: border-box;
       vertical-align: middle;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .btn-trash-corner {
@@ -393,13 +395,13 @@
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #05140b; border-top: 2px solid #143d22;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-around; align-items: center;
       padding: 10px 8px max(10px, env(safe-area-inset-bottom)) 8px;
       z-index: 1000; overflow-x: auto;
     }
     .nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; min-width: 16%;
+      color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; min-width: 18%;
     }
     .nav-item .icon { font-size: 20px; margin-bottom: 3px; }
     .nav-item.active { color: var(--plant-green); font-weight: 600; }
@@ -487,15 +489,9 @@
         </div>
       </div>
 
-      <!-- HARDWARE & SETUP DETAILS -->
+      <!-- SETUPS -->
       <div class="card">
-        <h2>Hardware & Setup-Details</h2>
-        
-        <div id="strains-overview-box" style="background: rgba(46, 204, 113, 0.05); border: 1px solid rgba(46, 204, 113, 0.15); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; font-size: 12px;">
-          <strong style="color: var(--plant-green); display: block; margin-bottom: 4px;">🌱 Aktive Sorten in Zelten:</strong>
-          <div id="active-strains-list" style="color: #fff;">Lädt Sorten...</div>
-        </div>
-
+        <h2>Setups</h2>
         <div id="dashboard-setup-container" style="margin-top: 10px;"></div>
       </div>
 
@@ -527,24 +523,12 @@
       </div>
     </div>
 
-    <!-- TAB 2: GROWPLAN -->
-    <div id="tab-plan" class="tab-content">
-      <div class="card">
-        <h2>
-          <span>Zielwerte & Ablauf</span>
-          <button type="button" class="btn-back" style="font-size: 11px;" onclick="openGoalModal()">+ Ziele</button>
-        </h2>
-        
-        <div id="custom-goals-container" style="margin-bottom: 14px;"></div>
-      </div>
-    </div>
-
     <!-- TAB 3: DÜNGERECHNER -->
     <div id="tab-calc" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h2 style="margin-bottom: 0;">Smarter Düngerechner</h2>
-          <img id="bionova-logo" src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="BioNova" style="height: 36px; width: auto; max-width: 90px; object-fit: contain; cursor: pointer; border-radius: 6px;" onclick="changeBioNovaLogoUrl()" title="Klicken zum Ändern des BioNova Fotos">
+          <img id="bionova-logo" src="https://lh3.googleusercontent.com/d/1qiL3IxsdN1SkO9ESLga1m-1uQ1JHaoUw" alt="BioNova" style="height: 36px; width: auto; max-width: 90px; object-fit: contain; cursor: pointer; border-radius: 6px;" onclick="changeBioNovaLogoUrl()" title="Klicken zum Ändern des BioNova Fotos">
         </div>
         <div class="form-group">
           <label>1. Growbox oder einzelne Pflanze wählen:</label>
@@ -602,6 +586,7 @@
       <div class="card">
         <h2>Neuen Log-Eintrag hinzufügen</h2>
         <form id="logForm" onsubmit="submitLog(event)">
+          <div class="form-group"><label>Datum:</label><input type="date" id="log-date" required></div>
           <div class="form-group"><label>Zelt / Pflanze wählen</label><select id="log-plant"></select></div>
           <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="log-water" placeholder="z. B. 0.5" step="0.1" min="0.1"></div>
           <div class="form-group">
@@ -963,38 +948,9 @@
     </div>
   </div>
 
-  <!-- Modal 10: Zielwert / Ablauf Schritt Hinzufügen / Bearbeiten -->
-  <div class="modal-overlay" id="goalModal">
-    <div class="modal-card">
-      <button type="button" class="btn-trash-corner" id="btnDeleteGoal" style="display:none;" onclick="deleteGoalConfirm()" title="Ziel löschen">🗑️</button>
-      <h3 id="goalModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zielwert / Ablaufschritt</h3>
-      <input type="hidden" id="editGoalId">
-      <div class="form-group"><label>Titel / Thema:</label><input type="text" id="goalTitleInput" placeholder="z.B. Ziel-EC Phase Peak" required></div>
-      <div class="form-group"><label>Phase / Woche (Optional):</label><input type="text" id="goalWeekInput" placeholder="z.B. Vegetationswoche 2 oder Blütewoche 4"></div>
-      <div class="form-group"><label>Details & Zielwerte:</label><textarea id="goalDescInput" rows="3" placeholder="z.B. EC 1.9, RLF ~50%, Temp 25°C"></textarea></div>
-
-      <button type="button" class="btn" onclick="saveGoalItem()">Ziel speichern</button>
-      <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Abbrechen</button>
-    </div>
-  </div>
-
-  <!-- Modal 11: Ausrüstung für spezifisches Zelt -->
-  <div class="modal-overlay" id="boxEquipmentListModal">
-    <div class="modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 id="boxEquipmentModalTitle" style="color: var(--plant-green); margin-bottom: 0;">⚙️ Zelt Ausrüstung</h3>
-        <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openEquipmentModalForBox()">+ Ausrüstung</button>
-      </div>
-      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Hinterlegte Ausrüstung und Lampen in dieser Growbox:</p>
-      <div id="boxEquipmentModalListContainer" style="margin-bottom: 14px;"></div>
-      <button type="button" class="btn btn-secondary" onclick="closeBoxEquipmentListModal()">Schließen</button>
-    </div>
-  </div>
-
   <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('dashboard', this)"><span class="icon">📊</span><span>Home</span></div>
-    <div class="nav-item" onclick="switchTab('plan', this)"><span class="icon">📅</span><span>Plan</span></div>
     <div class="nav-item" onclick="switchTab('calc', this)"><span class="icon">🧪</span><span>Rechner</span></div>
     <div class="nav-item" onclick="switchTab('log', this)"><span class="icon">📝</span><span>Logbuch</span></div>
     <div class="nav-item" onclick="switchTab('plants', this)"><span class="icon">⛺</span><span>Zelte</span></div>
@@ -1027,7 +983,6 @@
       if (splash) {
         splash.classList.remove('hidden');
         splash.classList.add('animate-splash');
-        // Nach Ablauf der Text-Animation (ca. 2.8s) Splash-Screen ausblenden
         setTimeout(hideSplashScreen, 2800);
       }
     }
@@ -1074,15 +1029,6 @@
       { id: 5, name: "Silver Haze", box: "Grow Box", strain: "Sativa (Extra Blüte-Wochen)", time: "10-11 Wochen", img: "" }
     ];
 
-    const DEFAULT_GOALS = [
-      { id: "goal_def_1", title: "Vegetationsphase", week: "VT 1+", desc: "EC 1.0 | RLF ~65%" },
-      { id: "goal_def_2", title: "Frühe Blüte", week: "BW 1-3", desc: "EC 1.4 - 1.9 | RLF ~55%" },
-      { id: "goal_def_3", title: "Hauptblüte", week: "BW 4-6", desc: "EC 1.9 | RLF ~50%" },
-      { id: "goal_def_4", title: "Extrawochen (Silver Haze)", week: "BW 6-9", desc: "Peak (BW 6 & 7) & Reduzierung 1 (BW 8 & 9) verlängern!" },
-      { id: "goal_def_5", title: "Spätblüte", week: "BW 8 / 10", desc: "EC 1.7 - 1.4 | RLF ~45%" },
-      { id: "goal_def_6", title: "Vor Ernte (Spülen)", week: "BW End", desc: "Nur BN-Zym & VitaSol" }
-    ];
-
     function ensureAllPlantsExist(incomingPlants) {
       if (!Array.isArray(incomingPlants) || incomingPlants.length === 0) return DEFAULT_PLANTS;
       incomingPlants.forEach(p => { if (p.name === "Swiss Watch" && (!p.img || p.img.trim() === "")) p.img = SWISS_WATCH_IMG; });
@@ -1099,7 +1045,6 @@
     let plantsData = ensureAllPlantsExist(loadedPlants);
 
     let equipmentData = JSON.parse(localStorage.getItem('creamyp_equipment_v1')) || [];
-    let goalsData = JSON.parse(localStorage.getItem('creamyp_goals_v1')) || DEFAULT_GOALS;
     let bionovaLogoUrl = localStorage.getItem('creamyp_bionova_logo') || "https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5";
 
     let activeEditingBox = null;
@@ -1120,7 +1065,6 @@
     let activeLogItem = null;
     let activeFutureItem = null;
     let activeEquipmentItem = null;
-    let activeGoalItem = null;
     let editingProjectPlantIndex = null;
 
     function formatNumberDE(val, decimals = 1) {
@@ -1199,14 +1143,12 @@
         document.getElementById('biometric-lock-overlay').classList.add('active');
         authenticateUserBiometric();
       } else {
-        // Falls kein Lock aktiv ist, sofort Animation starten
         startSplashAnimation();
       }
     }
 
     function handleUnlockSuccess() {
       document.getElementById('biometric-lock-overlay').classList.remove('active');
-      // Kurz warten und dann Splash-Animation abspielen lassen
       setTimeout(() => {
         startSplashAnimation();
       }, 300);
@@ -1256,12 +1198,25 @@
     window.addEventListener('DOMContentLoaded', () => { 
       const stromDate = document.getElementById('strom-input-date');
       if(stromDate) stromDate.value = todayStr;
+
+      const logDate = document.getElementById('log-date');
+      if(logDate) logDate.value = todayStr;
+
       const arcDate = document.getElementById('arc-datum');
       if(arcDate) arcDate.value = todayStr;
 
       const logoImg = document.getElementById('bionova-logo');
       if(logoImg && bionovaLogoUrl) logoImg.src = bionovaLogoUrl;
       
+      // Schließen von Modals beim Klick außerhalb (Overlay Klick)
+      document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.classList.remove('active');
+          }
+        });
+      });
+
       loadHeaderLeafImages();
       checkLockOnStart();
       fetchInitialData(); 
@@ -1291,11 +1246,6 @@
             localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
           }
 
-          if (data && data.goals && Array.isArray(data.goals) && data.goals.length > 0) {
-            goalsData = data.goals;
-            localStorage.setItem('creamyp_goals_v1', JSON.stringify(goalsData));
-          }
-          
           if (latest && latest.temp !== undefined && latest.temp !== '--') {
             document.getElementById('val-temp').innerText = latest.temp + "°C";
             document.getElementById('val-humidity').innerText = latest.humidity + "%";
@@ -1311,7 +1261,6 @@
 
           updateCalcBoxDropdown();
           renderDashboardSetup(); 
-          renderCustomGoals();
           autoCalculateFertilizer(); 
           renderBoxTiles(); 
           populateLogDropdown();
@@ -1319,7 +1268,7 @@
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
-          renderDashboardSetup(); renderCustomGoals(); autoCalculateFertilizer(); renderBoxTiles();
+          renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
         });
     }
 
@@ -1540,95 +1489,98 @@
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
-      const strainsListElem = document.getElementById('active-strains-list');
-      if (strainsListElem) {
-        if (plantsData && plantsData.length > 0) {
-          const allStrains = plantsData.map(p => `<strong>${p.name}</strong> (${p.strain || 'Sorte unb.'})`).join(' • ');
-          strainsListElem.innerHTML = allStrains;
-        } else {
-          strainsListElem.innerHTML = "Keine Pflanzen/Sorten vorhanden.";
-        }
-      }
-
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
         const info = getBoxInfo(boxName);
         const boxData = boxesData[boxName] || {};
         const strainNames = boxPlants.length > 0 ? boxPlants.map(p => p.name).join(', ') : 'Keine Pflanzen im Zelt';
+        const safeBoxId = boxName.replace(/[^a-zA-Z0-9]/g, '_');
         
         const boxImgHtml = boxData.img 
           ? `<img src="${boxData.img}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border);">` 
           : ``;
 
         const card = document.createElement('div');
-        card.className = 'setup-card-box clickable-card';
-        card.onclick = () => openBoxEquipmentListModal(boxName);
+        card.className = 'setup-card-box';
 
         card.innerHTML = `
-          <h3>
-            <span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h3 style="margin-bottom:0;"><span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span></h3>
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
-          </h3>
-          <p style="font-size: 12px; color: #fff; margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
-          <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
-            <span>⚙️ Ausrüstung & Hardware anzeigen</span>
-            <span>➔</span>
           </div>
+          <p style="font-size: 12px; color: #fff; margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; cursor: pointer;" onclick="toggleBoxEquipmentDropdown('${safeBoxId}', '${boxName}')">
+            <span>⚙️ Ausrüstung anzeigen</span>
+            <span id="eq-arrow-${safeBoxId}">▾</span>
+          </div>
+          <div id="eq-dropdown-${safeBoxId}" style="display:none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--card-border);"></div>
         `;
         container.appendChild(card);
       });
     }
 
-    /* AUSRÜSTUNG (EQUIPMENT) LOGIK */
-    function openBoxEquipmentListModal(boxName) {
-      currentSelectedBox = boxName;
-      document.getElementById('boxEquipmentModalTitle').innerText = "⚙️ Ausrüstung - " + boxName;
-      renderBoxEquipmentListModal(boxName);
-      document.getElementById('boxEquipmentListModal').classList.add('active');
+    /* AUSRÜSTUNG (EQUIPMENT) DROPDOWN IN ZELT-KACHEL */
+    function toggleBoxEquipmentDropdown(safeBoxId, boxName) {
+      const dropdown = document.getElementById(`eq-dropdown-${safeBoxId}`);
+      const arrow = document.getElementById(`eq-arrow-${safeBoxId}`);
+      if (!dropdown) return;
+
+      const isHidden = dropdown.style.display === 'none';
+      dropdown.style.display = isHidden ? 'block' : 'none';
+      arrow.innerText = isHidden ? '▴' : '▾';
+
+      if (isHidden) {
+        renderBoxEquipmentDropdown(safeBoxId, boxName);
+      }
     }
 
-    function closeBoxEquipmentListModal() {
-      document.getElementById('boxEquipmentListModal').classList.remove('active');
-    }
-
-    function openEquipmentModalForBox() {
-      openEquipmentModal();
-    }
-
-    function renderBoxEquipmentListModal(boxName) {
-      const container = document.getElementById('boxEquipmentModalListContainer');
+    function renderBoxEquipmentDropdown(safeBoxId, boxName) {
+      const container = document.getElementById(`eq-dropdown-${safeBoxId}`);
       if (!container) return;
-      container.innerHTML = "";
 
       const boxEquipment = equipmentData.filter(item => item.box === boxName || item.box === "Allgemein");
+      const boxData = boxesData[boxName] || {};
+      const boxImgHtml = boxData.img 
+        ? `<img src="${boxData.img}" style="width: 24px; height: 24px; border-radius: 4px; object-fit: cover; margin-right: 6px;">` 
+        : `⛺ `;
+
+      let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <strong style="font-size: 12px; color: #fff; display: flex; align-items: center;">${boxImgHtml} Ausrüstung für ${boxName}</strong>
+          <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3); font-size: 11px; padding: 4px 10px; height: auto;" onclick="openEquipmentModalForBox('${boxName}')">+ Ausrüstung</button>
+        </div>
+      `;
 
       if (boxEquipment.length === 0) {
-        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px 0;">Keine Ausrüstung für dieses Zelt hinterlegt.<br>Klicke oben auf "+ Ausrüstung" um welche hinzuzufügen.</div>`;
-        return;
+        html += `<div style="font-size:11px; color:var(--text-muted); padding: 8px 0;">Keine Ausrüstung hinterlegt.</div>`;
+      } else {
+        boxEquipment.forEach(item => {
+          const imgHtml = item.img 
+            ? `<img src="${item.img}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border); flex-shrink: 0;">`
+            : `<div style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right: 8px; flex-shrink: 0;">⚙️</div>`;
+
+          html += `
+            <div class="list-item-card" style="padding: 8px;" onclick="openEditEquipmentModal('${item.id}')">
+              <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
+                ${imgHtml}
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+                  <div style="font-size: 10px; color: var(--plant-green);">${item.category || 'Equipment'}</div>
+                  ${item.notes ? `<div style="font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
+                </div>
+              </div>
+              <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0; margin-left:6px; flex-shrink:0; width:28px; height:28px; font-size:11px;" onclick="event.stopPropagation(); deleteEquipmentDirect('${item.id}', '${safeBoxId}', '${boxName}')" title="Löschen">🗑️</button>
+            </div>
+          `;
+        });
       }
 
-      boxEquipment.forEach(item => {
-        const imgHtml = item.img 
-          ? `<img src="${item.img}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border); flex-shrink: 0;">`
-          : `<div style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 12px; flex-shrink: 0;">⚙️</div>`;
+      container.innerHTML = html;
+    }
 
-        const tile = document.createElement('div');
-        tile.className = 'list-item-card';
-        tile.onclick = () => openEditEquipmentModal(item.id);
-
-        tile.innerHTML = `
-          <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
-            ${imgHtml}
-            <div style="flex: 1; min-width: 0;">
-              <div style="font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
-              <div style="font-size: 11px; color: var(--plant-green); margin-top: 2px;">${item.category || 'Equipment'} • <span style="color:var(--text-muted);">${item.box || 'Allgemein'}</span></div>
-              ${item.notes ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
-            </div>
-          </div>
-          <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0; margin-left:8px; flex-shrink:0;" onclick="event.stopPropagation(); deleteEquipmentDirect('${item.id}')" title="Löschen">🗑️</button>
-        `;
-        container.appendChild(tile);
-      });
+    function openEquipmentModalForBox(boxName) {
+      if (boxName) currentSelectedBox = boxName;
+      openEquipmentModal();
     }
 
     function openEquipmentModal() {
@@ -1704,7 +1656,7 @@
 
       saveEquipmentCloudAndLocal();
       closeEquipmentModal();
-      if (currentSelectedBox) renderBoxEquipmentListModal(currentSelectedBox);
+      renderDashboardSetup();
       showSuccessToast("Ausrüstung gespeichert!");
     }
 
@@ -1714,109 +1666,21 @@
       closeEquipmentModal();
     }
 
-    function deleteEquipmentDirect(id) {
+    function deleteEquipmentDirect(id, safeBoxId = null, boxName = null) {
       if (!confirm("Ausrüstungsgegenstand wirklich löschen?")) return;
       equipmentData = equipmentData.filter(e => e.id != id);
       saveEquipmentCloudAndLocal();
-      if (currentSelectedBox) renderBoxEquipmentListModal(currentSelectedBox);
+      if (safeBoxId && boxName) {
+        renderBoxEquipmentDropdown(safeBoxId, boxName);
+      } else {
+        renderDashboardSetup();
+      }
       showSuccessToast("Ausrüstung gelöscht!");
     }
 
     function saveEquipmentCloudAndLocal() {
       localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveEquipment", equipment: equipmentData }) });
-    }
-
-    /* ZIELWERTE & ABLAUF LOGIK */
-    function renderCustomGoals() {
-      const container = document.getElementById('custom-goals-container');
-      if (!container) return;
-      container.innerHTML = "";
-
-      if (!goalsData || goalsData.length === 0) return;
-
-      goalsData.forEach(g => {
-        const card = document.createElement('div');
-        card.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative; cursor: pointer;";
-        card.onclick = () => openEditGoalModal(g.id);
-
-        card.innerHTML = `
-          <button type="button" class="btn-trash-corner" style="position:absolute; top:10px; right:10px;" onclick="event.stopPropagation(); deleteGoalDirect('${g.id}')" title="Ziel löschen">🗑️</button>
-          <div style="font-size: 14px; font-weight: 700; color: var(--plant-green); margin-bottom: 2px;">${g.title}</div>
-          ${g.week ? `<div style="font-size: 11px; color: var(--bloom-pink); font-weight: 600; margin-bottom: 4px;">🗓️ ${g.week}</div>` : ''}
-          <div style="font-size: 12px; color: #fff; line-height: 1.4;">${g.desc || ''}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function openGoalModal() {
-      activeGoalItem = null;
-      document.getElementById('goalModalTitle').innerText = "+ Zielwert / Ablauf hinzufügen";
-      document.getElementById('editGoalId').value = "";
-      document.getElementById('goalTitleInput').value = "";
-      document.getElementById('goalWeekInput').value = "";
-      document.getElementById('goalDescInput').value = "";
-      document.getElementById('btnDeleteGoal').style.display = 'none';
-      document.getElementById('goalModal').classList.add('active');
-    }
-
-    function openEditGoalModal(id) {
-      activeGoalItem = goalsData.find(g => g.id == id);
-      if (!activeGoalItem) return;
-
-      document.getElementById('goalModalTitle').innerText = "Zielwert bearbeiten";
-      document.getElementById('editGoalId').value = activeGoalItem.id;
-      document.getElementById('goalTitleInput').value = activeGoalItem.title || "";
-      document.getElementById('goalWeekInput').value = activeGoalItem.week || "";
-      document.getElementById('goalDescInput').value = activeGoalItem.desc || "";
-
-      document.getElementById('btnDeleteGoal').style.display = 'block';
-      document.getElementById('goalModal').classList.add('active');
-    }
-
-    function closeGoalModal() {
-      document.getElementById('goalModal').classList.remove('active');
-      activeGoalItem = null;
-    }
-
-    function saveGoalItem() {
-      const title = document.getElementById('goalTitleInput').value.trim();
-      if (!title) return alert("Bitte einen Titel eingeben!");
-
-      const id = document.getElementById('editGoalId').value || "goal_" + Date.now();
-      const week = document.getElementById('goalWeekInput').value;
-      const desc = document.getElementById('goalDescInput').value;
-
-      const goalObj = { id, title, week, desc };
-
-      const existingIndex = goalsData.findIndex(g => g.id == id);
-      if (existingIndex > -1) { goalsData[existingIndex] = goalObj; }
-      else { goalsData.push(goalObj); }
-
-      saveGoalsCloudAndLocal();
-      closeGoalModal();
-      renderCustomGoals();
-      showSuccessToast("Ziel/Ablauf gespeichert!");
-    }
-
-    function deleteGoalConfirm() {
-      if (!activeGoalItem) return;
-      deleteGoalDirect(activeGoalItem.id);
-      closeGoalModal();
-    }
-
-    function deleteGoalDirect(id) {
-      if (!confirm("Dieses Ziel wirklich löschen?")) return;
-      goalsData = goalsData.filter(g => g.id != id);
-      saveGoalsCloudAndLocal();
-      renderCustomGoals();
-      showSuccessToast("Ziel gelöscht!");
-    }
-
-    function saveGoalsCloudAndLocal() {
-      localStorage.setItem('creamyp_goals_v1', JSON.stringify(goalsData));
-      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveGoals", goals: goalsData }) });
     }
 
     function changeBioNovaLogoUrl() {
@@ -2271,6 +2135,7 @@
       const fileInput = document.getElementById('log-file');
       const payload = { 
         pflanzenId: document.getElementById('log-plant').value, 
+        datum: document.getElementById('log-date').value || todayStr,
         wasser: document.getElementById('log-water').value, 
         maengel: document.getElementById('log-defect').value, 
         notiz: document.getElementById('log-notes').value,
@@ -2292,6 +2157,7 @@
       .then(() => { 
         btn.innerText = "In Google Sheet speichern"; btn.disabled = false;
         document.getElementById('logForm').reset(); 
+        document.getElementById('log-date').value = todayStr;
         showSuccessToast("Logbuch-Eintrag gespeichert!");
         fetchInitialData(); 
       });
