@@ -1,3 +1,6 @@
+Hier ist der vollständig aktualisierte Code. Alle gewünschten Änderungen an Texten, Emojis, Logbuch-Kacheln, Formularfeldern, der Namensbearbeitung für Pflanzen sowie den beiden maßgeschneiderten Vektorgrafiken für Temperatur und Luftfeuchtigkeit wurden direkt eingebaut.
+
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -21,9 +24,9 @@
   <style>
     :root {
       /* Farbschema */
-      --bg-color: #F4F6F8;            /* Sehr helles, kühles Grau-Blau */
-      --card-bg: #ffffff;            /* Äußere Hauptkacheln */
-      --inner-box-bg: #E7EAEE;       /* Unterkacheln / Innere Boxen */
+      --bg-color: #F4F6F8;            /* Sehr helles, kühles Grau-Blau (Hintergrund) */
+      --card-bg: #ffffff;            /* Hauptkacheln / Äußere Container (Weiss) */
+      --inner-box-bg: #E7EAEE;       /* Unterkacheln / Innere Boxen (Grau-Blau) */
       --card-border: rgba(52, 74, 91, 0.15);
       
       --primary-purple: #0F172A;
@@ -78,26 +81,14 @@
     #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     
     .splash-content {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;
     }
 
     .splash-phase {
-      position: absolute;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 20px;
+      position: absolute; display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 20px;
     }
     .splash-phase.active { display: flex; }
 
-    /* Animationen für die Phasen */
     .anim-from-bottom { animation: slideFromBottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .anim-from-right { animation: slideFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
@@ -111,12 +102,8 @@
     }
 
     .pulse-anim {
-      height: 150px; width: auto;
-      background-color: #fff;
-      padding: 20px 40px;
-      border-radius: 50px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-      display: inline-block;
+      height: 150px; width: auto; background-color: #fff; padding: 20px 40px; border-radius: 50px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4); display: inline-block;
     }
     #splash-screen.animate-splash .pulse-anim { animation: pulse 1.5s infinite; }
     @keyframes pulse {
@@ -126,8 +113,7 @@
     }
 
     .splash-text-container {
-      margin-top: 20px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      margin-top: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     }
     .splash-line1 {
       font-family: 'Dancing Script', cursive; font-size: 26px; font-weight: 600;
@@ -149,72 +135,43 @@
 
     /* Sorten-Karten im Splash Screen */
     .splash-strain-card {
-      width: 280px;
-      height: 280px;
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      background: #000;
+      width: 280px; height: 280px; border-radius: 28px; overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.15); background: #000;
     }
-    .splash-strain-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .splash-strain-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .splash-strain-title {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-top: 20px;
-      letter-spacing: 2px;
-      text-align: center;
-      text-transform: uppercase;
+      font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff;
+      margin-top: 20px; letter-spacing: 2px; text-align: center; text-transform: uppercase;
     }
     .splash-thick-line {
-      width: 100px;
-      height: 6px;
-      background: #10b981;
-      border-radius: 4px;
-      margin-top: 10px;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+      width: 100px; height: 6px; background: #10b981; border-radius: 4px; margin-top: 10px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
     }
 
     /* Header */
     header {
-      position: sticky; top: 0; z-index: 100;
-      background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
-      padding-top: max(12px, env(safe-area-inset-top)); 
-      padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
-      text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
+      position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+      padding-top: max(12px, env(safe-area-inset-top)); padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
+      text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
 
     .header-leaf-overlay {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;
       background-repeat: repeat-x; background-position: center center; background-size: 420px auto;     
       mix-blend-mode: screen; opacity: 0.85; z-index: 2; pointer-events: none;
     }
 
     .logo-wrapper {
-      background-color: #fff; padding: 6px 18px; border-radius: 32px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
-      justify-content: center; position: relative; z-index: 10;
+      background-color: #fff; padding: 6px 18px; border-radius: 32px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;
     }
     .app-logo { max-height: 56px; width: auto; display: block; }
 
     .btn-lock-toggle {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: #000; border: 1px solid rgba(255,255,255,0.2);
-      color: #fff; width: 36px; height: 36px; border-radius: 50%;
-      font-size: 16px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; line-height: 1; padding: 0; margin: 0;
-      z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #000;
+      border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      line-height: 1; padding: 0; margin: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .container { padding: var(--space-md); max-width: 500px; margin: 0 auto; }
@@ -227,9 +184,10 @@
     .clickable-card { cursor: pointer; transition: transform var(--transition-fast), border-color var(--transition-fast); }
     .clickable-card:active { transform: scale(0.98); border-color: var(--plant-green); }
 
+    /* Sensor-Grid mit Platz für Vektorgrafiken */
     .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); text-align: center; }
-    .sensor-box { background: var(--inner-box-bg); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(52, 74, 91, 0.1); }
-    .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: var(--text-main); }
+    .sensor-box { background: var(--inner-box-bg); padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(52, 74, 91, 0.1); display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .sensor-val { font-size: 19px; font-weight: 700; margin: 2px 0; color: var(--text-main); }
     .sensor-label { font-size: 11px; color: var(--text-muted); }
     .badge-good { color: var(--plant-green-dark); }
 
@@ -308,6 +266,19 @@
 
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
+    /* Eigenständige Kacheln für Logbuch-Einträge */
+    .log-card-item {
+      background: var(--inner-box-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+    }
+    .log-card-item:active { transform: scale(0.99); }
+
     .modal-overlay {
       display: flex; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px); z-index: 2000; align-items: flex-end; justify-content: center; opacity: 0;
@@ -324,11 +295,6 @@
       content: ''; display: block; width: 36px; height: 4px; background: rgba(0, 0, 0, 0.15); border-radius: 2px; margin: 0 auto var(--space-md) auto;
     }
     .modal-overlay.active .modal-card { transform: translateY(0); }
-
-    .log-item-row { padding: 12px; border-bottom: 1px solid rgba(52, 74, 91, 0.1); font-size: 12px; cursor: pointer; transition: background 0.15s; }
-    .log-item-row:hover { background: rgba(0,0,0,0.02); }
-    .log-item-row:last-child { border-bottom: none; }
-    .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green-dark); font-weight: 600; margin-bottom: 4px; align-items: center; }
 
     .ranking-box { background: var(--inner-box-bg); border: 1px solid rgba(217, 119, 6, 0.3); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
     .ranking-title { font-size: 12px; color: #b45309; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
@@ -449,10 +415,34 @@
     <div id="tab-dashboard" class="tab-content active">
       <div class="card clickable-card" onclick="toggleKlimaChart()">
         <h2>Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green-dark);">● Online ▾</span></h2>
+        
         <div class="sensor-grid">
-          <div class="sensor-box"><div class="sensor-label">TEMP</div><div class="sensor-val" id="val-temp">--°C</div></div>
-          <div class="sensor-box"><div class="sensor-label">FEUCHTE</div><div class="sensor-val" id="val-humidity">--%</div></div>
-          <div class="sensor-box"><div class="sensor-label">VPD</div><div class="sensor-val badge-good" id="val-vpd">--</div><div class="sensor-label" id="val-time">Lädt...</div></div>
+          <!-- Temp Kachel mit roten Hitze-Wellen -->
+          <div class="sensor-box">
+            <div class="sensor-label">TEMP</div>
+            <div class="sensor-val" id="val-temp">--°C</div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 4px;">
+              <path d="M6 19c0-2.5 2-2.5 2-5s-2-2.5-2-5 2-2.5 2-5"/>
+              <path d="M12 19c0-2.5 2-2.5 2-5s-2-2.5-2-5 2-2.5 2-5"/>
+              <path d="M18 19c0-2.5 2-2.5 2-5s-2-2.5-2-5 2-2.5 2-5"/>
+            </svg>
+          </div>
+
+          <!-- Feuchte Kachel mit blauem Wasser-Strudel -->
+          <div class="sensor-box">
+            <div class="sensor-label">FEUCHTE</div>
+            <div class="sensor-val" id="val-humidity">--%</div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 4px;">
+              <path d="M12 2a10 10 0 1 0 10 10A8 8 0 1 0 6 12a6 6 0 1 0 10 0 4 4 0 1 0-6 0"/>
+            </svg>
+          </div>
+
+          <!-- VPD Kachel -->
+          <div class="sensor-box">
+            <div class="sensor-label">VPD</div>
+            <div class="sensor-val badge-good" id="val-vpd">--</div>
+            <div class="sensor-label" id="val-time" style="margin-top: 6px;">Lädt...</div>
+          </div>
         </div>
 
         <div id="chart-dropdown" onclick="event.stopPropagation()">
@@ -471,6 +461,7 @@
         <div id="dashboard-setup-container" style="margin-top: 10px;"></div>
       </div>
 
+      <!-- STROMVERBRAUCH -->
       <div class="card clickable-card" onclick="toggleStromDropdown()">
         <h2>Stromverbrauch <span style="font-size: 12px; color: var(--text-muted);">▾</span></h2>
         <div class="sensor-grid">
@@ -480,12 +471,12 @@
         </div>
 
         <div id="strom-dropdown" onclick="event.stopPropagation()">
+          <!-- Reiner Monatsprognose-Titel ohne All-Time-Zusatz -->
           <div style="background: var(--inner-box-bg); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
-            <span class="sensor-label">MONATSPROGNOSE (ALL-TIME DURCHSCHNITT)</span>
+            <span class="sensor-label" style="font-weight: 700; letter-spacing: 0.5px;">MONATSPROGNOSE</span>
             <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
 
-          <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">📊 Historische Zählerstände & Protokoll:</h4>
           <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: var(--inner-box-bg); border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
             Lädt Protokoll...
           </div>
@@ -554,7 +545,8 @@
     <!-- TAB 4: LOGBUCH -->
     <div id="tab-log" class="tab-content">
       <div class="card">
-        <h2>Bisherige Logbuch-Einträge</h2>
+        <!-- Einfacher Titel Logbuch -->
+        <h2>Logbuch</h2>
         <div id="recent-logs-list">Lädt...</div>
         <button type="button" id="btn-expand-logs" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandGlobalLogs()">Mehr Einträge anzeigen</button>
       </div>
@@ -564,16 +556,14 @@
         <form id="logForm" onsubmit="submitLog(event)">
           <div class="form-group"><label>Datum:</label><input type="date" id="log-date" required></div>
           <div class="form-group"><label>Zelt / Pflanze wählen</label><select id="log-plant"></select></div>
-          <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="log-water" placeholder="z. B. 0.5" step="0.1" min="0.1"></div>
+          <div class="form-group"><label>Gießmenge (Liter, optional)</label><input type="number" id="log-water" placeholder="z. B. 0.5" step="0.1" min="0.1"></div>
+          
+          <!-- Auffälligkeiten als Freifeld anstelle von starrer Selektion -->
           <div class="form-group">
-            <label>Auffälligkeiten / Mängel</label>
-            <select id="log-defect">
-              <option value="Keine">Keine (Gesund)</option>
-              <option value="Stickstoff-Mangel">Stickstoff-Mangel</option>
-              <option value="CalMag-Mangel">Cal/Mag-Mangel</option>
-              <option value="Überdüngung">Überdüngung</option>
-            </select>
+            <label>Auffälligkeiten / Mängel (optional)</label>
+            <input type="text" id="log-defect" placeholder="z. B. leichte gelbe Blattspitzen...">
           </div>
+          
           <div class="form-group"><label>Notizen</label><textarea id="log-notes" rows="3" placeholder="Notizen..."></textarea></div>
           <div class="form-group"><label>Foto hinzufügen (Optional)</label><input type="file" id="log-file" accept="image/*"></div>
           <button type="submit" class="btn" id="btn-submit-log">In Google Sheet speichern</button>
@@ -714,7 +704,7 @@
 
     </div>
 
-  </div>
+  </div> <!-- End container -->
 
   <!-- MODALS -->
 
@@ -853,20 +843,31 @@
     </div>
   </div>
 
-  <!-- Modal 8: Pflanzen Details & Logbuch-Einträge -->
+  <!-- Modal 8: Pflanzen Details, Name Ändern & Logbuch-Einträge -->
   <div class="modal-overlay" id="plantDetailModal">
     <div class="modal-card">
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="plantImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
-      <h3 id="modalPlantName" style="color: var(--plant-green-dark); margin-bottom: 2px;">Pflanze</h3>
-      <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
+      
+      <!-- Bearbeitbarer Pflanzenname & Strain -->
+      <div class="form-group" style="margin-bottom: 8px;">
+        <label style="font-size:11px; font-weight: 600; color: var(--plant-green-dark);">Pflanzenname bearbeiten:</label>
+        <input type="text" id="modalPlantNameInput" style="font-size: 16px; font-weight: 700; padding: 8px 10px;">
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label style="font-size:11px;">Sorte / Genetik:</label>
+        <input type="text" id="modalPlantStrainInput" style="font-size: 13px; padding: 8px 10px;">
+      </div>
+
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 14px;"></div>
       
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <button type="button" class="btn-back" style="font-size:11px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
-        <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px;">
+        <button type="button" class="btn" style="padding: 8px; font-size: 12px; flex: 1;" onclick="savePlantNameAndStrain()">Name / Genetik speichern</button>
+        <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0; height: 36px; width: 36px;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       </div>
+
+      <button type="button" class="btn-back" style="font-size:11px; width:100%; margin-bottom:12px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
 
       <div id="customPhaseUI" style="display:none; background: var(--inner-box-bg); padding:10px; border-radius:8px; margin-bottom:14px; border: 1px solid var(--card-border);">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
@@ -933,7 +934,7 @@
     <div class="nav-item" onclick="switchTab('archiv', this)"><span class="icon">📚</span><span>Archiv</span></div>
   </nav>
 
-  <!-- JAVASCRIPT LOGIK & SPLASH ANIMATION CONTROL -->
+  <!-- SKRIPTE & LOGIK -->
   <script>
     const HEADER_LEAF_URL = "https://lh3.googleusercontent.com/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH"; 
 
@@ -954,7 +955,6 @@
       }
     }
 
-    /* Drei-Phasen-Steuerung für den Splash Screen */
     function startSplashAnimation() {
       const splash = document.getElementById('splash-screen');
       const phaseLogo = document.getElementById('splash-phase-logo');
@@ -965,19 +965,16 @@
         splash.classList.remove('hidden');
         splash.classList.add('animate-splash');
 
-        // Phase 1: Logo ist 2.2 Sek sichtbar
         setTimeout(() => {
           phaseLogo.classList.remove('active');
           phaseSlide1.classList.add('active', 'anim-from-bottom');
         }, 2200);
 
-        // Phase 2: Slide 1 (WHITE WEDDING RBX) für 2.2 Sek
         setTimeout(() => {
           phaseSlide1.classList.remove('active');
           phaseSlide2.classList.add('active', 'anim-from-right');
         }, 4400);
 
-        // Phase 3: Slide 2 (ETHOS COOKIES) für 2.2 Sek, danach Hauptbildschirm
         setTimeout(() => {
           hideSplashScreen();
         }, 6600);
@@ -1464,6 +1461,7 @@
       return calculatePhaseDetails('blüte', todayStr);
     }
 
+    /* Aufgeräumte Dropdown-Auswahl ohne Emojis & Zusatztexte im Düngerechner */
     function updateCalcBoxDropdown() {
       const select = document.getElementById('calc-box');
       if(!select) return;
@@ -1471,11 +1469,11 @@
       select.innerHTML = "";
 
       Object.keys(boxesData).forEach(b => {
-        select.innerHTML += `<option value="box:${b}">⛺ Zelt: ${b}</option>`;
+        select.innerHTML += `<option value="box:${b}">${b}</option>`;
       });
 
       plantsData.forEach(p => {
-        select.innerHTML += `<option value="plant:${p.id}">🌱 Pflanze: ${p.name} (${p.box})</option>`;
+        select.innerHTML += `<option value="plant:${p.id}">${p.name} (${p.box})</option>`;
       });
 
       if(currentVal) select.value = currentVal;
@@ -1926,13 +1924,41 @@
       currentDetailPlant = plant; 
       plantLogLimit = 2;
       const info = getPlantInfo(plant);
-      document.getElementById('modalPlantName').innerText = plant.name;
-      document.getElementById('modalPlantStrain').innerText = (plant.strain || '') + " (" + plant.box + ")";
+      
+      document.getElementById('modalPlantNameInput').value = plant.name;
+      document.getElementById('modalPlantStrainInput').value = plant.strain || "";
       document.getElementById('modalPlantDayTag').innerText = info.exactDayText;
       document.getElementById('modalPlantFileInput').value = "";
       updatePlantImageDisplay(plant.img || "");
       renderPlantSpecificLogs();
       document.getElementById('plantDetailModal').classList.add('active');
+    }
+
+    /* Namensänderung für Pflanzen mit Synchronisation der Bezüge */
+    function savePlantNameAndStrain() {
+      if (!currentDetailPlant) return;
+      const oldName = currentDetailPlant.name;
+      const newName = document.getElementById('modalPlantNameInput').value.trim();
+      const newStrain = document.getElementById('modalPlantStrainInput').value.trim();
+
+      if (!newName) return alert("Bitte einen Pflanzennamen eingeben!");
+
+      currentDetailPlant.name = newName;
+      currentDetailPlant.strain = newStrain;
+
+      // Logbuch-Einträge bei Namensänderung mit anpassen
+      if (oldName !== newName && Array.isArray(globalLogsCache)) {
+        globalLogsCache.forEach(l => {
+          if (l.plant === oldName) {
+            l.plant = newName;
+          }
+        });
+      }
+
+      savePlantsDataCloudAndLocal();
+      populateLogDropdown();
+      if (currentSelectedBox) openBoxDetail(currentSelectedBox);
+      showSuccessToast("Pflanzenname aktualisiert!");
     }
 
     function deleteCurrentPlantConfirm() {
@@ -1971,6 +1997,7 @@
       updateCalcBoxDropdown();
     }
 
+    /* Aufgeräumte Darstellung der Logbucheinträge ohne leeres Wasser/Mängel */
     function renderPlantSpecificLogs() {
       const container = document.getElementById('plantLogList');
       if (!currentDetailPlant) return;
@@ -1984,8 +2011,9 @@
 
       let html = "";
       matchingLogs.slice(0, plantLogLimit).forEach(l => {
-        const defectText = l.defects || 'Keine (Gesund)';
-        const defectBadgeColor = (defectText !== 'Keine' && defectText !== 'Keine (Gesund)') ? '#e74c3c' : 'var(--plant-green-dark)';
+        const hasWater = l.water && parseFloat(l.water) > 0;
+        const defectsVal = (l.defects || l.maengel || '').trim();
+        const hasDefects = defectsVal && defectsVal !== "Keine" && defectsVal !== "Keine (Gesund)";
 
         const logImgHtml = l.bild 
           ? `<div style="margin-top: 10px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
@@ -1994,19 +2022,16 @@
           : ``;
 
         html += `
-          <div style="background: var(--inner-box-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
+          <div class="log-card-item">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
               <span style="font-size: 12px; color: var(--plant-green-dark); font-weight: 700;">📅 ${l.date}</span>
               <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 11px; background: rgba(2, 132, 199, 0.15); color: var(--root-blue); padding: 2px 8px; border-radius: 10px; font-weight: 600;">💧 ${l.water ? l.water + 'L' : '0L'}</span>
+                ${hasWater ? `<span style="font-size: 11px; background: rgba(2, 132, 199, 0.15); color: var(--root-blue); padding: 2px 8px; border-radius: 10px; font-weight: 600;">💧 ${parseFloat(l.water).toFixed(1)}L</span>` : ''}
                 <button type="button" class="btn-back" style="padding: 0 8px; height: 26px; line-height: 24px; font-size: 11px;" onclick="openEditLogModal('${l.id}')" title="Bearbeiten">✏️</button>
               </div>
             </div>
             
-            <div style="font-size: 12px; color: var(--text-main); margin-bottom: 4px;">
-              <strong>Mängel / Status:</strong> <span style="color: ${defectBadgeColor}; font-weight:600;">${defectText}</span>
-            </div>
-
+            ${hasDefects ? `<div style="font-size: 12px; color: #e74c3c; font-weight:600; margin-bottom: 4px;"><strong>Mängel:</strong> ${defectsVal}</div>` : ''}
             ${l.note ? `<div style="font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 8px; margin-top: 6px; font-style: italic;">"${l.note}"</div>` : ''}
             
             ${logImgHtml}
@@ -2083,7 +2108,7 @@
       return "";
     }
 
-    // --- LOGBUCH LOGIK ---
+    /* Aufgeräumte Haupt-Logbuchliste mit Kacheldesign */
     function renderRecentLogsList() {
       const container = document.getElementById('recent-logs-list');
       if (!globalLogsCache || globalLogsCache.length === 0) { 
@@ -2096,23 +2121,32 @@
       globalLogsCache.slice(0, globalLogLimit).forEach(l => {
         const entityImg = getEntityImage(l.plant);
         const iconHtml = entityImg 
-          ? `<img src="${entityImg}" style="width:24px; height:24px; border-radius:6px; object-fit:cover; margin-right:8px; border:1px solid var(--card-border); flex-shrink:0;">`
+          ? `<img src="${entityImg}" style="width:28px; height:28px; border-radius:6px; object-fit:cover; margin-right:8px; border:1px solid var(--card-border); flex-shrink:0;">`
           : `<span style="font-size:16px; margin-right:6px;">🌱</span>`;
 
+        const hasWater = l.water && parseFloat(l.water) > 0;
+        const defectsVal = (l.defects || l.maengel || '').trim();
+        const hasDefects = defectsVal && defectsVal !== "Keine" && defectsVal !== "Keine (Gesund)";
+
         const logImgHtml = l.bild 
-          ? `<div style="margin-top: 8px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
+          ? `<div style="margin-top: 10px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
                <img src="${l.bild}" style="width: 100%; height: 180px; object-fit: cover; display: block;" onclick="event.stopPropagation(); window.open('${l.bild}', '_blank')">
              </div>`
           : ``;
 
         html += `
-          <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
-            <div class="log-item-header">
-              <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:var(--text-main);">${l.plant}</strong></span>
-              <span style="color: var(--text-muted); font-size:11px;">${l.date}</span>
+          <div class="log-card-item" onclick="openEditLogModal('${l.id}')">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:var(--text-main); font-size: 14px;">${l.plant}</strong></span>
+              <span style="color: var(--text-muted); font-size:11px; font-weight:600;">${l.date}</span>
             </div>
-            <div style="margin-top:2px; color: var(--text-main);"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
-            ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
+            
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+              ${hasWater ? `<span style="font-size:11px; background: rgba(2, 132, 199, 0.12); color: var(--root-blue); padding: 2px 8px; border-radius: 8px; font-weight:600;">💧 Gießmenge: ${parseFloat(l.water).toFixed(1)}L</span>` : ''}
+              ${hasDefects ? `<span style="font-size:11px; background: rgba(231, 76, 60, 0.12); color: #e74c3c; padding: 2px 8px; border-radius: 8px; font-weight:600;">⚠️ ${defectsVal}</span>` : ''}
+            </div>
+
+            ${l.note ? `<div style="color: var(--text-muted); font-size: 12px; margin-top:6px; font-style: italic; background: rgba(0,0,0,0.02); padding: 6px 8px; border-radius: 6px;">"${l.note}"</div>` : ''}
             ${logImgHtml}
           </div>`;
       });
@@ -2164,7 +2198,7 @@
 
       document.getElementById('editLogId').value = activeLogItem.id;
       document.getElementById('editLogWater').value = activeLogItem.water || "";
-      document.getElementById('editLogDefect').value = activeLogItem.defects || "Keine";
+      document.getElementById('editLogDefect').value = activeLogItem.defects || activeLogItem.maengel || "";
       document.getElementById('editLogNote').value = activeLogItem.note || "";
       
       const wrapper = document.getElementById('editLogImgWrapper');
@@ -2209,8 +2243,7 @@
       select.innerHTML = "";
       Object.keys(boxesData).forEach(box => { select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`; });
       plantsData.forEach(p => {
-        const icon = p.isSteckling ? "📦" : "🌱";
-        select.innerHTML += `<option value="${p.name}">${icon} ${p.name} (${p.box})</option>`;
+        select.innerHTML += `<option value="${p.name}">${p.name} (${p.box})</option>`;
       });
     }
 
@@ -2692,3 +2725,5 @@
   </script>
 </body>
 </html>
+
+```
