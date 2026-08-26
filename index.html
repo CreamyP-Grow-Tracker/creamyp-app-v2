@@ -20,9 +20,10 @@
 
   <style>
     :root {
-      /* Angelernte Wunschfarben */
-      --bg-color: #F4F6F8;            /* Sehr helles, kühles Grau-Blau */
-      --card-bg: #E7EAEE;            /* Helles, kühles Grau-Blau für Karten */
+      /* Invertierte Farblogik für verschachtelte Kacheln */
+      --bg-color: #F4F6F8;            /* Sehr helles, kühles Grau-Blau (Hintergrund) */
+      --card-bg: #ffffff;            /* Hauptkacheln / Äußere Container (Hell/Weiß) */
+      --inner-box-bg: #E7EAEE;       /* Unterkacheln / Innere Elemente (Kühles Grau-Blau) */
       --card-border: rgba(52, 74, 91, 0.15);
       
       --primary-purple: #0F172A;
@@ -42,7 +43,7 @@
       --dry-brown: #d97706;
       --dry-brown-bg: rgba(217, 119, 6, 0.15);
 
-      --text-main: #0F172A;           /* Dunkler Text für optimale Lesbarkeit auf hellem Grund */
+      --text-main: #0F172A;           /* Dunkler Text für optimale Lesbarkeit */
       --text-muted: #475569;
 
       /* 8-Point-Grid Standardisierung */
@@ -63,7 +64,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* Splash Screen (Dunkles Mitternachtsblau) */
+    /* Splash Screen (Mitternachtsblau) */
     #splash-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -138,7 +139,7 @@
       100% { opacity: 1; clip-path: inset(-30px -60px -30px -60px); }
     }
 
-    /* Header mit korrigierten sichtbaren Blättern */
+    /* Header mit sichtbarem Blättermuster */
     header {
       position: sticky; top: 0; z-index: 100;
       background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
@@ -185,13 +186,15 @@
     .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Äußere Hauptkachel: Weiß/Hell */
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .clickable-card { cursor: pointer; transition: transform var(--transition-fast), border-color var(--transition-fast); }
     .clickable-card:active { transform: scale(0.98); border-color: var(--plant-green); }
 
+    /* Innere kleine Kacheln/Boxen: Kühleres Grau-Blau (#E7EAEE) */
     .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); text-align: center; }
-    .sensor-box { background: rgba(255, 255, 255, 0.6); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(52, 74, 91, 0.1); }
+    .sensor-box { background: var(--inner-box-bg); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(52, 74, 91, 0.1); }
     .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: var(--text-main); }
     .sensor-label { font-size: 11px; color: var(--text-muted); }
     .badge-good { color: var(--plant-green-dark); }
@@ -199,18 +202,18 @@
     #chart-dropdown, #strom-dropdown { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--card-border); padding-bottom: 4px; }
     .chart-wrapper { position: relative; height: 180px; width: 100%; margin-top: 8px; }
     .chart-btn-group { display: flex; gap: var(--space-sm); margin-bottom: 12px; justify-content: center; }
-    .btn-timefilter { background: rgba(255, 255, 255, 0.8); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer; }
+    .btn-timefilter { background: var(--inner-box-bg); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-timefilter.active { background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16, 185, 129, 0.4); }
 
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input, select, textarea { width: 100%; padding: 12px; background: #ffffff; border: 1px solid rgba(52, 74, 91, 0.2); border-radius: 10px; color: var(--text-main); font-size: 15px; outline: none; }
+    input, select, textarea { width: 100%; padding: 12px; background: var(--inner-box-bg); border: 1px solid rgba(52, 74, 91, 0.2); border-radius: 10px; color: var(--text-main); font-size: 15px; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #ffffff; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); }
     .btn-secondary { background: #cbd5e1; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
     
     .btn-back {
-      background: rgba(255, 255, 255, 0.8);
+      background: var(--inner-box-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border);
       padding: 0 14px;
@@ -233,7 +236,7 @@
 
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
-      background: rgba(255, 255, 255, 0.8); border: 1px solid var(--card-border);
+      background: var(--inner-box-bg); border: 1px solid var(--card-border);
       color: var(--text-muted); width: 34px; height: 34px; border-radius: var(--radius-sm);
       font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: all var(--transition-fast); z-index: 5;
@@ -248,11 +251,12 @@
     .ec-badge.bloom-mode { background: linear-gradient(135deg, #d63031, var(--primary-pink)); color: #fff; }
     .calc-table td.val.bloom-val { color: var(--primary-pink); }
 
-    .setup-card-box { background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
+    /* Unterkacheln (Setups, Zelt-Kacheln, Pflanzen-Kacheln) -> Dunklerer Ton (#E7EAEE) */
+    .setup-card-box { background: var(--inner-box-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
     .setup-card-box h3 { font-size: 15px; color: var(--plant-green-dark); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     
     .box-tile-card { 
-      background: #ffffff; 
+      background: var(--inner-box-bg); 
       border: 1px solid var(--card-border); 
       border-radius: var(--radius-md); 
       padding: 18px; 
@@ -270,7 +274,7 @@
     .box-tile-arrow { font-size: 24px; color: var(--plant-green-dark); }
 
     .list-item-card {
-      background: #ffffff;
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 10px 12px;
@@ -286,7 +290,7 @@
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
     
     .plant-card { 
-      background: #ffffff; 
+      background: var(--inner-box-bg); 
       border: 1px solid var(--card-border); 
       border-radius: 12px; 
       padding: 10px; 
@@ -364,7 +368,7 @@
     .log-item-row:last-child { border-bottom: none; }
     .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green-dark); font-weight: 600; margin-bottom: 4px; align-items: center; }
 
-    .ranking-box { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(217, 119, 6, 0.3); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
+    .ranking-box { background: var(--inner-box-bg); border: 1px solid rgba(217, 119, 6, 0.3); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
     .ranking-title { font-size: 12px; color: #b45309; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
     .ranking-value { font-size: 16px; color: var(--text-main); font-weight: 700; }
 
@@ -509,13 +513,13 @@
         </div>
 
         <div id="strom-dropdown" onclick="event.stopPropagation()">
-          <div style="background: rgba(255,255,255,0.6); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
+          <div style="background: var(--inner-box-bg); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
             <span class="sensor-label">MONATSPROGNOSE (ALL-TIME DURCHSCHNITT)</span>
             <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
 
           <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">📊 Historische Zählerstände & Protokoll:</h4>
-          <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: #ffffff; border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
+          <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: var(--inner-box-bg); border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
             Lädt Protokoll...
           </div>
 
@@ -561,7 +565,7 @@
             <option value="flush">💧 Vor Ernte / Spülen</option>
           </select>
         </details>
-        <div style="padding: 12px; background: #ffffff; border-radius: 12px; border: 1px solid var(--card-border);">
+        <div style="padding: 12px; background: var(--inner-box-bg); border-radius: 12px; border: 1px solid var(--card-border);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-size: 13px; color: var(--text-muted);">Mischung für <strong id="calc-liters-label" style="color: var(--text-main);">10</strong> Liter:</span>
             <div><span class="sensor-label">EC</span> <span class="ec-badge" id="res-ec">1.0</span></div>
@@ -625,7 +629,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.8);" onclick="openAddPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--inner-box-bg);" onclick="openAddPlantModal()">+ Pflanze</button>
               <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
             </div>
           </div>
@@ -707,7 +711,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showArchiveOverview()">← Projekte</button>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.8);" onclick="openAddProjectPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--inner-box-bg);" onclick="openAddProjectPlantModal()">+ Pflanze</button>
               <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="switchToEditArchiveView()">✏️ Bearbeiten</button>
             </div>
           </div>
@@ -724,7 +728,7 @@
             <h3 style="font-size: 14px; color: var(--plant-green-dark); margin-bottom: 8px;">📊 Projekt-Auswertung & Reviews</h3>
             <div id="arcDetailStats" class="archive-stats" style="margin-bottom: 10px;"></div>
 
-            <div style="font-size: 12px; line-height: 1.5; background: #ffffff; padding: 10px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--card-border);">
+            <div style="font-size: 12px; line-height: 1.5; background: var(--inner-box-bg); padding: 10px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--card-border);">
               <div><strong>📅 Erntedatum:</strong> <span id="arcDetailDateText">--</span></div>
               <div style="margin-top: 4px;"><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
               <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
@@ -897,7 +901,7 @@
         <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       </div>
 
-      <div id="customPhaseUI" style="display:none; background:#ffffff; padding:10px; border-radius:8px; margin-bottom:14px; border: 1px solid var(--card-border);">
+      <div id="customPhaseUI" style="display:none; background: var(--inner-box-bg); padding:10px; border-radius:8px; margin-bottom:14px; border: 1px solid var(--card-border);">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
            <option value="box">-- Automatisch vom Zelt übernehmen --</option>
@@ -962,7 +966,7 @@
     <div class="nav-item" onclick="switchTab('archiv', this)"><span class="icon">📚</span><span>Archiv</span></div>
   </nav>
 
-  <!-- 100% UNVERÄNDERTE ORIGINAL-LOGIK -->
+  <!-- UNVERÄNDERTE FUNKTIONALITÄT UND SKRIPTE -->
   <script>
     const HEADER_LEAF_URL = "https://lh3.googleusercontent.com/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH"; 
 
@@ -1986,7 +1990,7 @@
       const matchingLogs = globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box);
       
       if (matchingLogs.length === 0) {
-        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: #ffffff; border-radius: 10px; border: 1px solid var(--card-border);">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
+        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: var(--inner-box-bg); border-radius: 10px; border: 1px solid var(--card-border);">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
         document.getElementById('btnExpandLogs').style.display = 'none'; 
         return;
       }
@@ -2003,7 +2007,7 @@
           : ``;
 
         html += `
-          <div style="background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
+          <div style="background: var(--inner-box-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
               <span style="font-size: 12px; color: var(--plant-green-dark); font-weight: 700;">📅 ${l.date}</span>
               <div style="display: flex; align-items: center; gap: 6px;">
