@@ -24,7 +24,9 @@
       --card-bg: #141a16;
       --card-border: rgba(255, 255, 255, 0.08);
       
-      --primary-purple: #9b51e0;
+      --primary-purple: #0F172A; /* Ersetzt durch Mitternachtsblau */
+      --primary-midnight: #0F172A;
+      --primary-midnight-soft: #1E293B;
       --primary-pink: #ff75c3;
       --electric-blue: #00d2d3;
       
@@ -64,7 +66,7 @@
     #splash-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, #9b51e0, #ff75c3);
+      background: linear-gradient(135deg, #0F172A, #1E293B);
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -137,7 +139,7 @@
 
     header {
       position: sticky; top: 0; z-index: 100;
-      background: linear-gradient(135deg, rgba(155, 81, 224, 0.45), rgba(255, 117, 195, 0.3));
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.6));
       padding-top: max(12px, env(safe-area-inset-top)); 
       padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
       text-align: center; border-bottom: 1px solid var(--card-border);
