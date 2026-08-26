@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="CreamyP V2">
   <link rel="manifest" href="manifest.json">
 
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5">
+  <link rel="apple-touch-icon" href="logo.jpg">
   
   <title>CreamyP Grow Tracker V2</title>
 
@@ -20,29 +20,30 @@
 
   <style>
     :root {
-      --bg-color: #0c100d;
-      --card-bg: #141a16;
-      --card-border: rgba(255, 255, 255, 0.08);
+      /* Neue Farbabstimmung */
+      --bg-color: #F4F6F8;            /* Helles, kühles Grau-Blau für den mittleren Bereich */
+      --card-bg: #E7EAEE;            /* Helles, kühles Grau-Blau für Kacheln & Karten */
+      --card-border: rgba(52, 74, 91, 0.12);
       
-      --primary-purple: #0F172A; /* Ersetzt durch Mitternachtsblau */
-      --primary-midnight: #0F172A;
+      --primary-purple: #0F172A;
+      --primary-midnight: #0F172A;   /* Mitternachtsblau für Header & Splash */
       --primary-midnight-soft: #1E293B;
-      --primary-pink: #ff75c3;
-      --electric-blue: #00d2d3;
+      --primary-pink: #d63384;
+      --electric-blue: #0284c7;
       
-      --plant-green: #2ecc71;
-      --plant-green-dark: #27ae60;
-      --plant-green-bg: rgba(46, 204, 113, 0.15);
+      --plant-green: #10b981;
+      --plant-green-dark: #059669;
+      --plant-green-bg: rgba(16, 185, 129, 0.15);
       
-      --bloom-pink: #ff75c3;
-      --bloom-pink-bg: rgba(255, 117, 195, 0.15);
-      --root-blue: #00d2d3;
-      --root-blue-bg: rgba(0, 210, 211, 0.15);
-      --dry-brown: #dca570;
-      --dry-brown-bg: rgba(220, 165, 112, 0.15);
+      --bloom-pink: #ec4899;
+      --bloom-pink-bg: rgba(236, 72, 153, 0.15);
+      --root-blue: #0284c7;
+      --root-blue-bg: rgba(2, 132, 199, 0.15);
+      --dry-brown: #d97706;
+      --dry-brown-bg: rgba(217, 119, 6, 0.15);
 
-      --text-main: #f3f7f4;
-      --text-muted: #8e9e94;
+      --text-main: #0F172A;           /* Dunkler Text für optimale Lesbarkeit auf hellem Grund */
+      --text-muted: #475569;          /* Lesbare Untertitel-Farbe */
 
       /* 8-Point-Grid Standardisierung */
       --space-xs: 4px;
@@ -62,7 +63,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* Splash Screen */
+    /* Splash Screen (Dunkles Mitternachtsblau wie gewünscht) */
     #splash-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -137,12 +138,13 @@
       100% { opacity: 1; clip-path: inset(-30px -60px -30px -60px); }
     }
 
+    /* Header (Dunkles Mitternachtsblau wie gewünscht) */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.6));
+      background: linear-gradient(180deg, #0F172A 0%, rgba(30, 41, 59, 0.95) 100%);
       padding-top: max(12px, env(safe-area-inset-top)); 
       padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
-      text-align: center; border-bottom: 1px solid var(--card-border);
+      text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
@@ -155,15 +157,15 @@
       background-repeat: repeat-x;
       background-position: center center;
       background-size: 420px auto;     
-      mix-blend-mode: screen;
-      opacity: 0.85;
+      mix-blend-mode: soft-light;
+      opacity: 0.4;
       z-index: 2;
       pointer-events: none;
     }
 
     .logo-wrapper {
       background-color: #fff; padding: 6px 18px; border-radius: 32px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center;
       justify-content: center; position: relative; z-index: 10;
     }
     .app-logo { max-height: 56px; width: auto; display: block; }
@@ -171,7 +173,7 @@
     /* Zentrierter Einstellungen / Lock-Button */
     .btn-lock-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: #000; border: 1px solid var(--card-border);
+      background: #000; border: 1px solid rgba(255,255,255,0.2);
       color: #fff; width: 36px; height: 36px; border-radius: 50%;
       font-size: 16px; cursor: pointer; display: flex; align-items: center;
       justify-content: center; line-height: 1; padding: 0; margin: 0;
@@ -183,32 +185,32 @@
     .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); box-shadow: 0 4px 12px rgba(0,0,0,0.4); position: relative; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; }
     .card h2 { font-size: 16px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .clickable-card { cursor: pointer; transition: transform var(--transition-fast), border-color var(--transition-fast); }
     .clickable-card:active { transform: scale(0.98); border-color: var(--plant-green); }
 
     .sensor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); text-align: center; }
-    .sensor-box { background: rgba(46, 204, 113, 0.04); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
-    .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: #fff; }
+    .sensor-box { background: rgba(255, 255, 255, 0.6); padding: 12px 8px; border-radius: 12px; border: 1px solid rgba(52, 74, 91, 0.1); }
+    .sensor-val { font-size: 20px; font-weight: 700; margin: 4px 0; color: var(--text-main); }
     .sensor-label { font-size: 11px; color: var(--text-muted); }
-    .badge-good { color: var(--plant-green); }
+    .badge-good { color: var(--plant-green-dark); }
 
     #chart-dropdown, #strom-dropdown { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--card-border); padding-bottom: 4px; }
     .chart-wrapper { position: relative; height: 180px; width: 100%; margin-top: 8px; }
     .chart-btn-group { display: flex; gap: var(--space-sm); margin-bottom: 12px; justify-content: center; }
-    .btn-timefilter { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer; }
-    .btn-timefilter.active { background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46, 204, 113, 0.4); }
+    .btn-timefilter { background: rgba(255, 255, 255, 0.8); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer; }
+    .btn-timefilter.active { background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16, 185, 129, 0.4); }
 
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input, select, textarea { width: 100%; padding: 12px; background: #0f1411; border: 1px solid var(--card-border); border-radius: 10px; color: #fff; font-size: 15px; outline: none; }
+    input, select, textarea { width: 100%; padding: 12px; background: #ffffff; border: 1px solid rgba(52, 74, 91, 0.2); border-radius: 10px; color: var(--text-main); font-size: 15px; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--plant-green); }
-    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #0b140e; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); }
-    .btn-secondary { background: #232d27; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--plant-green-dark), var(--plant-green)); color: #ffffff; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); }
+    .btn-secondary { background: #cbd5e1; color: var(--text-main); box-shadow: none; margin-top: var(--space-sm); }
     
     .btn-back {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.8);
       color: var(--text-main);
       border: 1px solid var(--card-border);
       padding: 0 14px;
@@ -231,7 +233,7 @@
 
     .btn-trash-corner {
       position: absolute; top: 14px; right: 14px;
-      background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.8); border: 1px solid var(--card-border);
       color: var(--text-muted); width: 34px; height: 34px; border-radius: var(--radius-sm);
       font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: all var(--transition-fast); z-index: 5;
@@ -239,18 +241,18 @@
     .btn-trash-corner:hover, .btn-trash-corner:active { background: rgba(192, 57, 43, 0.2); color: #e74c3c; border-color: rgba(192, 57, 43, 0.4); transform: scale(1.05); }
 
     .calc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+    .calc-table td { padding: 8px 4px; border-bottom: 1px solid rgba(52, 74, 91, 0.1); font-size: 14px; }
     .calc-table tr:last-child td { border-bottom: none; }
-    .calc-table td.val { text-align: right; font-weight: 700; color: var(--plant-green); }
-    .ec-badge { background: linear-gradient(135deg, #27ae60, #2ecc71); color: #0b140e; font-weight: 800; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: inline-block; }
+    .calc-table td.val { text-align: right; font-weight: 700; color: var(--plant-green-dark); }
+    .ec-badge { background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-weight: 800; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: inline-block; }
     .ec-badge.bloom-mode { background: linear-gradient(135deg, #d63031, var(--primary-pink)); color: #fff; }
     .calc-table td.val.bloom-val { color: var(--primary-pink); }
 
-    .setup-card-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
-    .setup-card-box h3 { font-size: 15px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .setup-card-box { background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; }
+    .setup-card-box h3 { font-size: 15px; color: var(--plant-green-dark); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     
     .box-tile-card { 
-      background: linear-gradient(135deg, rgba(38, 51, 44, 0.6), rgba(24, 31, 27, 0.9)); 
+      background: #ffffff; 
       border: 1px solid var(--card-border); 
       border-radius: var(--radius-md); 
       padding: 18px; 
@@ -263,12 +265,12 @@
       transition: transform var(--transition-fast), border-color var(--transition-fast); 
     }
     .box-tile-card:active { transform: scale(0.98); border-color: var(--plant-green); }
-    .box-tile-info h3 { font-size: 18px; color: #fff; margin-bottom: 6px; }
+    .box-tile-info h3 { font-size: 18px; color: var(--text-main); margin-bottom: 6px; }
     .box-tile-info p { font-size: 13px; color: var(--text-muted); }
-    .box-tile-arrow { font-size: 24px; color: var(--plant-green); }
+    .box-tile-arrow { font-size: 24px; color: var(--plant-green-dark); }
 
     .list-item-card {
-      background: rgba(255,255,255,0.02);
+      background: #ffffff;
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 10px 12px;
@@ -279,12 +281,12 @@
       cursor: pointer;
       transition: transform var(--transition-fast), background var(--transition-fast);
     }
-    .list-item-card:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
+    .list-item-card:active { transform: scale(0.98); background: rgba(0,0,0,0.02); }
 
     .plants-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
     
     .plant-card { 
-      background: rgba(255,255,255,0.02); 
+      background: #ffffff; 
       border: 1px solid var(--card-border); 
       border-radius: 12px; 
       padding: 10px; 
@@ -300,10 +302,10 @@
     .plant-card.dry-card { border-left: 3px solid var(--dry-brown); }
 
     .plant-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-block; letter-spacing: 0.5px; }
-    .plant-tag.tag-veg { background: var(--plant-green-bg); color: var(--plant-green); border: 1px solid rgba(46, 204, 113, 0.3); }
-    .plant-tag.tag-bloom { background: var(--bloom-pink-bg); color: var(--bloom-pink); border: 1px solid rgba(255, 117, 195, 0.3); }
-    .plant-tag.tag-root { background: var(--root-blue-bg); color: var(--root-blue); border: 1px solid rgba(0, 210, 211, 0.3); }
-    .plant-tag.tag-dry { background: var(--dry-brown-bg); color: var(--dry-brown); border: 1px solid rgba(220, 165, 112, 0.3); }
+    .plant-tag.tag-veg { background: var(--plant-green-bg); color: var(--plant-green-dark); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .plant-tag.tag-bloom { background: var(--bloom-pink-bg); color: var(--bloom-pink); border: 1px solid rgba(236, 72, 153, 0.3); }
+    .plant-tag.tag-root { background: var(--root-blue-bg); color: var(--root-blue); border: 1px solid rgba(2, 132, 199, 0.3); }
+    .plant-tag.tag-dry { background: var(--dry-brown-bg); color: var(--dry-brown); border: 1px solid rgba(217, 119, 6, 0.3); }
 
     .box-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: transparent; color: var(--text-muted); }
 
@@ -311,7 +313,7 @@
       display: flex;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 2000;
@@ -328,7 +330,7 @@
     }
 
     .modal-card {
-      background: var(--card-bg);
+      background: #ffffff;
       border: 1px solid var(--card-border);
       border-bottom: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -339,7 +341,7 @@
       overflow-y: auto;
       transform: translateY(100%);
       transition: transform var(--transition-smooth);
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
       position: relative;
     }
 
@@ -348,7 +350,7 @@
       display: block;
       width: 36px;
       height: 4px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.15);
       border-radius: 2px;
       margin: 0 auto var(--space-md) auto;
     }
@@ -357,14 +359,14 @@
       transform: translateY(0);
     }
 
-    .log-item-row { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; transition: background 0.15s; }
-    .log-item-row:hover { background: rgba(255,255,255,0.03); }
+    .log-item-row { padding: 12px; border-bottom: 1px solid rgba(52, 74, 91, 0.1); font-size: 12px; cursor: pointer; transition: background 0.15s; }
+    .log-item-row:hover { background: rgba(0,0,0,0.02); }
     .log-item-row:last-child { border-bottom: none; }
-    .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green); font-weight: 600; margin-bottom: 4px; align-items: center; }
+    .log-item-header { display: flex; justify-content: space-between; color: var(--plant-green-dark); font-weight: 600; margin-bottom: 4px; align-items: center; }
 
-    .ranking-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
-    .ranking-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
-    .ranking-value { font-size: 16px; color: #fff; font-weight: 700; }
+    .ranking-box { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(217, 119, 6, 0.3); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
+    .ranking-title { font-size: 12px; color: #b45309; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+    .ranking-value { font-size: 16px; color: var(--text-main); font-weight: 700; }
 
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
     .gallery-thumb { width: 100%; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--card-border); }
@@ -373,9 +375,9 @@
       position: fixed; 
       top: calc(75px + env(safe-area-inset-top)); 
       left: 50%; transform: translateX(-50%) translateY(-100px);
-      background: #18221b; border: 1px solid var(--plant-green); color: var(--text-main);
+      background: #0F172A; border: 1px solid var(--plant-green); color: #ffffff;
       padding: var(--space-sm) var(--space-md); border-radius: 40px; display: flex; align-items: center; gap: var(--space-sm);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 10000; transition: transform var(--transition-smooth), opacity var(--transition-fast);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; transition: transform var(--transition-smooth), opacity var(--transition-fast);
       opacity: 0; pointer-events: none; font-weight: 600; font-size: 14px;
     }
     .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -394,23 +396,24 @@
     }
     @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
+    /* Unterer Balken (Mittleres, kühles Blau-Grau wie gewünscht) */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: #05140b; border-top: 2px solid #143d22;
+      background: #344A5B; border-top: 1px solid rgba(255,255,255,0.1);
       display: flex; justify-content: space-around; align-items: center;
       padding: 10px 8px max(10px, env(safe-area-inset-bottom)) 8px;
       z-index: 1000; overflow-x: auto;
     }
     .nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; min-width: 18%;
+      color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 10px; cursor: pointer; min-width: 18%;
     }
     .nav-item .icon { font-size: 20px; margin-bottom: 3px; }
-    .nav-item.active { color: var(--plant-green); font-weight: 600; }
+    .nav-item.active { color: #10b981; font-weight: 600; }
 
     #biometric-lock-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: #0d120f; z-index: 10000;
+      background: #0F172A; z-index: 10000;
       display: none; flex-direction: column; align-items: center; justify-content: center;
       text-align: center; padding: 20px;
     }
@@ -423,7 +426,7 @@
   <div id="biometric-lock-overlay">
     <div style="font-size: 60px; margin-bottom: 16px;">🔐</div>
     <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">CreamyP V2 Geschützt</h2>
-    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; max-width: 280px;">Sperre aufheben mit Face ID, Touch ID oder Geräte-Passcode.</p>
+    <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 24px; max-width: 280px;">Sperre aufheben mit Face ID, Touch ID oder Geräte-Passcode.</p>
     <button type="button" class="btn" style="max-width: 240px;" onclick="authenticateUserBiometric()">Entsperren mit Face ID</button>
     
     <div id="pinFallbackArea" style="display: none; margin-top: 20px; width: 100%; max-width: 240px;">
@@ -435,7 +438,7 @@
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
     <div class="splash-content">
-      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="pulse-anim">
+      <img src="logo.jpg" alt="CreamyP Logo" class="pulse-anim">
       <div style="color: #fff; font-weight: 700; margin-top: 24px; font-size: 18px; letter-spacing: 1px;">Let's Grow</div>
       
       <div class="splash-text-container">
@@ -461,7 +464,7 @@
     <div id="headerLeafOverlay" class="header-leaf-overlay" style="display:none;"></div>
     
     <div class="logo-wrapper">
-      <img src="https://lh3.googleusercontent.com/d/1xxCsp30Txke0yrsqvkJv1QKaPpFFggO5" alt="CreamyP Logo" class="app-logo">
+      <img src="logo.jpg" alt="CreamyP Logo" class="app-logo">
     </div>
 
     <button type="button" class="btn-lock-toggle" onclick="toggleBiometricLockSetting()" id="lockSettingBtn" title="Einstellungen / Face ID">
@@ -474,7 +477,7 @@
     <!-- TAB 1: DASHBOARD (HOME) -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="card clickable-card" onclick="toggleKlimaChart()">
-        <h2>Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green);">● Online ▾</span></h2>
+        <h2>Klima <span id="klima-status" style="font-size: 12px; color: var(--plant-green-dark);">● Online ▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box"><div class="sensor-label">TEMP</div><div class="sensor-val" id="val-temp">--°C</div></div>
           <div class="sensor-box"><div class="sensor-label">FEUCHTE</div><div class="sensor-val" id="val-humidity">--%</div></div>
@@ -501,18 +504,18 @@
         <h2>Stromverbrauch <span style="font-size: 12px; color: var(--text-muted);">▾</span></h2>
         <div class="sensor-grid">
           <div class="sensor-box"><div class="sensor-label">STAND</div><div class="sensor-val" id="strom-val-stand" style="font-size: 13px;">-- kWh</div></div>
-          <div class="sensor-box"><div class="sensor-label">Ø TAG (GESAMT)</div><div class="sensor-val" id="strom-val-daily" style="font-size: 13px; color: var(--plant-green);">-- kWh</div></div>
+          <div class="sensor-box"><div class="sensor-label">Ø TAG (GESAMT)</div><div class="sensor-val" id="strom-val-daily" style="font-size: 13px; color: var(--plant-green-dark);">-- kWh</div></div>
           <div class="sensor-box"><div class="sensor-label">JAHRESPROGNOSE</div><div class="sensor-val" id="strom-val-yearly" style="font-size: 12px; color: var(--primary-pink);">-- kWh</div></div>
         </div>
 
         <div id="strom-dropdown" onclick="event.stopPropagation()">
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
+          <div style="background: rgba(255,255,255,0.6); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
             <span class="sensor-label">MONATSPROGNOSE (ALL-TIME DURCHSCHNITT)</span>
             <div id="strom-val-monthly" style="font-size: 18px; font-weight: 700; color: var(--primary-pink); margin-top: 2px;">-- €/Monat</div>
           </div>
 
           <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">📊 Historische Zählerstände & Protokoll:</h4>
-          <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
+          <div id="strom-history-table-container" style="max-height: 200px; overflow-y: auto; background: #ffffff; border-radius: 10px; padding: 6px; margin-bottom: 14px; border: 1px solid var(--card-border);">
             Lädt Protokoll...
           </div>
 
@@ -537,7 +540,7 @@
           <select id="calc-box" onchange="autoCalculateFertilizer()"></select>
         </div>
         <div class="form-group"><label>2. Wassermenge (in Litern):</label><input type="number" id="calc-water" value="10" step="0.1" min="0.1" oninput="autoCalculateFertilizer()"></div>
-        <div id="calc-status-box" style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green); display: flex; align-items: center; justify-content: space-between;">
+        <div id="calc-status-box" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 12px; color: var(--plant-green-dark); display: flex; align-items: center; justify-content: space-between;">
           <span>Status / Phase:</span><strong id="calc-detected-status" style="font-size: 13px;">Berechne...</strong>
         </div>
         <details style="margin-bottom: 14px; font-size: 12px; color: var(--text-muted);">
@@ -558,9 +561,9 @@
             <option value="flush">💧 Vor Ernte / Spülen</option>
           </select>
         </details>
-        <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--card-border);">
+        <div style="padding: 12px; background: #ffffff; border-radius: 12px; border: 1px solid var(--card-border);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span style="font-size: 13px; color: var(--text-muted);">Mischung für <strong id="calc-liters-label" style="color: #fff;">10</strong> Liter:</span>
+            <span style="font-size: 13px; color: var(--text-muted);">Mischung für <strong id="calc-liters-label" style="color: var(--text-main);">10</strong> Liter:</span>
             <div><span class="sensor-label">EC</span> <span class="ec-badge" id="res-ec">1.0</span></div>
           </div>
           <table class="calc-table">
@@ -622,12 +625,12 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05);" onclick="openAddPlantModal()">+ Pflanze</button>
-              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.8);" onclick="openAddPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt bearbeiten</button>
             </div>
           </div>
 
-          <div id="selected-box-title" style="margin-bottom: 14px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: #fff;">
+          <div id="selected-box-title" style="margin-bottom: 14px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-weight: 700; font-size: 18px; color: var(--text-main);">
             Zelt Name
           </div>
 
@@ -654,7 +657,7 @@
         <div class="card">
           <h2>Ernte & Review eintragen</h2>
           <details>
-            <summary style="font-size: 13px; color: var(--plant-green); cursor: pointer; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
+            <summary style="font-size: 13px; color: var(--plant-green-dark); cursor: pointer; padding: 10px; background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600;">+ Neues Projekt ins Archiv aufnehmen</summary>
             <form id="archiveForm" onsubmit="submitArchive(event)" style="margin-top: 12px;">
               <div class="form-group"><label>Projektname</label><input type="text" id="arc-sorte" placeholder="z.B. Ethos Run 2026" required></div>
               <div class="form-group"><label>Enthaltene Pflanzen & Sorten (durch Komma getrennt)</label><textarea id="arc-pflanzen" rows="2" placeholder="z.B. Ethos Cookies #1, Ethos Cookies #2, White Wedding Rbx #1"></textarea></div>
@@ -684,7 +687,7 @@
           <button type="button" id="btn-expand-future" class="btn btn-secondary" style="display:none; font-size:12px; margin-bottom:16px;" onclick="expandFutureList()">Mehr Ideen anzeigen</button>
 
           <form id="futureForm" onsubmit="submitFuture(event)" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
-            <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">+ Neue Idee speichern</h3>
+            <h3 style="font-size: 14px; color: var(--plant-green-dark); margin-bottom: 8px;">+ Neue Idee speichern</h3>
             <div class="form-group">
               <select id="fut-kat">
                 <option value="🌱 Sorte">🌱 Neue Sorte anbauen</option>
@@ -704,13 +707,13 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-back" onclick="showArchiveOverview()">← Projekte</button>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.05);" onclick="openAddProjectPlantModal()">+ Pflanze</button>
-              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3);" onclick="switchToEditArchiveView()">✏️ Bearbeiten</button>
+              <button type="button" class="btn-back" style="background: rgba(255,255,255,0.8);" onclick="openAddProjectPlantModal()">+ Pflanze</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="switchToEditArchiveView()">✏️ Bearbeiten</button>
             </div>
           </div>
 
           <div id="projectDetailHeader" style="margin-bottom: 12px;">
-            <h2 id="arcDetailTitle" style="color: var(--plant-green); font-size: 20px; font-weight: 700; margin-bottom: 2px;">--</h2>
+            <h2 id="arcDetailTitle" style="color: var(--plant-green-dark); font-size: 20px; font-weight: 700; margin-bottom: 2px;">--</h2>
             <p id="arcDetailSubtitle" style="font-size: 12px; color: var(--text-muted);"></p>
           </div>
 
@@ -718,10 +721,10 @@
           <div id="arc-plants-grid" class="plants-grid"></div>
 
           <div style="border-top: 1px dashed var(--card-border); margin-top: 16px; padding-top: 14px;">
-            <h3 style="font-size: 14px; color: var(--plant-green); margin-bottom: 8px;">📊 Projekt-Auswertung & Reviews</h3>
+            <h3 style="font-size: 14px; color: var(--plant-green-dark); margin-bottom: 8px;">📊 Projekt-Auswertung & Reviews</h3>
             <div id="arcDetailStats" class="archive-stats" style="margin-bottom: 10px;"></div>
 
-            <div style="font-size: 12px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 12px;">
+            <div style="font-size: 12px; line-height: 1.5; background: #ffffff; padding: 10px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--card-border);">
               <div><strong>📅 Erntedatum:</strong> <span id="arcDetailDateText">--</span></div>
               <div style="margin-top: 4px;"><strong>⏱️ Blütedauer:</strong> <span id="arcDetailBloom">--</span></div>
               <div style="margin-top: 4px;"><strong>⚠️ Herausforderungen:</strong> <span id="arcDetailChallenges">--</span></div>
@@ -747,7 +750,7 @@
   <!-- Modal 1: Growbox Management -->
   <div class="modal-overlay" id="boxManagementModal">
     <div class="modal-card">
-      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Growboxen verwalten</h3>
+      <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">Growboxen verwalten</h3>
       <div id="existingBoxesList" style="margin-bottom: 14px;"></div>
       <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px;">
         <label>Neue Growbox hinzufügen:</label>
@@ -762,7 +765,7 @@
   <div class="modal-overlay" id="editLogModal">
     <div class="modal-card">
       <button type="button" class="btn-trash-corner" onclick="deleteLogEntryConfirm()" title="Eintrag löschen">🗑️</button>
-      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Log-Eintrag bearbeiten</h3>
+      <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">Log-Eintrag bearbeiten</h3>
       <input type="hidden" id="editLogId">
       <div class="form-group"><label>Gießmenge (Liter)</label><input type="number" id="editLogWater" step="0.1" min="0.1"></div>
       <div class="form-group"><label>Mängel</label><input type="text" id="editLogDefect"></div>
@@ -779,7 +782,7 @@
   <div class="modal-overlay" id="archiveEditModal">
     <div class="modal-card">
       <button type="button" class="btn-trash-corner" onclick="deleteArchiveConfirm()" title="Projekt löschen">🗑️</button>
-      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Projekt bearbeiten</h3>
+      <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">Projekt bearbeiten</h3>
       <input type="hidden" id="arcEditId">
       <div class="form-group"><label>Projektname</label><input type="text" id="arcEditSorte"></div>
       <div class="form-group"><label>Pflanzen & Sorten (kommagetrennt)</label><textarea id="arcEditPflanzen" rows="2"></textarea></div>
@@ -801,7 +804,7 @@
   <div class="modal-overlay" id="projectPlantModal">
     <div class="modal-card">
       <button type="button" class="btn-trash-corner" id="btnDeleteProjPlant" style="display:none;" onclick="deleteProjectPlant()" title="Pflanze entfernen">🗑️</button>
-      <h3 id="projPlantModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Pflanze im Projekt</h3>
+      <h3 id="projPlantModalTitle" style="color: var(--plant-green-dark); margin-bottom: 12px;">Pflanze im Projekt</h3>
       <input type="hidden" id="projPlantIndex">
       <div class="form-group"><label>Pflanzen- / Phäno-Name:</label><input type="text" id="projPlantName" placeholder="z.B. Ethos Cookies #1" required></div>
       <div class="form-group"><label>Sorte / Strain:</label><input type="text" id="projPlantStrain" placeholder="z.B. Hybrid / Ethos Genetics"></div>
@@ -820,7 +823,7 @@
   <div class="modal-overlay" id="editFutureModal">
     <div class="modal-card">
       <button type="button" class="btn-trash-corner" onclick="deleteFutureConfirm()" title="Idee löschen">🗑️</button>
-      <h3 style="color: var(--plant-green); margin-bottom: 12px;">Idee bearbeiten</h3>
+      <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">Idee bearbeiten</h3>
       <input type="hidden" id="editFutureId">
       <div class="form-group"><label>Kategorie</label>
         <select id="editFutureKat">
@@ -838,7 +841,7 @@
   <!-- Modal 6: Pflanze hinzufügen (Zelte) -->
   <div class="modal-overlay" id="addPlantModal">
     <div class="modal-card">
-      <h3 style="color: var(--plant-green); margin-bottom: 12px;">+ Neu ins Zelt</h3>
+      <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">+ Neu ins Zelt</h3>
       <div class="form-group">
         <label>Art des Neuzugangs:</label>
         <select id="newPlantType" onchange="toggleStecklingMode()">
@@ -853,13 +856,18 @@
     </div>
   </div>
 
-  <!-- Modal 7: Zelt Phase -->
+  <!-- Modal 7: Zelt Phase & Name Bearbeiten -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <div id="boxImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="boxImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
-      <h3 id="modalBoxTitle" style="color: var(--plant-green); margin-bottom: 12px;">Zelt anpassen</h3>
+      <h3 id="modalBoxTitle" style="color: var(--plant-green-dark); margin-bottom: 12px;">⛺ Zelt anpassen</h3>
+      
+      <div class="form-group">
+        <label>Zelt Name:</label>
+        <input type="text" id="modalBoxNameInput" placeholder="z.B. Mars Hydro" required>
+      </div>
       <div class="form-group">
         <label>Aktuelle Phase des Zelts:</label>
         <select id="modalBoxPhaseType">
@@ -871,7 +879,7 @@
       </div>
       <div class="form-group"><label>Startdatum dieser Phase:</label><input type="date" id="modalBoxStartDate"></div>
       <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 12px;">
-        <label>Zelt-Foto hinzufügen:</label>
+        <label>Zelt-Foto hinzufügen / ändern:</label>
         <input type="file" id="modalBoxFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handleBoxFileUpload(this)">
       </div>
       <button type="button" class="btn" onclick="saveBoxModal()">Für das Zelt speichern</button>
@@ -885,16 +893,16 @@
       <div id="plantImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="plantImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
-      <h3 id="modalPlantName" style="color: var(--plant-green); margin-bottom: 2px;">Pflanze</h3>
+      <h3 id="modalPlantName" style="color: var(--plant-green-dark); margin-bottom: 2px;">Pflanze</h3>
       <p id="modalPlantStrain" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"></p>
-      <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px;"></div>
+      <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 14px;"></div>
       
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <button type="button" class="btn-back" style="font-size:11px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
         <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
       </div>
 
-      <div id="customPhaseUI" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:14px;">
+      <div id="customPhaseUI" style="display:none; background:#ffffff; padding:10px; border-radius:8px; margin-bottom:14px; border: 1px solid var(--card-border);">
          <label style="font-size:11px; display:block; margin-bottom:4px;">Zählung abweichen für <span id="customPhasePlantName"></span>:</label>
          <select id="customPhaseType" style="padding:6px; font-size:12px; margin-bottom:6px;">
            <option value="box">-- Automatisch vom Zelt übernehmen --</option>
@@ -924,7 +932,7 @@
   <div class="modal-overlay" id="equipmentModal">
     <div class="modal-card">
       <button type="button" class="btn-trash-corner" id="btnDeleteEquipment" style="display:none;" onclick="deleteEquipmentConfirm()" title="Ausrüstung löschen">🗑️</button>
-      <h3 id="equipmentModalTitle" style="color: var(--plant-green); margin-bottom: 12px;">Ausrüstung</h3>
+      <h3 id="equipmentModalTitle" style="color: var(--plant-green-dark); margin-bottom: 12px;">Ausrüstung</h3>
       <input type="hidden" id="editEquipmentId">
       <div class="form-group"><label>Zelt / Bereich:</label><select id="eqBoxSelect"></select></div>
       <div class="form-group"><label>Name des Gegenstands / Modell:</label><input type="text" id="eqNameInput" placeholder="z.B. Sanlight EVO 4-80" required></div>
@@ -979,7 +987,6 @@
       }
     }
 
-    // Startet erst nach Entsperren die sichtbare Text-Animation
     function startSplashAnimation() {
       const splash = document.getElementById('splash-screen');
       if (splash) {
@@ -1068,6 +1075,12 @@
     let activeFutureItem = null;
     let activeEquipmentItem = null;
     let editingProjectPlantIndex = null;
+
+    function cleanUpBadBoxes() {
+      delete boxesData["null"];
+      delete boxesData["undefined"];
+      delete boxesData[""];
+    }
 
     function formatNumberDE(val, decimals = 1) {
       if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
@@ -1198,6 +1211,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => { 
+      cleanUpBadBoxes();
       const stromDate = document.getElementById('strom-input-date');
       if(stromDate) stromDate.value = todayStr;
 
@@ -1210,7 +1224,6 @@
       const logoImg = document.getElementById('bionova-logo');
       if(logoImg && bionovaLogoUrl) logoImg.src = bionovaLogoUrl;
       
-      // Schließen von Modals beim Klick außerhalb (Overlay Klick)
       document.querySelectorAll('.modal-overlay').forEach(modal => {
         modal.addEventListener('click', (e) => {
           if (e.target === modal) {
@@ -1235,6 +1248,7 @@
           
           if (data && data.boxes) {
             boxesData = data.boxes;
+            cleanUpBadBoxes();
             localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
           }
 
@@ -1269,6 +1283,7 @@
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
+          cleanUpBadBoxes();
           updateCalcBoxDropdown();
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
         });
@@ -1349,17 +1364,17 @@
           datasets: [
             { label: 'Temp (°C)', data: temps, borderColor: '#ff9f43', backgroundColor: 'rgba(255,159,67,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
             { label: 'Feuchte (%)', data: hums, borderColor: '#54a0ff', backgroundColor: 'rgba(84,160,255,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' },
-            { label: 'VPD (kPa)', data: vpds, borderColor: '#2ecc71', backgroundColor: 'rgba(46,204,113,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
+            { label: 'VPD (kPa)', data: vpds, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           scales: {
-            x: { ticks: { color: '#8e9e94', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y: { type: 'linear', position: 'left', ticks: { color: '#8e9e94', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y1: { type: 'linear', position: 'right', ticks: { color: '#2ecc71', font: { size: 9 } }, grid: { drawOnChartArea: false } }
+            x: { ticks: { color: '#475569', font: { size: 9 }, maxTicksLimit: 5 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+            y: { type: 'linear', position: 'left', ticks: { color: '#475569', font: { size: 9 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+            y1: { type: 'linear', position: 'right', ticks: { color: '#10b981', font: { size: 9 } }, grid: { drawOnChartArea: false } }
           },
-          plugins: { legend: { labels: { color: '#f3f7f4', font: { size: 10 } } } }
+          plugins: { legend: { labels: { color: '#0F172A', font: { size: 10 } } } }
         }
       });
     }
@@ -1387,11 +1402,11 @@
         
         strom.history.forEach(h => {
           tableHtml += `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
               <td style="padding:6px 4px; color:var(--text-muted);">${h.date}</td>
-              <td style="padding:6px 4px; font-weight:600; color:#fff;">${formatNumberDE(h.stand, 0)} kWh</td>
+              <td style="padding:6px 4px; font-weight:600; color:var(--text-main);">${formatNumberDE(h.stand, 0)} kWh</td>
               <td style="padding:6px 4px; color:var(--electric-blue);">+${formatNumberDE(h.diff, 1)} kWh</td>
-              <td style="padding:6px 4px; color:var(--plant-green);">${formatNumberDE(h.perDay, 2)} kWh</td>
+              <td style="padding:6px 4px; color:var(--plant-green-dark);">${formatNumberDE(h.perDay, 2)} kWh</td>
             </tr>`;
         });
         tableHtml += `</tbody></table>`;
@@ -1476,6 +1491,7 @@
       const currentVal = select.value;
       select.innerHTML = "";
 
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => {
         select.innerHTML += `<option value="box:${b}">⛺ Zelt: ${b}</option>`;
       });
@@ -1491,6 +1507,7 @@
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
         const info = getBoxInfo(boxName);
@@ -1510,8 +1527,8 @@
             <h3 style="margin-bottom:0;"><span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span></h3>
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </div>
-          <p style="font-size: 12px; color: #fff; margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
-          <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; cursor: pointer;" onclick="toggleBoxEquipmentDropdown('${safeBoxId}', '${boxName}')">
+          <p style="font-size: 12px; color: var(--text-main); margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green-dark); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; cursor: pointer;" onclick="toggleBoxEquipmentDropdown('${safeBoxId}', '${boxName}')">
             <span>⚙️ Ausrüstung anzeigen</span>
             <span id="eq-arrow-${safeBoxId}">▾</span>
           </div>
@@ -1521,7 +1538,7 @@
       });
     }
 
-    /* AUSRÜSTUNG (EQUIPMENT) DROPDOWN IN ZELT-KACHEL */
+    /* AUSRÜSTUNG DROPDOWN IN ZELT-KACHEL */
     function toggleBoxEquipmentDropdown(safeBoxId, boxName) {
       const dropdown = document.getElementById(`eq-dropdown-${safeBoxId}`);
       const arrow = document.getElementById(`eq-arrow-${safeBoxId}`);
@@ -1548,8 +1565,8 @@
 
       let html = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <strong style="font-size: 12px; color: #fff; display: flex; align-items: center;">${boxImgHtml} Ausrüstung für ${boxName}</strong>
-          <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green); border-color: rgba(46,204,113,0.3); font-size: 11px; padding: 4px 10px; height: auto;" onclick="openEquipmentModalForBox('${boxName}')">+ Ausrüstung</button>
+          <strong style="font-size: 12px; color: var(--text-main); display: flex; align-items: center;">${boxImgHtml} Ausrüstung für ${boxName}</strong>
+          <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3); font-size: 11px; padding: 4px 10px; height: auto;" onclick="openEquipmentModalForBox('${boxName}')">+ Ausrüstung</button>
         </div>
       `;
 
@@ -1559,15 +1576,15 @@
         boxEquipment.forEach(item => {
           const imgHtml = item.img 
             ? `<img src="${item.img}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover; margin-right: 8px; border: 1px solid var(--card-border); flex-shrink: 0;">`
-            : `<div style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right: 8px; flex-shrink: 0;">⚙️</div>`;
+            : `<div style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right: 8px; flex-shrink: 0;">⚙️</div>`;
 
           html += `
             <div class="list-item-card" style="padding: 8px;" onclick="openEditEquipmentModal('${item.id}')">
               <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
                 ${imgHtml}
                 <div style="flex: 1; min-width: 0;">
-                  <div style="font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
-                  <div style="font-size: 10px; color: var(--plant-green);">${item.category || 'Equipment'}</div>
+                  <div style="font-size: 12px; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+                  <div style="font-size: 10px; color: var(--plant-green-dark);">${item.category || 'Equipment'}</div>
                   ${item.notes ? `<div style="font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${item.notes}"</div>` : ''}
                 </div>
               </div>
@@ -1596,6 +1613,7 @@
 
       const select = document.getElementById('eqBoxSelect');
       select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
       if (currentSelectedBox) select.value = currentSelectedBox;
 
@@ -1614,6 +1632,7 @@
 
       const select = document.getElementById('eqBoxSelect');
       select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
       select.value = activeEquipmentItem.box || "Allgemein";
 
@@ -1775,8 +1794,8 @@
       const ecBadge = document.getElementById('res-ec');
       const statusBox = document.getElementById('calc-status-box');
       
-      if (isVegPhase) { ecBadge.classList.remove('bloom-mode'); statusBox.style.color = "var(--plant-green)"; statusBox.style.borderColor = "rgba(46, 204, 113, 0.2)"; } 
-      else { ecBadge.classList.add('bloom-mode'); statusBox.style.color = "var(--primary-pink)"; statusBox.style.borderColor = "rgba(255, 117, 195, 0.2)"; }
+      if (isVegPhase) { ecBadge.classList.remove('bloom-mode'); statusBox.style.color = "var(--plant-green-dark)"; statusBox.style.borderColor = "rgba(16, 185, 129, 0.3)"; } 
+      else { ecBadge.classList.add('bloom-mode'); statusBox.style.color = "var(--primary-pink)"; statusBox.style.borderColor = "rgba(236, 72, 153, 0.3)"; }
 
       const data = SCHEME_10L[targetPhaseKey] || SCHEME_10L.veg;
       ecBadge.innerText = data.ec;
@@ -1793,9 +1812,10 @@
     function openBoxManagementModal() {
       const container = document.getElementById('existingBoxesList');
       container.innerHTML = "";
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => {
         container.innerHTML += `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.05);">
             <span>⛺ ${b}</span>
             <button type="button" class="btn-trash-corner" style="position:relative; top:0; right:0;" onclick="deleteBox('${b}')" title="Löschen">🗑️</button>
           </div>`;
@@ -1836,6 +1856,7 @@
     }
 
     function saveBoxesDataCloudAndLocal() {
+      cleanUpBadBoxes();
       localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
     }
@@ -1843,6 +1864,7 @@
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
+      cleanUpBadBoxes();
 
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
@@ -1852,10 +1874,10 @@
         
         const boxImgHtml = boxData.img 
           ? `<img src="${boxData.img}" style="width: 70px; height: 70px; border-radius: 12px; object-fit: cover; margin-right: 16px; border: 1px solid var(--card-border); flex-shrink: 0;">` 
-          : `<div style="width: 70px; height: 70px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 32px; margin-right: 16px; flex-shrink: 0;">⛺</div>`;
+          : `<div style="width: 70px; height: 70px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 32px; margin-right: 16px; flex-shrink: 0;">⛺</div>`;
 
         let tagColor = 'var(--bloom-pink)';
-        if(info.phase === 'veg') tagColor = 'var(--plant-green)';
+        if(info.phase === 'veg') tagColor = 'var(--plant-green-dark)';
         if(info.phase === 'rooting') tagColor = 'var(--root-blue)';
         if(info.phase === 'drying') tagColor = 'var(--dry-brown)';
 
@@ -1878,6 +1900,7 @@
     }
 
     function openBoxDetail(boxName) {
+      if (!boxName || boxName === "null" || boxName === "undefined") return;
       currentSelectedBox = boxName;
       document.getElementById('box-overview-view').style.display = 'none';
       document.getElementById('box-detail-view').style.display = 'block';
@@ -1911,13 +1934,13 @@
       
       const imgThumbHtml = (p.img && p.img.trim() !== '') 
         ? `<img src="${p.img}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0;">` 
-        : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🌱</div>`;
+        : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🌱</div>`;
 
       card.innerHTML = `
         <div style="display: flex; gap: 8px;">
           ${imgThumbHtml}
           <div style="flex: 1; min-width: 0;">
-            <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h3>
+            <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">${p.name}</h3>
             <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.strain || ''}</div>
           </div>
         </div>
@@ -1984,7 +2007,7 @@
       const matchingLogs = globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box);
       
       if (matchingLogs.length === 0) {
-        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: rgba(0,0,0,0.2); border-radius: 10px;">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
+        container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: #ffffff; border-radius: 10px; border: 1px solid var(--card-border);">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
         document.getElementById('btnExpandLogs').style.display = 'none'; 
         return;
       }
@@ -1992,7 +2015,7 @@
       let html = "";
       matchingLogs.slice(0, plantLogLimit).forEach(l => {
         const defectText = l.defects || 'Keine (Gesund)';
-        const defectBadgeColor = (defectText !== 'Keine' && defectText !== 'Keine (Gesund)') ? '#e74c3c' : 'var(--plant-green)';
+        const defectBadgeColor = (defectText !== 'Keine' && defectText !== 'Keine (Gesund)') ? '#e74c3c' : 'var(--plant-green-dark)';
 
         const logImgHtml = l.bild 
           ? `<div style="margin-top: 10px; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border);">
@@ -2001,20 +2024,20 @@
           : ``;
 
         html += `
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
+          <div style="background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span style="font-size: 12px; color: var(--plant-green); font-weight: 700;">📅 ${l.date}</span>
+              <span style="font-size: 12px; color: var(--plant-green-dark); font-weight: 700;">📅 ${l.date}</span>
               <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 11px; background: rgba(0, 210, 211, 0.15); color: var(--electric-blue); padding: 2px 8px; border-radius: 10px; font-weight: 600;">💧 ${l.water ? l.water + 'L' : '0L'}</span>
+                <span style="font-size: 11px; background: rgba(2, 132, 199, 0.15); color: var(--root-blue); padding: 2px 8px; border-radius: 10px; font-weight: 600;">💧 ${l.water ? l.water + 'L' : '0L'}</span>
                 <button type="button" class="btn-back" style="padding: 0 8px; height: 26px; line-height: 24px; font-size: 11px;" onclick="openEditLogModal('${l.id}')" title="Bearbeiten">✏️</button>
               </div>
             </div>
             
-            <div style="font-size: 12px; color: #fff; margin-bottom: 4px;">
+            <div style="font-size: 12px; color: var(--text-main); margin-bottom: 4px;">
               <strong>Mängel / Status:</strong> <span style="color: ${defectBadgeColor}; font-weight:600;">${defectText}</span>
             </div>
 
-            ${l.note ? `<div style="font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px; margin-top: 6px; font-style: italic;">"${l.note}"</div>` : ''}
+            ${l.note ? `<div style="font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 8px; margin-top: 6px; font-style: italic;">"${l.note}"</div>` : ''}
             
             ${logImgHtml}
           </div>`;
@@ -2041,28 +2064,48 @@
       currentDetailPlant = null; 
     }
 
+    /* KORRIGIERTE ZELT-BEARBEITEN-LOGIK */
     function openBoxModal(boxName) {
+      if (!boxName || boxName === "null" || boxName === "undefined") {
+        alert("Bitte zuerst eine gültige Growbox auswählen.");
+        return;
+      }
       activeEditingBox = boxName;
       const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr, img: "" };
+      
       document.getElementById('modalBoxTitle').innerText = "⛺ " + boxName + " anpassen";
+      document.getElementById('modalBoxNameInput').value = boxName;
       document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
       document.getElementById('modalBoxStartDate').value = formatDateForInput(box.startDate || todayStr);
       
-      const imgWrapper = document.getElementById('boxImgWrapper'); const imgPreview = document.getElementById('boxImgPreview');
-      if (box.img && box.img.trim() !== "") { imgPreview.src = box.img; imgWrapper.style.display = 'block'; } 
-      else { imgWrapper.style.display = 'none'; }
+      const imgWrapper = document.getElementById('boxImgWrapper'); 
+      const imgPreview = document.getElementById('boxImgPreview');
+      if (box.img && box.img.trim() !== "") { 
+        imgPreview.src = box.img; 
+        imgWrapper.style.display = 'block'; 
+      } else { 
+        imgWrapper.style.display = 'none'; 
+        imgPreview.src = "";
+      }
+      document.getElementById('modalBoxFileInput').value = "";
       document.getElementById('boxModal').classList.add('active');
     }
 
     function handleBoxFileUpload(input) {
+      if (!activeEditingBox || activeEditingBox === "null" || activeEditingBox === "undefined") {
+        alert("Fehler: Kein gültiges Zelt zum Hochladen ausgewählt!");
+        return;
+      }
       if (input.files && input.files[0]) {
         uploadImageToCloud(input.files[0]).then(imageUrl => {
-          if(!boxesData[activeEditingBox]) boxesData[activeEditingBox] = {};
+          if (!boxesData[activeEditingBox]) {
+            boxesData[activeEditingBox] = { phaseType: "veg", startDate: todayStr, img: "" };
+          }
           boxesData[activeEditingBox].img = imageUrl;
           document.getElementById('boxImgPreview').src = imageUrl;
           document.getElementById('boxImgWrapper').style.display = 'block';
           saveBoxesDataCloudAndLocal();
-          showSuccessToast("Foto gespeichert!");
+          showSuccessToast("Foto für das Zelt gespeichert!");
         });
       }
     }
@@ -2070,14 +2113,38 @@
     function closeBoxModal() { document.getElementById('boxModal').classList.remove('active'); activeEditingBox = null; }
 
     function saveBoxModal() {
-      if (!activeEditingBox) return;
-      const existingImg = (boxesData[activeEditingBox] && boxesData[activeEditingBox].img) ? boxesData[activeEditingBox].img : "";
-      boxesData[activeEditingBox] = { phaseType: document.getElementById('modalBoxPhaseType').value, startDate: document.getElementById('modalBoxStartDate').value, img: existingImg };
+      if (!activeEditingBox || activeEditingBox === "null" || activeEditingBox === "undefined") return;
+      
+      const newName = document.getElementById('modalBoxNameInput').value.trim();
+      if (!newName) return alert("Bitte einen Namen für das Zelt eingeben!");
+
+      const phaseType = document.getElementById('modalBoxPhaseType').value;
+      const startDate = document.getElementById('modalBoxStartDate').value;
+      const imgWrapper = document.getElementById('boxImgWrapper');
+      const imgPreview = document.getElementById('boxImgPreview');
+      const existingImg = (imgWrapper.style.display !== 'none') ? imgPreview.src : (boxesData[activeEditingBox]?.img || "");
+
+      if (newName !== activeEditingBox) {
+        // Namensänderung durchführen
+        delete boxesData[activeEditingBox];
+        plantsData.forEach(p => { if (p.box === activeEditingBox) p.box = newName; });
+        equipmentData.forEach(eq => { if (eq.box === activeEditingBox) eq.box = newName; });
+        if (currentSelectedBox === activeEditingBox) currentSelectedBox = newName;
+        activeEditingBox = newName;
+      }
+
+      boxesData[activeEditingBox] = { phaseType, startDate, img: existingImg };
+      
       saveBoxesDataCloudAndLocal();
-      renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
+      savePlantsDataCloudAndLocal();
+      saveEquipmentCloudAndLocal();
+      
+      renderDashboardSetup(); 
+      autoCalculateFertilizer(); 
+      renderBoxTiles();
       if (currentSelectedBox) openBoxDetail(currentSelectedBox);
       closeBoxModal();
-      showSuccessToast("Zeltphase gespeichert!");
+      showSuccessToast("Zelt gespeichert!");
     }
 
     function getEntityImage(plantOrBoxName) {
@@ -2115,10 +2182,10 @@
         html += `
           <div class="log-item-row" onclick="openEditLogModal('${l.id}')">
             <div class="log-item-header">
-              <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:#fff;">${l.plant}</strong></span>
+              <span style="display:flex; align-items:center;">${iconHtml}<strong style="color:var(--text-main);">${l.plant}</strong></span>
               <span style="color: var(--text-muted); font-size:11px;">${l.date}</span>
             </div>
-            <div style="margin-top:2px;"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
+            <div style="margin-top:2px; color: var(--text-main);"><strong>Wasser:</strong> ${l.water ? l.water + 'L' : '---'} | <strong>Mängel:</strong> ${l.defects || 'Keine'}</div>
             ${l.note ? `<div style="color: var(--text-muted); font-size: 11px; margin-top:2px;">"${l.note}"</div>` : ''}
             ${logImgHtml}
           </div>`;
@@ -2214,6 +2281,7 @@
       const select = document.getElementById('log-plant');
       if (!select) return;
       select.innerHTML = "";
+      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(box => { select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`; });
       plantsData.forEach(p => {
         const icon = p.isSteckling ? "📦" : "🌱";
@@ -2239,7 +2307,7 @@
         
         const imgThumbHtml = item.bild 
           ? `<img src="${item.bild}" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; margin-right: 12px; border: 1px solid var(--card-border);">` 
-          : `<div style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right:12px;">🌿</div>`;
+          : `<div style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right:12px;">🌿</div>`;
 
         const tile = document.createElement('div');
         tile.className = 'box-tile-card';
@@ -2250,7 +2318,7 @@
             ${imgThumbHtml}
             <div class="box-tile-info">
               <h3>${item.sorte}</h3>
-              <p style="color:var(--text-muted);">${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color:var(--plant-green);">${item.ertrag || 0}g</strong> • ⭐ ${gesamtScore}/10</p>
+              <p style="color:var(--text-muted);">${plantCount} ${plantCount === 1 ? 'Pflanze' : 'Pflanzen'} • <strong style="color:var(--plant-green-dark);">${item.ertrag || 0}g</strong> • ⭐ ${gesamtScore}/10</p>
             </div>
           </div>
           <div style="text-align:right;">
@@ -2327,19 +2395,19 @@
 
         const imgThumbHtml = (p.img && p.img.trim() !== '') 
           ? `<img src="${p.img}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--card-border); flex-shrink: 0;">` 
-          : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🪴</div>`;
+          : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">🪴</div>`;
 
         card.innerHTML = `
           <div style="display: flex; gap: 8px;">
             ${imgThumbHtml}
             <div style="flex: 1; min-width: 0;">
-              <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h3>
+              <h3 style="font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">${p.name}</h3>
               <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2;">${p.strain || ''}</div>
             </div>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <span class="plant-tag tag-bloom" style="font-size: 10px; padding: 2px 6px;">Geerntet</span>
-            <span style="font-size: 10px; color: var(--plant-green); font-weight:700;">${p.notes || ''}</span>
+            <span style="font-size: 10px; color: var(--plant-green-dark); font-weight:700;">${p.notes || ''}</span>
           </div>
         `;
         grid.appendChild(card);
@@ -2465,11 +2533,11 @@
       container.innerHTML = `
         <div class="ranking-box"><div class="ranking-title">All-Time Favorite</div><div class="ranking-value">${bestOverall.sorte}</div></div>
         <div style="display: flex; gap: 10px;">
-          <div class="ranking-box" style="flex: 1; border-color: rgba(0, 210, 211, 0.4); background: rgba(0, 210, 211, 0.08);">
-            <div class="ranking-title" style="color: #00d2d3;">⚖️ Ertrags-König</div>
+          <div class="ranking-box" style="flex: 1; border-color: rgba(2, 132, 199, 0.3); background: rgba(2, 132, 199, 0.08);">
+            <div class="ranking-title" style="color: #0284c7;">⚖️ Ertrags-König</div>
             <div class="ranking-value" style="font-size:13px;">${bestYield.sorte}<br><span style="color:var(--text-muted);font-weight:400;">${bestYield.ertrag || 0}g</span></div>
           </div>
-          <div class="ranking-box" style="flex: 1; border-color: rgba(255, 117, 195, 0.3); background: rgba(255, 117, 195, 0.05);">
+          <div class="ranking-box" style="flex: 1; border-color: rgba(236, 72, 153, 0.3); background: rgba(236, 72, 153, 0.05);">
             <div class="ranking-title" style="color:var(--bloom-pink);">👅 Terpen-Sieger</div>
             <div class="ranking-value" style="font-size:13px;">${bestTaste.sorte}<br><span style="color:var(--text-muted);font-weight:400;">Aroma & Taste</span></div>
           </div>
@@ -2601,9 +2669,9 @@
       let html = "";
       futureCache.slice(0, futureLimit).forEach(item => { 
         html += `
-          <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor:pointer;" onclick="openEditFutureModal('${item.id}')">
-            <div style="font-size:10px; color:var(--plant-green); margin-bottom:2px;">${item.kategorie}</div>
-            <div style="font-size:14px; font-weight:600; color:#fff;">${item.titel}</div>
+          <div style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); cursor:pointer;" onclick="openEditFutureModal('${item.id}')">
+            <div style="font-size:10px; color:var(--plant-green-dark); margin-bottom:2px;">${item.kategorie}</div>
+            <div style="font-size:14px; font-weight:600; color:var(--text-main);">${item.titel}</div>
           </div>`; 
       });
       container.innerHTML = html;
