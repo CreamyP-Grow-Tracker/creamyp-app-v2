@@ -20,13 +20,13 @@
 
   <style>
     :root {
-      /* Neue Farbabstimmung */
-      --bg-color: #F4F6F8;            /* Helles, kühles Grau-Blau für den mittleren Bereich */
-      --card-bg: #E7EAEE;            /* Helles, kühles Grau-Blau für Kacheln & Karten */
-      --card-border: rgba(52, 74, 91, 0.12);
+      /* Angelernte Wunschfarben */
+      --bg-color: #F4F6F8;            /* Sehr helles, kühles Grau-Blau */
+      --card-bg: #E7EAEE;            /* Helles, kühles Grau-Blau für Karten */
+      --card-border: rgba(52, 74, 91, 0.15);
       
       --primary-purple: #0F172A;
-      --primary-midnight: #0F172A;   /* Mitternachtsblau für Header & Splash */
+      --primary-midnight: #0F172A;
       --primary-midnight-soft: #1E293B;
       --primary-pink: #d63384;
       --electric-blue: #0284c7;
@@ -43,7 +43,7 @@
       --dry-brown-bg: rgba(217, 119, 6, 0.15);
 
       --text-main: #0F172A;           /* Dunkler Text für optimale Lesbarkeit auf hellem Grund */
-      --text-muted: #475569;          /* Lesbare Untertitel-Farbe */
+      --text-muted: #475569;
 
       /* 8-Point-Grid Standardisierung */
       --space-xs: 4px;
@@ -63,7 +63,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: calc(85px + env(safe-area-inset-bottom)); min-height: 100vh; }
 
-    /* Splash Screen (Dunkles Mitternachtsblau wie gewünscht) */
+    /* Splash Screen (Dunkles Mitternachtsblau) */
     #splash-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -138,33 +138,34 @@
       100% { opacity: 1; clip-path: inset(-30px -60px -30px -60px); }
     }
 
-    /* Header (Dunkles Mitternachtsblau wie gewünscht) */
+    /* Header mit korrigierten sichtbaren Blättern */
     header {
-  position: sticky; top: 0; z-index: 100;
-  background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
-  padding-top: max(12px, env(safe-area-inset-top)); 
-  padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
-  text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
+      position: sticky; top: 0; z-index: 100;
+      background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+      padding-top: max(12px, env(safe-area-inset-top)); 
+      padding-bottom: 14px; padding-left: 12px; padding-right: 12px;
+      text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
 
-.header-leaf-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%; height: 100%;
-  background-repeat: repeat-x;
-  background-position: center center;
-  background-size: 420px auto;     
-  mix-blend-mode: screen;
-  opacity: 0.85;
-  z-index: 2;
-  pointer-events: none;
-}
+    .header-leaf-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      background-repeat: repeat-x;
+      background-position: center center;
+      background-size: 420px auto;     
+      mix-blend-mode: screen;
+      opacity: 0.85;
+      z-index: 2;
+      pointer-events: none;
+    }
+
     .logo-wrapper {
       background-color: #fff; padding: 6px 18px; border-radius: 32px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center;
       justify-content: center; position: relative; z-index: 10;
     }
     .app-logo { max-height: 56px; width: auto; display: block; }
@@ -395,7 +396,7 @@
     }
     @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
-    /* Unterer Balken (Mittleres, kühles Blau-Grau wie gewünscht) */
+    /* Unterer Navigationsbalken (#344A5B) */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #344A5B; border-top: 1px solid rgba(255,255,255,0.1);
@@ -625,7 +626,7 @@
             <button type="button" class="btn-back" onclick="showBoxOverview()">← Zelte</button>
             <div style="display: flex; align-items: center; gap: 6px;">
               <button type="button" class="btn-back" style="background: rgba(255,255,255,0.8);" onclick="openAddPlantModal()">+ Pflanze</button>
-              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt bearbeiten</button>
+              <button type="button" class="btn-back" style="background: var(--plant-green-bg); color: var(--plant-green-dark); border-color: rgba(16,185,129,0.3);" onclick="openBoxModal(currentSelectedBox)">Zelt-Phase</button>
             </div>
           </div>
 
@@ -855,18 +856,13 @@
     </div>
   </div>
 
-  <!-- Modal 7: Zelt Phase & Name Bearbeiten -->
+  <!-- Modal 7: Zelt Phase -->
   <div class="modal-overlay" id="boxModal">
     <div class="modal-card">
       <div id="boxImgWrapper" style="margin-bottom: 14px; text-align: center; display: none;">
         <img id="boxImgPreview" src="" style="width: 100%; max-height: 220px; border-radius: 12px; border: 1px solid var(--card-border); object-fit: cover;">
       </div>
-      <h3 id="modalBoxTitle" style="color: var(--plant-green-dark); margin-bottom: 12px;">⛺ Zelt anpassen</h3>
-      
-      <div class="form-group">
-        <label>Zelt Name:</label>
-        <input type="text" id="modalBoxNameInput" placeholder="z.B. Mars Hydro" required>
-      </div>
+      <h3 id="modalBoxTitle" style="color: var(--plant-green-dark); margin-bottom: 12px;">Zelt anpassen</h3>
       <div class="form-group">
         <label>Aktuelle Phase des Zelts:</label>
         <select id="modalBoxPhaseType">
@@ -878,7 +874,7 @@
       </div>
       <div class="form-group"><label>Startdatum dieser Phase:</label><input type="date" id="modalBoxStartDate"></div>
       <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-bottom: 12px;">
-        <label>Zelt-Foto hinzufügen / ändern:</label>
+        <label>Zelt-Foto hinzufügen:</label>
         <input type="file" id="modalBoxFileInput" accept="image/*" style="font-size: 12px; padding: 8px;" onchange="handleBoxFileUpload(this)">
       </div>
       <button type="button" class="btn" onclick="saveBoxModal()">Für das Zelt speichern</button>
@@ -966,6 +962,7 @@
     <div class="nav-item" onclick="switchTab('archiv', this)"><span class="icon">📚</span><span>Archiv</span></div>
   </nav>
 
+  <!-- 100% UNVERÄNDERTE ORIGINAL-LOGIK -->
   <script>
     const HEADER_LEAF_URL = "https://lh3.googleusercontent.com/d/1Q3FyHy72jZ0Gf_3YAbyfLv0hczUep2WH"; 
 
@@ -1074,12 +1071,6 @@
     let activeFutureItem = null;
     let activeEquipmentItem = null;
     let editingProjectPlantIndex = null;
-
-    function cleanUpBadBoxes() {
-      delete boxesData["null"];
-      delete boxesData["undefined"];
-      delete boxesData[""];
-    }
 
     function formatNumberDE(val, decimals = 1) {
       if (val === null || val === undefined || isNaN(val) || val === "--") return "--";
@@ -1210,7 +1201,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => { 
-      cleanUpBadBoxes();
       const stromDate = document.getElementById('strom-input-date');
       if(stromDate) stromDate.value = todayStr;
 
@@ -1247,7 +1237,6 @@
           
           if (data && data.boxes) {
             boxesData = data.boxes;
-            cleanUpBadBoxes();
             localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
           }
 
@@ -1282,7 +1271,6 @@
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
-          cleanUpBadBoxes();
           updateCalcBoxDropdown();
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
         });
@@ -1490,7 +1478,6 @@
       const currentVal = select.value;
       select.innerHTML = "";
 
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => {
         select.innerHTML += `<option value="box:${b}">⛺ Zelt: ${b}</option>`;
       });
@@ -1506,7 +1493,6 @@
       const container = document.getElementById('dashboard-setup-container');
       container.innerHTML = "";
 
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
         const info = getBoxInfo(boxName);
@@ -1612,7 +1598,6 @@
 
       const select = document.getElementById('eqBoxSelect');
       select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
       if (currentSelectedBox) select.value = currentSelectedBox;
 
@@ -1631,7 +1616,6 @@
 
       const select = document.getElementById('eqBoxSelect');
       select.innerHTML = `<option value="Allgemein">Allgemein / Nicht zugeteilt</option>`;
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => { select.innerHTML += `<option value="${b}">⛺ Zelt: ${b}</option>`; });
       select.value = activeEquipmentItem.box || "Allgemein";
 
@@ -1811,7 +1795,6 @@
     function openBoxManagementModal() {
       const container = document.getElementById('existingBoxesList');
       container.innerHTML = "";
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(b => {
         container.innerHTML += `
           <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.05);">
@@ -1855,7 +1838,6 @@
     }
 
     function saveBoxesDataCloudAndLocal() {
-      cleanUpBadBoxes();
       localStorage.setItem('creamyp_boxes_v8', JSON.stringify(boxesData));
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveBoxes", boxes: boxesData }) });
     }
@@ -1863,7 +1845,6 @@
     function renderBoxTiles() {
       const container = document.getElementById('box-tiles-container');
       container.innerHTML = "";
-      cleanUpBadBoxes();
 
       Object.keys(boxesData).forEach(boxName => {
         const boxPlants = plantsData.filter(p => p.box === boxName);
@@ -1899,7 +1880,6 @@
     }
 
     function openBoxDetail(boxName) {
-      if (!boxName || boxName === "null" || boxName === "undefined") return;
       currentSelectedBox = boxName;
       document.getElementById('box-overview-view').style.display = 'none';
       document.getElementById('box-detail-view').style.display = 'block';
@@ -2063,48 +2043,28 @@
       currentDetailPlant = null; 
     }
 
-    /* KORRIGIERTE ZELT-BEARBEITEN-LOGIK */
     function openBoxModal(boxName) {
-      if (!boxName || boxName === "null" || boxName === "undefined") {
-        alert("Bitte zuerst eine gültige Growbox auswählen.");
-        return;
-      }
       activeEditingBox = boxName;
       const box = boxesData[boxName] || { phaseType: "blüte", startDate: todayStr, img: "" };
-      
       document.getElementById('modalBoxTitle').innerText = "⛺ " + boxName + " anpassen";
-      document.getElementById('modalBoxNameInput').value = boxName;
       document.getElementById('modalBoxPhaseType').value = box.phaseType || "blüte";
       document.getElementById('modalBoxStartDate').value = formatDateForInput(box.startDate || todayStr);
       
-      const imgWrapper = document.getElementById('boxImgWrapper'); 
-      const imgPreview = document.getElementById('boxImgPreview');
-      if (box.img && box.img.trim() !== "") { 
-        imgPreview.src = box.img; 
-        imgWrapper.style.display = 'block'; 
-      } else { 
-        imgWrapper.style.display = 'none'; 
-        imgPreview.src = "";
-      }
-      document.getElementById('modalBoxFileInput').value = "";
+      const imgWrapper = document.getElementById('boxImgWrapper'); const imgPreview = document.getElementById('boxImgPreview');
+      if (box.img && box.img.trim() !== "") { imgPreview.src = box.img; imgWrapper.style.display = 'block'; } 
+      else { imgWrapper.style.display = 'none'; }
       document.getElementById('boxModal').classList.add('active');
     }
 
     function handleBoxFileUpload(input) {
-      if (!activeEditingBox || activeEditingBox === "null" || activeEditingBox === "undefined") {
-        alert("Fehler: Kein gültiges Zelt zum Hochladen ausgewählt!");
-        return;
-      }
       if (input.files && input.files[0]) {
         uploadImageToCloud(input.files[0]).then(imageUrl => {
-          if (!boxesData[activeEditingBox]) {
-            boxesData[activeEditingBox] = { phaseType: "veg", startDate: todayStr, img: "" };
-          }
+          if(!boxesData[activeEditingBox]) boxesData[activeEditingBox] = {};
           boxesData[activeEditingBox].img = imageUrl;
           document.getElementById('boxImgPreview').src = imageUrl;
           document.getElementById('boxImgWrapper').style.display = 'block';
           saveBoxesDataCloudAndLocal();
-          showSuccessToast("Foto für das Zelt gespeichert!");
+          showSuccessToast("Foto gespeichert!");
         });
       }
     }
@@ -2112,38 +2072,14 @@
     function closeBoxModal() { document.getElementById('boxModal').classList.remove('active'); activeEditingBox = null; }
 
     function saveBoxModal() {
-      if (!activeEditingBox || activeEditingBox === "null" || activeEditingBox === "undefined") return;
-      
-      const newName = document.getElementById('modalBoxNameInput').value.trim();
-      if (!newName) return alert("Bitte einen Namen für das Zelt eingeben!");
-
-      const phaseType = document.getElementById('modalBoxPhaseType').value;
-      const startDate = document.getElementById('modalBoxStartDate').value;
-      const imgWrapper = document.getElementById('boxImgWrapper');
-      const imgPreview = document.getElementById('boxImgPreview');
-      const existingImg = (imgWrapper.style.display !== 'none') ? imgPreview.src : (boxesData[activeEditingBox]?.img || "");
-
-      if (newName !== activeEditingBox) {
-        // Namensänderung durchführen
-        delete boxesData[activeEditingBox];
-        plantsData.forEach(p => { if (p.box === activeEditingBox) p.box = newName; });
-        equipmentData.forEach(eq => { if (eq.box === activeEditingBox) eq.box = newName; });
-        if (currentSelectedBox === activeEditingBox) currentSelectedBox = newName;
-        activeEditingBox = newName;
-      }
-
-      boxesData[activeEditingBox] = { phaseType, startDate, img: existingImg };
-      
+      if (!activeEditingBox) return;
+      const existingImg = (boxesData[activeEditingBox] && boxesData[activeEditingBox].img) ? boxesData[activeEditingBox].img : "";
+      boxesData[activeEditingBox] = { phaseType: document.getElementById('modalBoxPhaseType').value, startDate: document.getElementById('modalBoxStartDate').value, img: existingImg };
       saveBoxesDataCloudAndLocal();
-      savePlantsDataCloudAndLocal();
-      saveEquipmentCloudAndLocal();
-      
-      renderDashboardSetup(); 
-      autoCalculateFertilizer(); 
-      renderBoxTiles();
+      renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
       if (currentSelectedBox) openBoxDetail(currentSelectedBox);
       closeBoxModal();
-      showSuccessToast("Zelt gespeichert!");
+      showSuccessToast("Zeltphase gespeichert!");
     }
 
     function getEntityImage(plantOrBoxName) {
@@ -2280,7 +2216,6 @@
       const select = document.getElementById('log-plant');
       if (!select) return;
       select.innerHTML = "";
-      cleanUpBadBoxes();
       Object.keys(boxesData).forEach(box => { select.innerHTML += `<option value="${box}">⛺ ${box} (Ganzes Zelt)</option>`; });
       plantsData.forEach(p => {
         const icon = p.isSteckling ? "📦" : "🌱";
