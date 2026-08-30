@@ -952,7 +952,7 @@
     </div>
   </div>
 
-  <!-- Bottom Nav mit dezenter Trennlinie & korrigiertem Rechner-Symbol (+ - × ÷) -->
+  <!-- Bottom Nav mit dezenter Trennlinie, korrigiertem Rechner-Symbol (+ - ÷ ×) & zentrierten Logbuch-Linien -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('dashboard', this)">
       <span class="icon">
@@ -968,20 +968,26 @@
           <line x1="3" y1="6" x2="9" y2="6"/>
           <!-- Minus (-) oben rechts -->
           <line x1="15" y1="6" x2="21" y2="6"/>
-          <!-- Mal (x) unten links -->
-          <line x1="3.5" y1="14.5" x2="8.5" y2="19.5"/>
-          <line x1="8.5" y1="14.5" x2="3.5" y2="19.5"/>
-          <!-- Geteilt (÷) unten rechts -->
-          <line x1="15" y1="17" x2="21" y2="17"/>
-          <circle cx="18" cy="14" r="1" fill="currentColor" stroke="none"/>
-          <circle cx="18" cy="20" r="1" fill="currentColor" stroke="none"/>
+          <!-- Geteilt (÷) unten links -->
+          <line x1="3" y1="17" x2="9" y2="17"/>
+          <circle cx="6" cy="14" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="6" cy="20" r="1" fill="currentColor" stroke="none"/>
+          <!-- Mal (x) unten rechts -->
+          <line x1="15.5" y1="14.5" x2="20.5" y2="19.5"/>
+          <line x1="20.5" y1="14.5" x2="15.5" y2="19.5"/>
         </svg>
       </span>
       <span>Rechner</span>
     </div>
     <div class="nav-item" onclick="switchTab('log', this)">
       <span class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13c1.2 0 1.2 1 2.4 1s1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1"/><path d="M8 17c1.2 0 1.2 1 2.4 1s1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <!-- Exakt zentrierte Schlangenlinien für Schrift -->
+          <path d="M7 13c1 0 1 .8 2 .8s1-.8 2-.8 1 .8 2 .8 1-.8 2-.8 1 .8 2 .8"/>
+          <path d="M7 17c1 0 1 .8 2 .8s1-.8 2-.8 1 .8 2 .8 1-.8 2-.8 1 .8 2 .8"/>
+        </svg>
       </span>
       <span>Logbuch</span>
     </div>
@@ -1612,12 +1618,13 @@
         const card = document.createElement('div');
         card.className = 'setup-card-box';
 
+        /* 'Enthaltene Pflanzen:' Text entfernt */
         card.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <h3 style="margin-bottom:0;"><span style="display:flex; align-items:center;">${boxImgHtml}${boxName}</span></h3>
             <span class="plant-tag ${info.tagClass}">${info.statusText}</span>
           </div>
-          <p style="font-size: 12px; color: var(--text-main); margin-top: 4px;"><strong>Enthaltene Pflanzen:</strong> ${strainNames}</p>
+          <p style="font-size: 12px; color: var(--text-main); margin-top: 4px;">${strainNames}</p>
           <div style="margin-top: 10px; font-size: 11px; color: var(--plant-green-dark); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; cursor: pointer;" onclick="toggleBoxEquipmentDropdown('${safeBoxId}', '${boxName}')">
             <span>⚙️ Ausrüstung anzeigen</span>
             <span id="eq-arrow-${safeBoxId}">▾</span>
