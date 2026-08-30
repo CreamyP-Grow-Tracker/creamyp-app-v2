@@ -632,10 +632,17 @@
         <div class="card"><h2>Ranking</h2><div id="ranking-container">Lädt Rankings...</div></div>
 
         <div class="card">
-          <h2>Archivierte Projekte</h2>
+          <h2>Archivierte Projekte & Ernten</h2>
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Wähle ein Projekt aus, um Pflanzen und Details zu sehen:</p>
           <div id="archive-tiles-container">Lädt Projekte...</div>
           <button type="button" id="btn-expand-archive" class="btn btn-secondary" style="display:none; font-size:12px; margin-top:10px;" onclick="expandArchiveList()">Mehr Projekte anzeigen</button>
+        </div>
+
+        <!-- Neuer Bereich für vergangene / aussortierte Einzelpflanzen -->
+        <div class="card">
+          <h2>Aussortierte & Beendete Pflanzen</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Historie aus dem Zelt entfernter Pflanzen:</p>
+          <div id="discarded-plants-container">Lädt Historie...</div>
         </div>
 
         <div class="card">
@@ -890,12 +897,15 @@
 
       <div id="modalPlantDayTag" style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 14px;"></div>
 
-      <!-- Button zum Abschließen/Ernten der Pflanze -->
-      <button type="button" class="btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); margin-bottom: 12px; font-size:14px; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);" onclick="openCompletePlantModal()">🏆 Pflanze ernten & ins Archiv übertragen</button>
+      <!-- Buttons zum Ernten oder Aussortieren -->
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <button type="button" class="btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); font-size:12px; padding: 10px; flex: 1; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);" onclick="openCompletePlantModal()">🏆 Ernten</button>
+        <button type="button" class="btn" style="background: linear-gradient(135deg, #475569, #64748b); font-size:12px; padding: 10px; flex: 1; box-shadow: 0 4px 12px rgba(71, 85, 105, 0.25);" onclick="openDiscardPlantModal()">❌ Aussortieren</button>
+      </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px;">
         <button type="button" class="btn" style="padding: 8px; font-size: 12px; flex: 1;" onclick="savePlantNameAndStrain()">Änderungen speichern</button>
-        <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0; height: 36px; width: 36px;" onclick="deleteCurrentPlantConfirm()" title="Pflanze löschen">🗑️</button>
+        <button type="button" class="btn-trash-corner" style="position: relative; top: 0; right: 0; height: 36px; width: 36px;" onclick="deleteCurrentPlantConfirm()" title="Pflanze komplett löschen">🗑️</button>
       </div>
 
       <button type="button" class="btn-back" style="font-size:11px; width:100%; margin-bottom:12px;" onclick="toggleCustomPhaseUI()">Individuelle Phase anpassen</button>
@@ -956,7 +966,7 @@
     </div>
   </div>
 
-  <!-- Modal 10: Pflanze abschließen & Archivieren -->
+  <!-- Modal 10: Pflanze ernten & ins Archiv übertragen -->
   <div class="modal-overlay" id="completePlantModal">
     <div class="modal-card">
       <h3 style="color: var(--plant-green-dark); margin-bottom: 12px;">🏆 Pflanze ernten & ins Archiv übertragen</h3>
@@ -976,8 +986,50 @@
       <div class="form-group"><label>Blütedauer / Gesamtdauer:</label><input type="text" id="compPlantBluetedauer" placeholder="z.B. 9 Wochen / 63 Tage"></div>
       <div class="form-group"><label>Herausforderungen im Grow:</label><textarea id="compPlantHerausforderungen" rows="2" placeholder="z.B. Leichte Hitze im Sommer..."></textarea></div>
       <div class="form-group"><label>Smoke-Review & Erfahrung:</label><textarea id="compPlantReview" rows="2" placeholder="z.B. Sehr süßes Aroma, entspannendes Stoned..."></textarea></div>
-      <button type="button" class="btn" onclick="submitPlantCompletion()">Pflanze abschließen & Archivieren</button>
+      <button type="button" class="btn" onclick="submitPlantCompletion()">Pflanze ernten & Archivieren</button>
       <button type="button" class="btn btn-secondary" onclick="closeCompletePlantModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 11: Pflanze aussortieren / töten -->
+  <div class="modal-overlay" id="discardPlantModal">
+    <div class="modal-card">
+      <h3 style="color: #64748b; margin-bottom: 12px;">❌ Pflanze aussortieren / beenden</h3>
+      <input type="hidden" id="discPlantId">
+      <div class="form-group"><label>Pflanze:</label><input type="text" id="discPlantName" readonly style="opacity:0.7;"></div>
+      <div class="form-group">
+        <label>Grund für das Aussortieren:</label>
+        <select id="discPlantReason">
+          <option value="Männlich / Zwitter">♂️ Männlich / Zwitter</option>
+          <option value="Krankheit / Schimmel">🦠 Krankheit / Schimmel / Schädlingsbefall</option>
+          <option value="Platzmangel / Kümmerwuchs">✂️ Platzmangel / Kümmerwuchs</option>
+          <option value="Sonstiges">⚙️ Sonstiges</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Enddatum:</label><input type="date" id="discPlantDate"></div>
+      <div class="form-group"><label>Notizen / Bemerkungen (optional):</label><textarea id="discPlantNotes" rows="3" placeholder="z.B. frühzeitig wegen Pollenflug aussortiert..."></textarea></div>
+      <button type="button" class="btn" style="background: linear-gradient(135deg, #475569, #64748b);" onclick="submitPlantDiscard()">Pflanze aus Zelt entfernen & Historieren</button>
+      <button type="button" class="btn btn-secondary" onclick="closeDiscardPlantModal()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Modal 12: Aussortierte Pflanze - Detailansicht mit Historie -->
+  <div class="modal-overlay" id="discardedPlantDetailModal">
+    <div class="modal-card">
+      <h3 id="discDetailTitle" style="color: var(--text-main); margin-bottom: 4px;">--</h3>
+      <div id="discDetailSubtitle" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;"></div>
+      
+      <div style="font-size: 12px; line-height: 1.5; background: var(--inner-box-bg); padding: 10px; border-radius: 10px; margin-bottom: 14px; border: 1px solid var(--card-border);">
+        <div><strong>❌ Grund:</strong> <span id="discDetailReasonText">--</span></div>
+        <div style="margin-top: 4px;"><strong>📅 Enddatum:</strong> <span id="discDetailDateText">--</span></div>
+        <div style="margin-top: 4px;"><strong>⛺ Ehemaliges Zelt:</strong> <span id="discDetailBoxText">--</span></div>
+        <div style="margin-top: 4px;"><strong>💬 Notiz:</strong> <em id="discDetailNotesText">--</em></div>
+      </div>
+
+      <h4 style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Logbuch-Historie dieser Pflanze:</h4>
+      <div id="discDetailLogList" style="margin-bottom: 14px;"></div>
+
+      <button type="button" class="btn btn-secondary" onclick="closeDiscardedPlantDetailModal()">Schließen</button>
     </div>
   </div>
 
@@ -992,16 +1044,12 @@
     <div class="nav-item" onclick="switchTab('calc', this)">
       <span class="icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <!-- Plus (+) oben links -->
           <line x1="6" y1="3" x2="6" y2="9"/>
           <line x1="3" y1="6" x2="9" y2="6"/>
-          <!-- Minus (-) oben rechts -->
           <line x1="15" y1="6" x2="21" y2="6"/>
-          <!-- Geteilt (÷) unten links -->
           <line x1="3" y1="17" x2="9" y2="17"/>
           <circle cx="6" cy="14" r="1" fill="currentColor" stroke="none"/>
           <circle cx="6" cy="20" r="1" fill="currentColor" stroke="none"/>
-          <!-- Mal (x) unten rechts -->
           <line x1="15.5" y1="14.5" x2="20.5" y2="19.5"/>
           <line x1="20.5" y1="14.5" x2="15.5" y2="19.5"/>
         </svg>
@@ -1013,7 +1061,6 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
-          <!-- Exakt zentrierte Schlangenlinien für Schrift -->
           <path d="M7 13c1 0 1 .8 2 .8s1-.8 2-.8 1 .8 2 .8 1-.8 2-.8 1 .8 2 .8"/>
           <path d="M7 17c1 0 1 .8 2 .8s1-.8 2-.8 1 .8 2 .8 1-.8 2-.8 1 .8 2 .8"/>
         </svg>
@@ -1138,6 +1185,8 @@
     try { loadedPlants = JSON.parse(localStorage.getItem('creamyp_plants_v10')); } catch(e) {}
     let plantsData = ensureAllPlantsExist(loadedPlants);
 
+    let discardedPlantsData = JSON.parse(localStorage.getItem('creamyp_discarded_plants_v1')) || [];
+
     let equipmentData = JSON.parse(localStorage.getItem('creamyp_equipment_v1')) || [];
     let bionovaLogoUrl = localStorage.getItem('creamyp_bionova_logo_v2') || "https://lh3.googleusercontent.com/d/1qiL3IxsdN1SkO9ESLga1m-1uQ1JHaoUw";
 
@@ -1187,6 +1236,16 @@
         }
       } catch(e) {}
       return todayStr;
+    }
+
+    /* Hilfsfunktion für chronologische Sortierung von Logbucheinträgen (Neueste zuerst) */
+    function getSortedLogs(logs) {
+      if (!Array.isArray(logs)) return [];
+      return [...logs].sort((a, b) => {
+        const dA = new Date(formatDateForInput(a.date || a.datum || todayStr));
+        const dB = new Date(formatDateForInput(b.date || b.datum || todayStr));
+        return dB - dA;
+      });
     }
 
     // --- FACE ID & BIOMETRISCHE SPERRE ---
@@ -1337,6 +1396,11 @@
             localStorage.setItem('creamyp_plants_v10', JSON.stringify(plantsData));
           }
 
+          if (data && data.discardedPlants) {
+            discardedPlantsData = data.discardedPlants;
+            localStorage.setItem('creamyp_discarded_plants_v1', JSON.stringify(discardedPlantsData));
+          }
+
           if (data && data.equipment && Array.isArray(data.equipment)) {
             equipmentData = data.equipment;
             localStorage.setItem('creamyp_equipment_v1', JSON.stringify(equipmentData));
@@ -1365,12 +1429,14 @@
           renderBoxTiles(); 
           populateLogDropdown();
           renderVPDMatrix(currentTempVal, currentRhVal);
+          renderDiscardedPlantsList();
         })
         .catch(err => {
           console.error("Fehler beim Abrufen:", err);
           updateCalcBoxDropdown();
           renderDashboardSetup(); autoCalculateFertilizer(); renderBoxTiles();
           renderVPDMatrix(currentTempVal, currentRhVal);
+          renderDiscardedPlantsList();
         });
     }
 
@@ -2137,7 +2203,7 @@
       showSuccessToast("Pflanze & Zeltzuordnung aktualisiert!");
     }
 
-    /* Pflanze abschließen & Archivieren Modal Logik */
+    /* Pflanze ernten Modal */
     function openCompletePlantModal() {
       if (!currentDetailPlant) return;
       const info = getPlantInfo(currentDetailPlant);
@@ -2195,11 +2261,9 @@
         plantList: [{ id: 0, name: currentDetailPlant.name, strain: currentDetailPlant.strain || '', notes: ertrag ? `${ertrag}g` : '', img: currentDetailPlant.img || '' }]
       };
 
-      // Pflanze aus der aktiven Liste entfernen
       plantsData = plantsData.filter(p => p.id !== currentDetailPlant.id);
       savePlantsDataCloudAndLocal();
 
-      // Neues Projekt ins Archiv speichern
       fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveArchive", entry: archivePayload }) })
       .then(() => {
         closeCompletePlantModal();
@@ -2209,6 +2273,137 @@
         showSuccessToast("Pflanze geerntet & ins Archiv übertragen!");
         fetchInitialData();
       });
+    }
+
+    /* Pflanze aussortieren / töten Modal */
+    function openDiscardPlantModal() {
+      if(!currentDetailPlant) return;
+      document.getElementById('discPlantId').value = currentDetailPlant.id;
+      document.getElementById('discPlantName').value = currentDetailPlant.name;
+      document.getElementById('discPlantDate').value = todayStr;
+      document.getElementById('discPlantNotes').value = "";
+      document.getElementById('discardPlantModal').classList.add('active');
+    }
+
+    function closeDiscardPlantModal() {
+      document.getElementById('discardPlantModal').classList.remove('active');
+    }
+
+    function submitPlantDiscard() {
+      if(!currentDetailPlant) return;
+
+      const reason = document.getElementById('discPlantReason').value;
+      const endDate = document.getElementById('discPlantDate').value || todayStr;
+      const notes = document.getElementById('discPlantNotes').value;
+
+      const discardedObj = {
+        id: "disc_" + Date.now(),
+        originalId: currentDetailPlant.id,
+        name: currentDetailPlant.name,
+        strain: currentDetailPlant.strain || "",
+        box: currentDetailPlant.box || "",
+        img: currentDetailPlant.img || "",
+        reason: reason,
+        endDate: endDate,
+        notes: notes
+      };
+
+      discardedPlantsData.unshift(discardedObj);
+      saveDiscardedPlantsCloudAndLocal();
+
+      // Entferne Pflanze aus aktivem Zelt (Logbucheinträge bleiben erhalten!)
+      plantsData = plantsData.filter(p => p.id !== currentDetailPlant.id);
+      savePlantsDataCloudAndLocal();
+
+      closeDiscardPlantModal();
+      closePlantDetailModal();
+      if (currentSelectedBox) openBoxDetail(currentSelectedBox);
+      populateLogDropdown();
+      renderDiscardedPlantsList();
+      showSuccessToast("Pflanze aussortiert & historiert!");
+    }
+
+    function saveDiscardedPlantsCloudAndLocal() {
+      localStorage.setItem('creamyp_discarded_plants_v1', JSON.stringify(discardedPlantsData));
+      fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "saveDiscardedPlants", discarded: discardedPlantsData }) });
+    }
+
+    function renderDiscardedPlantsList() {
+      const container = document.getElementById('discarded-plants-container');
+      if (!container) return;
+
+      if (!discardedPlantsData || discardedPlantsData.length === 0) {
+        container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Keine aussortierten Pflanzen in der Historie.</p>`;
+        return;
+      }
+
+      let html = "";
+      discardedPlantsData.forEach(item => {
+        const imgThumbHtml = item.img 
+          ? `<img src="${item.img}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; margin-right: 10px; border: 1px solid var(--card-border);">`
+          : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right:10px;">❌</div>`;
+
+        html += `
+          <div class="list-item-card" onclick="openDiscardedPlantDetailModal('${item.id}')">
+            <div style="display:flex; align-items:center; flex:1; min-width:0;">
+              ${imgThumbHtml}
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:13px; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
+                <div style="font-size:10px; color:#e74c3c; font-weight:600;">❌ ${item.reason}</div>
+              </div>
+            </div>
+            <div style="text-align:right; font-size:10px; color:var(--text-muted);">
+              <div>${item.endDate}</div>
+              <div style="font-size:11px; color:var(--plant-green-dark);">Details ➔</div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function openDiscardedPlantDetailModal(id) {
+      const item = discardedPlantsData.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('discDetailTitle').innerText = item.name;
+      document.getElementById('discDetailSubtitle').innerText = item.strain ? `Sorte: ${item.strain}` : 'Keine Genetik angegeben';
+      document.getElementById('discDetailReasonText').innerText = item.reason;
+      document.getElementById('discDetailDateText').innerText = item.endDate;
+      document.getElementById('discDetailBoxText').innerText = item.box || 'Unbekannt';
+      document.getElementById('discDetailNotesText').innerText = item.notes || 'Keine Notiz hinterlegt.';
+
+      // Chronologische Logbucheinträge dieser früheren Pflanze rendern
+      const matchingLogs = getSortedLogs(globalLogsCache.filter(l => l.plant === item.name || l.plant === item.box));
+      const logListContainer = document.getElementById('discDetailLogList');
+
+      if (matchingLogs.length === 0) {
+        logListContainer.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 8px; text-align: center; background: var(--inner-box-bg); border-radius: 8px;">Keine Logbuch-Einträge vorhanden.</div>`;
+      } else {
+        let logsHtml = "";
+        matchingLogs.forEach(l => {
+          const hasWater = l.water && parseFloat(l.water) > 0;
+          const defectsVal = (l.defects || l.maengel || '').trim();
+          const hasDefects = defectsVal && defectsVal !== "Keine" && defectsVal !== "Keine (Gesund)";
+
+          logsHtml += `
+            <div style="background: var(--inner-box-bg); padding: 10px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--card-border); font-size: 11px;">
+              <div style="display: flex; justify-content: space-between; font-weight:700; color:var(--plant-green-dark); margin-bottom:4px;">
+                <span>📅 ${l.date || l.datum}</span>
+                ${hasWater ? `<span style="color:var(--root-blue);">💧 ${parseFloat(l.water).toFixed(1)}L</span>` : ''}
+              </div>
+              ${hasDefects ? `<div style="color:#e74c3c; font-weight:600;">⚠️ ${defectsVal}</div>` : ''}
+              ${l.note ? `<div style="font-style:italic; color:var(--text-muted); margin-top:4px;">"${l.note}"</div>` : ''}
+            </div>`;
+        });
+        logListContainer.innerHTML = logsHtml;
+      }
+
+      document.getElementById('discardedPlantDetailModal').classList.add('active');
+    }
+
+    function closeDiscardedPlantDetailModal() {
+      document.getElementById('discardedPlantDetailModal').classList.remove('active');
     }
 
     function deleteCurrentPlantConfirm() {
@@ -2250,7 +2445,9 @@
     function renderPlantSpecificLogs() {
       const container = document.getElementById('plantLogList');
       if (!currentDetailPlant) return;
-      const matchingLogs = globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box);
+      
+      // Chronologisch absteigend sortierte Logbucheinträge
+      const matchingLogs = getSortedLogs(globalLogsCache.filter(l => l.plant === currentDetailPlant.name || l.plant === currentDetailPlant.box));
 
       if (matchingLogs.length === 0) {
         container.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px; text-align: center; background: var(--inner-box-bg); border-radius: 10px; border: 1px solid var(--card-border);">Keine Logbuch-Einträge für diese Pflanze hinterlegt.</div>`;
@@ -2365,8 +2562,11 @@
         return; 
       }
 
+      // Chronologisch absteigend sortierte Haupt-Logbuchliste
+      const sortedLogs = getSortedLogs(globalLogsCache);
+
       let html = "";
-      globalLogsCache.slice(0, globalLogLimit).forEach(l => {
+      sortedLogs.slice(0, globalLogLimit).forEach(l => {
         const entityImg = getEntityImage(l.plant);
         const iconHtml = entityImg 
           ? `<img src="${entityImg}" style="width:28px; height:28px; border-radius:6px; object-fit:cover; margin-right:8px; border:1px solid var(--card-border); flex-shrink:0;">`
@@ -2399,7 +2599,7 @@
           </div>`;
       });
       container.innerHTML = html;
-      document.getElementById('btn-expand-logs').style.display = globalLogsCache.length > globalLogLimit ? 'block' : 'none';
+      document.getElementById('btn-expand-logs').style.display = sortedLogs.length > globalLogLimit ? 'block' : 'none';
     }
 
     function expandGlobalLogs() { globalLogLimit += 10; renderRecentLogsList(); }
